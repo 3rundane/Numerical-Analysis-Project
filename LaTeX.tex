@@ -85,14 +85,14 @@ R \sin{\big(\frac{2pi}{s}\big) \cdot t} \\
 \[\includegraphics{Images/M5600_2_Code.PNG}\]
 
 \begin{itemize}
-\item[{\textbf{Exercise 3:}}] Find a formula that converts position as given in (8) at time $t = 0$ into Cartesian coordinates.
+\item[{\textbf{Exercise 3:}}] Find a formula that converts position as given in (\textbf{8}) at time $t = 0$ into Cartesian coordinates.
 \end{itemize}
 It is important to note the parameters for the following variables: \\
-\(t_V = 0, \quad \psi_d, \psi_m, \psi_s \in \big[0, \frac{pi}{2}\big], \quad \textrm{NS} \in \{-1, 1\}, \quad \lambda_d, \lambda_m, \lambda_s \in [o, \pi], \quad \textrm{EW} \in \{-1, 1\}, \quad h = h\)
+\(t_V = 0, \quad \psi_d, \psi_m, \psi_s \in \big[0, \frac{pi}{2}\big], \quad \textrm{NS} \in \{-1, 1\}, \quad \lambda_d, \lambda_m, \lambda_s \in [0, \pi], \quad \textrm{EW} \in \{-1, 1\}, \quad h = h\)
 
 \begin{itemize}
 \item[{\textbf{Step 1)}}] Using the program from \textbf{Exercise 2}, we will do the following conversions: \\
-\(\psi_d, \psi_m, \psi_s \ \textrm{to} \ \phi \in \big[0, \frac{pi}{2}\big]\) \qquad and \qquad \(\lambda_d, \lambda_m, \lambda_s \ \textrm{to} \ \theta \in [o, \pi]\)
+\(\psi_d, \psi_m, \psi_s \ \textrm{to} \ \phi \in \big[0, \frac{pi}{2}\big]\) \qquad and \qquad \(\lambda_d, \lambda_m, \lambda_s \ \textrm{to} \ \theta \in [0, \pi]\)
 
 \item[{\textbf{Step 2)}}] We will solve for $x, \ y, \ \textrm{and} \ z$ using trigonometry functions.  Note the following diagrams, where \textbf{R} is the radius of the Earth, $\alpha$ is the perpendicular distance of the position, and the rest have been identified above:
 \end{itemize}
@@ -111,7 +111,7 @@ Thus Given we know $\phi$ and $\theta$ using the program from \textbf{Exercise 2
 |\alpha| \cos (\textrm{EW} \cdot \theta) \\ |\alpha| \sin (\textrm{EW} \cdot \theta) \\ (R + h) \sin (\textrm{NS} \cdot \phi) \end{bmatrix}\]
 
 \begin{itemize}
-\item[{\textbf{Exercise 4:}}] Find a formula that converts position and general time $t$ as a given in (8) into Cartesian coordinates.
+\item[{\textbf{Exercise 4:}}] Find a formula that converts position and general time $t$ as a given in (\textbf{8}) into Cartesian coordinates.
 \end{itemize}
 We use our formula from \textbf{Exercise 3} to find the Cartesian coordinates at $t=0$ and then use a rotation matrix to find position at time $t$.  It is important to note that the rotation is around the $z$-axis.
 
@@ -136,7 +136,7 @@ Now we arrive at,
 \end{bmatrix} \]
 
 \begin{itemize}
-\item[{\textbf{Exercise 5:}}] Find a formula that converts a position given in Cartesian coordinates at time $t=0$ into a position of the form (8).
+\item[{\textbf{Exercise 5:}}] Find a formula that converts a position given in Cartesian coordinates at time $t=0$ into a position of the form (\textbf{8}).
 \end{itemize}
 Given Cartesian coordinates \([x, y, z]^T\), we need to find Geographical coordinates in terms of \\
 \(t_V \quad \psi_d \quad \psi_m \quad \psi_s \quad \textrm{NS} \quad \lambda_d \quad \lambda_m \quad \lambda_s \quad \textrm{EW} \quad h.\) \ Using the following diagrams, we can identify Geographic variables to assist in forming the formula for conversion.
@@ -169,7 +169,7 @@ Given Cartesian coordinates \([x, y, z]^T\), we need to find Geographical coordi
 \end{itemize}
 
 \begin{itemize}
-\item[{\textbf{Exercise 6:}}] Find a formula that converts general time $t$ and a position given in Cartesian coordinates into a position of the form (8).
+\item[{\textbf{Exercise 6:}}] Find a formula that converts general time $t$ and a position given in Cartesian coordinates into a position of the form (\textbf{8}).
 \end{itemize}
 We note that we need to un-rotate for $t$ seconds from \textbf{Exercise 4}, thus we have:
 \[\textbf{R}^{-1}(t) = \textbf{R}(t)^T = \begin{bmatrix}
@@ -221,13 +221,13 @@ where \(\alpha = (R + h) \cos (\textrm{NS} \cdot \phi)\).
 \begin{minipage}{0.6\linewidth}
 We have the following plane equation:
 \begin{align*}
-    \textbf{x} \cdot \textbf{P}_o\textbf{P} &= 0 \\
+    \textbf{n} \cdot \textbf{P}_0\textbf{P} &= 0 \\
     \langle x_1, x_2, x_3 \rangle \cdot \langle x-x_1, y-x_2, z-x_3 \rangle &= 0 \\
     x_1x + x_2y + x_3z &= x_1^2 + x_2^2 + x_3^2
 \end{align*}
 Note: The purple plane shows:
 \[x_1x + x_2y + x_3z \geq x_1^2 + x_2^2 + x_3^2.\]
-Thus, $\textbf{s} = (s_1, s_2, s_3)$ is in the horizon of point \\
+Thus, $\textbf{S} = (s_1, s_2, s_3)$ is in the horizon of point \\
 $\textbf{x} = (x_1, x_2, x_3)$ if
 \[x_1s_1 + x_2s_2 + x_3x_3 \geq x_1^2 + x_2^2 + x_3^2\]
 or $\textbf{s}$ must satisfy the inequality
@@ -240,27 +240,58 @@ or $\textbf{s}$ must satisfy the inequality
 \begin{itemize}
 \item[{\textbf{Exercise 9:}}] Discuss how to compute $t_S$ and $\textbf{x}_S$.
 \end{itemize}
-We are given $x_V$ (the position of the vehicle in Cartesian coordinates when it sends the signal to the satellite) and $t_V$ (the time when the vehicle sends the signal).  We want to find $x_S$ (the position of the satellite when it receives the signal from the vehicle) and $t_S$ (the time when the satellite receives the signal), such that \(c|t_V - t_S| = ||x_V - x_S||\).
+We are given $x_V$ (the position of the vehicle in Cartesian coordinates when it sends the signal to the satellite) and $t_V$ (the time when the vehicle sends the signal).  We want to find $x_S$ (the position of the satellite when it receives the signal from the vehicle) and $t_S$ (the time when the satellite receives the signal), such that
+\begin{equation}
+    c|t_V - t_S| = ||\textbf{x}_V - \textbf{x}_S||.
+\end{equation}
+Using this equation which describes the orbit of a satellite, and the equation
+\begin{equation}
+    \textbf{x}_S (t) = (R+h) \Bigg[\textbf{u}\cos \bigg(\frac{2\pi t}{p} + \theta \bigg) + \textbf{v}\sin \bigg(\frac{2\pi t}{p} + \theta \bigg)\Bigg].
+\end{equation}
+Rearranging (1), we get
+\[t_S = t_V - \frac{\big|\big|\textbf{x}_S (t_S) - \textbf{x}_V\big|\big|}{c}.\]
+By substitution we arrive at
+\[t_S = t_V - \frac{1}{c} \cdot \Bigg|\Bigg|(R+h) \Bigg[\textbf{u}\cos \bigg(\frac{2\pi t}{p} + \theta \bigg) + \textbf{v}\sin \bigg(\frac{2\pi t}{p} + \theta \bigg)\Bigg] - \textbf{x}_V\Bigg|\Bigg|.\]
+This is now a fixed problem where,
+\[t_{n+1} = t_V - \frac{1}{c} \cdot \big|\big|\textbf{x}_S (t_n) - \textbf{x}_V\big|\big|.\]
+We start with $t_o = t_V$ and go until \(c|t_V - t_S| < 10^{-2}\), which is $1$ cm of accuracy.
 
 \begin{itemize}
-\item[{\textbf{Exercise 10:}}] Suppose you have data of the from (11) from $4$ satellites.  Write down a set of four equations whose solutions are the position of the vehicle in Cartesian coordinates, and $t_V$.
+\item[{\textbf{Exercise 10:}}] Suppose you have data of the from (\textbf{11}) from $4$ satellites.  Write down a set of four equations whose solutions are the position of the vehicle in Cartesian coordinates, and $t_V$.
 \end{itemize}
-Using the form \(||\textbf{x}_V - \textbf{x}_S|| = c(t_V - t_S)\), we have the following $4$ equations:
+Provided we have $t_{S_i}, \textbf{x}_{S_i}$ for $i = 0,1,2,3$, we want $t_V$ and $\textbf{x}_V$.  Using the form \(||\textbf{x}_V - \textbf{x}_S|| = c(t_V - t_S)\), we have the following $4$ equations:
 \begin{equation}
-    ||\textbf{x}_V - \textbf{x}_{S_1}|| - ||\textbf{x}_V - \textbf{x}_{S_2}|| = c(t_{S_2} - t_{S_1})
-\end{equation}
-\begin{equation}
-    ||\textbf{x}_V - \textbf{x}_{S_1}|| - ||\textbf{x}_V - \textbf{x}_{S_3}|| = c(t_{S_3} - t_{S_1})
-\end{equation}
-\begin{equation}
-    ||\textbf{x}_V - \textbf{x}_{S_1}|| - ||\textbf{x}_V - \textbf{x}_{S_4}|| = c(t_{S_4} - t_{S_1})
+    ||\textbf{x}_V - \textbf{x}_{S_0}|| = c(t_V - t_{S_0})
 \end{equation}
 \begin{equation}
     ||\textbf{x}_V - \textbf{x}_{S_1}|| = c(t_V - t_{S_1})
 \end{equation}
+\begin{equation}
+    ||\textbf{x}_V - \textbf{x}_{S_2}|| = c(t_V - t_{S_2})
+\end{equation}
+\begin{equation}
+    ||\textbf{x}_V - \textbf{x}_{S_3}|| = c(t_V - t_{S_3})
+\end{equation}
+Where
+\begin{equation}
+    ||\textbf{x}_V - \textbf{x}_{S_i}|| = c(t_V - t_{S_i})
+\end{equation} can be written as
+\begin{equation}
+    \Big[\big(x - \sigma_{i,1}\big)^2 + \big(y - \sigma_{i,2}\big)^2 + \big(z - \sigma_{i,3}\big)^2\Big]^{\frac{1}{2}} = c(t_V - t_{S_i}) \text{ for } i = 0,1,2,3.
+\end{equation}
+We can of course eliminate $t_V$ from equations by taking the difference of equations to maintain a level of accuracy.  Then solve the system of 3 equations for position.  Finally, solve for $t_V$.
+\begin{equation}
+    ||\textbf{x}_V - \textbf{x}_{S_0}|| - ||\textbf{x}_V - \textbf{x}_{S_1}|| = c(t_{S_1} - t_{S_0})
+\end{equation}
+\begin{equation}
+    ||\textbf{x}_V - \textbf{x}_{S_0}|| - ||\textbf{x}_V - \textbf{x}_{S_2}|| = c(t_{S_2} - t_{S_0})
+\end{equation}
+\begin{equation}
+    ||\textbf{x}_V - \textbf{x}_{S_0}|| - ||\textbf{x}_V - \textbf{x}_{S_3}|| = c(t_{S_3} - t_{S_0})
+\end{equation}
 
 \begin{itemize}
-\item[{\textbf{Exercise 11:}}] Suppose you have data of the from (11) from more than $4$ satellites.  Write down a least squares problem whose solution the position of the vehicle in Cartesian coordinates, and $t_V$.
+\item[{\textbf{Exercise 11 (D):}}] Suppose you have data of the from (\textbf{11}) from more than $4$ satellites.  Write down a least squares problem whose solution the position of the vehicle in Cartesian coordinates, and $t_V$.
 \end{itemize}
 We need to satisfy the condition $F(x) = 0$, as well as find the minimum of \(f(\textbf{x}) = F(\textbf{x})^T F(\textbf{x})\).  To do this, we will let \(||\textbf{x}_V - \textbf{x}_{S_i}|| = c(t_V - t_{S_i}) = \Delta_i\), where \(\Delta_i = c(t_V - t_{S_i})\) is used to compute $t_V$.  Using the equations from \textbf{Exercise 10}, we will denote successive differences for the least squares equations as such:
 \begin{align*}
@@ -294,9 +325,42 @@ Now
 \[\text{Solution} \Rightarrow \textbf{x}_V \Rightarrow ||\textbf{x}_V - \textbf{x}_{S_1}|| = c(t_V - t_{S_1})\]
 
 \begin{itemize}
+\item[{\textbf{Exercise 11 (I):}}] Suppose you have data of the from (\textbf{11}) from more than $4$ satellites.  Write down a least squares problem whose solution the position of the vehicle in Cartesian coordinates, and $t_V$.
+\end{itemize}
+Suppose we have data from $m+1$ satellites where $m+1>4$.  Then we can create $m$ equations using format from (9-11) in the form:
+\begin{equation}
+    ||\textbf{x}_V - \textbf{x}_{S_0}|| - ||\textbf{x}_V - \textbf{x}_{S_i}|| + ct_{S_0} - ct_{S_i} = 0 \text{ for } i = 1,2,...,m.
+\end{equation}
+We will let \(\textbf{x}_V = \big(x_1, x_2, x_3\big) \text{ and } \textbf{x}_{S_i} = \big(\sigma_{i,1}, \sigma_{i,2}, \sigma_{i,3}\big)\), then we can write (12) using the form
+\begin{equation}
+    \Big[\big(x_1 - \sigma_{0,1}\big)^2 + \big(x_2 - \sigma_{0,2}\big)^2 + \big(x_3 - \sigma_{0,3}\big)^2\Big]^{\frac{1}{2}} - \Big[\big(x_1 - \sigma_{i,1}\big)^2 + \big(x_2 - \sigma_{i,2}\big)^2 + \big(x_3 - \sigma_{i,3}\big)^2\Big]^{\frac{1}{2}} - ct_{S_0} - ct_{S_i} = 0.
+\end{equation}
+We will call equation (13) $F_i (x)$.  Now we define $f(x)$ as
+\begin{equation}
+    f(x) = \sum_{i=1}^m F_i^2 (x).
+\end{equation}
+We set the gradient $f$ to zero \[\nabla f = \Bigg[\frac{\partial f}{\partial x_1}, \frac{\partial f}{\partial x_2}, \frac{\partial f}{\partial x_3}\Bigg]^T = \textbf{0}.\]
+This will give us a system of equations
+\begin{align*}
+    \frac{\partial f}{\partial x}(x,y,z) = 0 \\
+    \frac{\partial f}{\partial y}(x,y,z) = 0 \\
+    \frac{\partial f}{\partial z}(x,y,z) = 0.
+\end{align*}
+We can solve this system using Newton's method.  Once we solve \(\textbf{x}_V = \big[x_1, x_2, x_3\big]^T\) we can then solve $t_V$
+\[\big|\big|\textbf{x}_V - \textbf{x}_{S_0}\big|\big| = c(t_V - t_{S_0}) \Rightarrow t_V = t_{S_0} + \frac{1}{c}\bigg|\bigg|\textbf{x}_V - \textbf{x}_{S_0}\bigg|\bigg|\]
+
+\begin{itemize}
 \item[{\textbf{Exercise 12:}}] Find a formula for the \textit{ground track} of satellite $1$, i.e., the position in geographic coordinates directly underneath the satellite on the surface of the earth, as a function of time.  Do you notice anything particular?  What is the significance of the orbital period being exactly one half sidereal day?
 \end{itemize}
-We have \(x_S (0) = x_S (\frac{S}{2})\).  After $T = \frac{S}{2}$, $x_S$ has returned to its starting value while our rotating coordinate system has rotated by $180^{\circ}$ about the z-axis.  We will start in the rotating frame of the earth and use the rotation matrix.
+The satellite having an orbital period of half a sidereal day is quite significant.  The satellite essentially completes its period twice as fast as earth completes its full rotation.  From the perspective of an observer on earth, it appears that the satellite completes its full period in one sidereal day.
+In fact, from the perspective of earth, the satellites orbit pattern will look like a saddle or pringle chip as opposed to a perfect circle.  The following equation describes the trajectory of our satellite in a Cartesian coordinate system that is fixed to our geographic coordinate system (i.e., C.C.S that rotates with earth):
+\begin{equation}
+   X_{trac,S_1} (t) = R \Bigg[\cos \bigg(\frac{2\pi t}{S} + \theta \bigg), \sin \bigg(\frac{2\pi t}{S} + \theta \bigg), \textbf{u}_3\cos \bigg(\frac{2\pi t}{p} + \theta \bigg) + \textbf{v}_3\sin \bigg(\frac{2\pi t}{p} + \theta \bigg)\Bigg]^T
+\end{equation}
+Thus, we can use our equation from \textbf{Exercise 5???} to find the geographic coordinates.
+\\
+\\
+(Dane)We have \(x_S (0) = x_S (\frac{S}{2})\).  After $T = \frac{S}{2}$, $x_S$ has returned to its starting value while our rotating coordinate system has rotated by $180^{\circ}$ about the z-axis.  We will start in the rotating frame of the earth and use the rotation matrix.
 \[\text{Insert a rotating frame image here...}\]
 We will denote $x_{fixed}$ as our fixed point, and $x_{rotate}$ as our rotation in s seconds.
 \begin{align*}
@@ -333,27 +397,27 @@ And
     y_4 &= ||\textbf{x}_V - \textbf{x}_{S_1}|| - c(t_V - t_{S_1})
 \end{align*}
 Now we need to compute \(\frac{\partial y_i}{\partial x_j} \text{ where } i = 1, 2, 3, 4,  j = 1, 2, 3, 4 \text{ and } x_4 = t_V\).  We need the Jacobian $J$.  We expand $y_l$ for $l = 1, 2, 3$ as follows:
-\begin{equation}
+\begin{equation*}
     y_l = \sqrt{\sum_{k=1}^3 \big(x_k - \sigma_k^{(1)}\big)^2} - \sqrt{\sum_{k=1}^3 \big(x_k - \sigma_k^{(l)}\big)^2} - c(t_l - t_1)
-\end{equation}
+\end{equation*}
 Note: We are using $\sigma_k$ for the components of the relevant $\textbf{x}_{S_i}$ (e.g., if $i = 1$), then $\sigma_k$ would be the $k-th$ component of $\textbf{x}_{S_i}$.  Likewise for $\tau_k$ for $\textbf{x}_{S_2}$,
-\begin{equation}
+\begin{equation*}
     \frac{\partial y_l}{\partial x_j} = \begin{cases}
     \frac{x_j - \sigma_j^{(1)}}{\sqrt{\sum_{k=1}^3 \big(x_k - \sigma_k\big)^2}} - \frac{x_j - \sigma_j^{(l)}}{\sqrt{\sum_{k=1}^3 \big(x_k - \tau_k\big)^2}}, \qquad \text{if } j \neq 4 \\
     \qquad 0, \qquad \text{if } j = 4
     \end{cases}
-\end{equation}
+\end{equation*}
 Now
-\begin{equation}
+\begin{equation*}
     y_4 = \sqrt{\sum_{k=1}^3 \big(x_k - \sigma_k^{(1)}\big)^2} -  c(t_4 - t_{S_1})
-\end{equation}
+\end{equation*}
 We differentiate to get
-\begin{equation}
+\begin{equation*}
     \frac{\partial y_4}{\partial x_j} = \begin{cases}
     \frac{x_j - \sigma_j^{(1)}}{\sqrt{\sum_{k=1}^3 \big(x_k - \sigma_k\big)^2}}, \qquad \text{if } j \neq 4 \\
     \qquad -c, \qquad \text{if } j = 4
     \end{cases}
-\end{equation}
+\end{equation*}
 For Newton's method, we iteratively solve:
 \begin{align*}
     J\big(\textbf{x}_k\big)\textbf{s}^{(k)} &= -F\big(\textbf{x}_k\big), \qquad \textbf{x}^{(0)} = \text{"guess"} \\
