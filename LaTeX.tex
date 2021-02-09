@@ -339,7 +339,9 @@ We will call equation (13) $F_i (x)$.  Now we define $f(x)$ as
 \begin{equation}
     f(x) = \sum_{i=1}^m F_i^2 (x).
 \end{equation}
-We set the gradient $f$ to zero \[\nabla f = \Bigg[\frac{\partial f}{\partial x_1}, \frac{\partial f}{\partial x_2}, \frac{\partial f}{\partial x_3}\Bigg]^T = \textbf{0}.\]
+We set the gradient $f$ to zero \[\nabla f = \begin{bmatrix}
+\frac{\partial f}{\partial x_1} & \frac{\partial f}{\partial x_2} & \frac{\partial f}{\partial x_3}
+\end{bmatrix}^T = \textbf{0}.\]
 This will give us a system of equations
 \begin{align*}
     \frac{\partial f}{\partial x}(x,y,z) = 0 \\
@@ -370,23 +372,16 @@ We will denote $x_{fixed}$ as our fixed point, and $x_{rotate}$ as our rotation 
 \end{align*}
 From here we will convert into geographic coordinates using the formulas from \textbf{Exercise 5}.
 \[\textbf{x}_{rotate} (t) = R\Bigg[\cos \bigg(\frac{2\pi}{p} \cdot t \bigg)\textbf{u}_{rotate} + \sin \bigg(\frac{2\pi}{p} \cdot t \bigg)\textbf{v}_{rotate} \Bigg]\]
+Below is the explicit derivation of $\textbf{x}_{rotate}$ with all of the numbers for $\textbf{u}$ and $\textbf{v}$ and the rotation matrix thrown in.
+HOW DO YOU WANT ME TO PUT THIS IN DANE???
 
 \begin{itemize}
 \item[{\textbf{Exercise 13:}}] Find a precise description of Newton's method as it is applied to the nonlinear system obtained by processing data from $4$ satellites, as derived in an earlier exercise.
 \end{itemize}
-\setcounter{equation}{0}
-\begin{equation}
-    ||\textbf{x}_V - \textbf{x}_{S_1}|| - ||\textbf{x}_V - \textbf{x}_{S_2}|| = c(t_{S_2} - t_{S_1})
-\end{equation}
-\begin{equation}
-    ||\textbf{x}_V - \textbf{x}_{S_1}|| - ||\textbf{x}_V - \textbf{x}_{S_3}|| = c(t_{S_3} - t_{S_1})
-\end{equation}
-\begin{equation}
-    ||\textbf{x}_V - \textbf{x}_{S_1}|| - ||\textbf{x}_V - \textbf{x}_{S_4}|| = c(t_{S_4} - t_{S_1})
-\end{equation}
-\begin{equation}
-    ||\textbf{x}_V - \textbf{x}_{S_1}|| = c(t_V - t_{S_1})
-\end{equation}
+\[||\textbf{x}_V - \textbf{x}_{S_1}|| - ||\textbf{x}_V - \textbf{x}_{S_2}|| = c(t_{S_2} - t_{S_1})\]
+\[||\textbf{x}_V - \textbf{x}_{S_1}|| - ||\textbf{x}_V - \textbf{x}_{S_3}|| = c(t_{S_3} - t_{S_1})\]
+\[||\textbf{x}_V - \textbf{x}_{S_1}|| - ||\textbf{x}_V - \textbf{x}_{S_4}|| = c(t_{S_4} - t_{S_1})\]
+\[||\textbf{x}_V - \textbf{x}_{S_1}|| = c(t_V - t_{S_1})\]
 Let \[\textbf{x}_V = \begin{bmatrix}
 x_1 \\ x_2 \\ x_3 \end{bmatrix}\]
 And
@@ -400,7 +395,7 @@ Now we need to compute \(\frac{\partial y_i}{\partial x_j} \text{ where } i = 1,
 \begin{equation*}
     y_l = \sqrt{\sum_{k=1}^3 \big(x_k - \sigma_k^{(1)}\big)^2} - \sqrt{\sum_{k=1}^3 \big(x_k - \sigma_k^{(l)}\big)^2} - c(t_l - t_1)
 \end{equation*}
-Note: We are using $\sigma_k$ for the components of the relevant $\textbf{x}_{S_i}$ (e.g., if $i = 1$), then $\sigma_k$ would be the $k-th$ component of $\textbf{x}_{S_i}$.  Likewise for $\tau_k$ for $\textbf{x}_{S_2}$,
+Note: We are using $\sigma_k$ for the components of the relevant $\textbf{x}_{S_i}$ (e.g., if $i = 1$), then $\sigma_k$ would be the $k^{th}$ component of $\textbf{x}_{S_i}$.  Likewise for $\tau_k$ for $\textbf{x}_{S_2}$,
 \begin{equation*}
     \frac{\partial y_l}{\partial x_j} = \begin{cases}
     \frac{x_j - \sigma_j^{(1)}}{\sqrt{\sum_{k=1}^3 \big(x_k - \sigma_k\big)^2}} - \frac{x_j - \sigma_j^{(l)}}{\sqrt{\sum_{k=1}^3 \big(x_k - \tau_k\big)^2}}, \qquad \text{if } j \neq 4 \\
@@ -424,6 +419,35 @@ For Newton's method, we iteratively solve:
     \textbf{x}^{(k+1)} &= \textbf{x}^{(k)} + \textbf{s}^{(k)}
 \end{align*}
 Note: the superscripts now denote steps in the Newton's method iteration.
+\\
+(Ike)Given $4$ satellites, we can define the equation $F_i (\textbf{x}_V)$ where $\textbf{x}_V = (x_1, x_2, x_3)$ to be as follows from (12) and (13):
+\begin{equation}
+    \begin{split}
+        F_i (\textbf{x}_V) &= ||\textbf{x}_V - \textbf{x}_{S_0}|| - ||\textbf{x}_V - \textbf{x}_{S_i}|| - c(t_{S_0} - t_{S_i}) \text{ for } i = 1,2,3 \\
+    &= \Bigg[\sum_{k=1}^3 \big(x_k - \sigma_{0,k}\big)^2\Bigg]^\frac{1}{2} - \Bigg[\sum_{k=1}^3 \big(x_k - \sigma_{i,k}\big)^2\Bigg]^\frac{1}{2} - c(t_{S_0} - t_{S_i})
+    \end{split}
+\end{equation}
+Define
+\[F(\textbf{x}) = \begin{bmatrix}
+F_1(\textbf{x}) & F_2(\textbf{x}) & F_3(\textbf{x})
+\end{bmatrix}^T\]
+Next we define the Jacobian of F(x), we have the partial derivatives
+\begin{equation}
+    \frac{\partial F_i}{\partial x_j} = \big(x_j - \sigma_{0,j}\big) \Bigg[\sum_{k=1}^3 \big(x_k - \sigma_{0,k}\big)^2\Bigg]^\frac{-1}{2} - \big(x_j - \sigma_{i,j}\big) \Bigg[\sum_{k=1}^3 \big(x_k - \sigma_{i,k}\big)^2\Bigg]^\frac{-1}{2},
+\end{equation}
+for $i = 1,2,3$ and $j = 1,2,3$.  Thus,
+\[\nabla F = \begin{bmatrix}
+\frac{\partial F_1}{\partial x_1} & \frac{\partial F_1}{\partial x_2} & \frac{\partial F_1}{\partial x_3} \\ \\
+\frac{\partial F_2}{\partial x_1} & \frac{\partial F_2}{\partial x_2} & \frac{\partial F_2}{\partial x_3} \\ \\
+\frac{\partial F_3}{\partial x_1} & \frac{\partial F_3}{\partial x_2} & \frac{\partial F_3}{\partial x_3}
+\end{bmatrix}\]
+Now we use Newton's method.  We start with some $x^{(0)}$.
+\begin{itemize}
+    \item We solve \ \qquad \(\nabla F(x^{(k)})\textbf{S} = -F(x^{(k)})\)
+    \item Then define \qquad \quad  \(x^{(k+1)} = x^{(k)} + \textbf{S}\)
+    \item Repeat until \(\qquad \qquad ||\textbf{S}|| < 0.01\)
+    \item In other words, until our error is less than 1 cm.
+\end{itemize}
 
 \begin{itemize}
 \item[{\textbf{Exercise 14:}}] Similarly, find Newton's method for the nonlinear system obtained from the least squares approach.
@@ -441,6 +465,23 @@ We apply Newton's method to this system:
 \begin{equation*}
     ||\textbf{x}_V - \textbf{x}_{S_1}|| - c(t_V - t_{S_1}) = 0
 \end{equation*}
+We define $F_i (\textbf{x}_V)$ as we did in (16), where $i = 1,2,...,m$ for $m>3$.  Also, recall (14).  Now we wish to solve $\nabla f(x) = 0$.  This requires us to take the Jacobian of $\nabla f \rightarrow$ this is the Hessian.  If we let
+\[B = \nabla F = \Bigg[\frac{\partial F_i}{\partial x_j}\Bigg]_{\begin{split}
+    i &= 1,2,...,m \\
+    j &= 1,2,3
+\end{split}}\]
+and recall (17), then the Hessian is
+\[H(\textbf{x}_V) \approx B^T B = \begin{bmatrix}
+\sum_{i=1}^3\Big(\frac{\partial F_i}{\partial x_1}\Big)^2 & \sum_{i=1}^3\Big(\frac{\partial F_i}{\partial x_1}\Big)\Big(\frac{\partial F_i}{\partial x_2}\Big) & \sum_{i=1}^3\Big(\frac{\partial F_i}{\partial x_1}\Big)\Big(\frac{\partial F_i}{\partial x_3}\Big) \\ \\
+\sum_{i=1}^3\Big(\frac{\partial F_i}{\partial x_1}\Big)\Big(\frac{\partial F_i}{\partial x_2}\Big) & \sum_{i=1}^3\Big(\frac{\partial F_i}{\partial x_2}\Big)^2 & \sum_{i=1}^3\Big(\frac{\partial F_i}{\partial x_2}\Big)\Big(\frac{\partial F_i}{\partial x_3}\Big) \\ \\
+\sum_{i=1}^3\Big(\frac{\partial F_i}{\partial x_1}\Big)\Big(\frac{\partial F_i}{\partial x_3}\Big) & \sum_{i=1}^3\Big(\frac{\partial F_i}{\partial x_2}\Big)\Big(\frac{\partial F_i}{\partial x_3}\Big) & \sum_{i=1}^3\Big(\frac{\partial F_i}{\partial x_3}\Big)^2
+\end{bmatrix}\]
+Assume small residuals we can neglect.  Thus for some given $x^{(0)}$.
+\begin{itemize}
+    \item Solve \ \qquad \(H(x^{(k)})\textbf{S} = -\nabla F(x^{(k)})\)
+    \item Then get \qquad \quad  \(x^{(k+1)} = x^{(k)} + \textbf{S}\)
+    \item Repeat until \(\qquad \quad ||\textbf{S}|| < 0.01\)
+\end{itemize}
 
 \begin{itemize}
 \item[{\textbf{Exercise 15:}}] Open-ended question... Think about the number of solutions obtained by analyzing four satellite signals with an unknown vehicle time $t_V$... NOT graded!
@@ -449,10 +490,17 @@ We apply Newton's method to this system:
 \begin{itemize}
 \item[{\textbf{Exercise 16:}}] I gave an early draft of this assignment to my friend Meg Ikkal Anna Liszt$^{-8-}$.  After muttering about the federal deficit she said that she has been talking to the Air Force (who operate GPS) for years.  She does not understand why they are being so hard on themselves.  She could save them billions of dollars because to determine position and altitude you only need three satellites, not four!  Three satellites would give you three differences in signal run times, those would constitute three equations for the three components of position, once you know position you can compute true run time to the satellite, and from that you can compute the current time.  She thinks that the Air Force is not implementing this approach because they don't want to pay her fee of $10\%$ of the savings in launch costs of satellites alone.  What do you think of this?
 \end{itemize}
+Suppose that we have information from only $3$ satellites.  Meg is proposing we can create three differences in signal run time, which would create our $3$ equations with $3$ unknowns. \\
+This, of course, can be done, but three is no guarantee the system created will yield a unique solution. \\
+It isn't possible in this case.  We can only create $2$ linearly independent difference equations.  For example, if our $3$ satellites are labeled $0,1,2$ respectively, then the following difference equations are examples of $2$ that can generate all other difference equations.
+\[F_1 (\textbf{x}_V) = ||\textbf{x}_V - \textbf{x}_{S_0}|| - ||\textbf{x}_V - \textbf{x}_{S_1}|| - c(t_{S_0} - t_{S_1})\]
+\[F_2 (\textbf{x}_V) = ||\textbf{x}_V - \textbf{x}_{S_0}|| - ||\textbf{x}_V - \textbf{x}_{S_2}|| - c(t_{S_0} - t_{S_2})\]
+Essentially, and $3$ difference equations that Meg proposes will be a linearly dependent system.  Therefore, an undetermined system that will not produce a unique result.
 
 \begin{itemize}
 \item[{\textbf{Exercise 17:}}] After venting her frustration about the federal deficit Meg went to task with \textit{me}.  She said that "you academic types" like to be so "cumbersome".  She thinks we don't use "common sense" because the very phrase isn't rooted in Latin or Greek.  Why, she says, do I have to have integers \textbf{NS} and \textbf{EW} to indicate which hemisphere I'm on?  Why, she says, don't I just make the degrees positive or negative?  Indeed, why not?
 \end{itemize}
+There is some subtlety to what Meg is proposing as an alternate.  If we simply let degrees be negative or positive, this does not account for the full representation we are actually using (i.e., degrees AND minutes and seconds). \\
+This would be prone to giving funny and unexpected results in our program.
 
-
-\end{document}
+\end{document} 
