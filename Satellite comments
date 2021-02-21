@@ -1,0 +1,48 @@
+# Satellite reads data.dat ~ Dane has it done
+
+# Vehicle receives 10 pieces of data from dat files
+# 1. beginning time
+# 2. ending time
+# 3. number of steps of trip
+# 4. degrees latitude
+# 5. minutes latitude
+# 6. seconds latitude
+# 7. hemisphere (1 if Northern, -1 if Southern)
+# 8. degrees longitude
+# 9. minutes longitude
+# 10. seconds longitude
+# 11. hemisphere (1 if Eastern, -1 if Western)
+# 12. altitude of destination, in meters
+
+# Satellite then reads 10 pieces of data
+# 1. t_v
+# 2. degrees latitude
+# 3. minutes latitude
+# 4. seconds latitude
+# 5. hemisphere (1 if Northern, -1 if Southern)
+# 6. degrees longitude
+# 7. minutes longitude
+# 8. seconds longitude
+# 9. hemisphere (1 if Eastern, -1 if Western)
+# 10. altitude of destination, in meters
+
+# Satellite has three tasks:
+# --------------------------
+# A. Compute position of vehicle, x_v (4-12), at time t_v (1 or 2?)
+#    - Essentially convert geo --> cartesian.
+#    - Return cart value of position of vehicle
+#
+# B. Given x_v and t_v from A, determine which satellites are above the horizon at time t_v. Compute time t_s and x_s
+#    for those satellites. Determine which satellites were above horizon at time t_s.
+#
+#     i) Determine if which satellites are above x_v at time t_v
+#           - use equation (20) and exercise 8
+#           - store i_s, satellite number [0,23] to some list/dictionary
+#    ii) For Satellites from i) find t_s via fixed point iteration. Then x_s by equation (20)
+#           - Use equation (20) and problem 9 to find t_s, stop program when c|t_v - t_s| < 10^-11 (1 cm of accuracy)
+#           - Plug t_s into equation (20) to find x_s
+#           - store t_s and x_s in list/dictionary?
+#   iii) Final check. See if x_s positions from ii) satisfy exercise 8. Were they above horizon at necessary t_s time?
+#           - store i_s, t_s, x_s for the satellites that remain.
+#
+# C. Write copy of standard input (data from Vehicle) and standard output(i_s, t_s, x_s) to log file.
