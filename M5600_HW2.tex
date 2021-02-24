@@ -1,0 +1,418 @@
+\documentclass[11pt]{article}
+
+%%%%%%%%%%%%%%%%%%%
+% Page Layout
+%%%%%%%%%%%%%%%%%%%
+
+\setlength{\paperwidth}{8.5in} \setlength{\paperheight}{11in}
+\setlength{\marginparwidth}{0in} \setlength{\marginparsep}{0in}
+\setlength{\oddsidemargin}{0in} \setlength{\evensidemargin}{0in}
+\setlength{\textwidth}{6.5in} \setlength{\topmargin}{-0.5in}
+\setlength{\textheight}{9in}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Include Packages and Style Files
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[english]{babel}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{enumerate}
+\usepackage[useregional]{datetime2}
+\usepackage[pdftex]{graphicx,color}
+\usepackage{multicol}
+\setlength{\columnsep}{1.5cm}
+\usepackage{algorithm2e}
+\usepackage{listings}
+\usepackage{multirow}
+\usepackage[utf8]{inputenc}
+
+\setlength{\arrayrulewidth}{0.8mm}
+\setlength{\tabcolsep}{18pt}
+\renewcommand{\arraystretch}{1.25}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Define theorem environments
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{question}[theorem]{Question}
+\newtheorem{conjecture}[theorem]{Conjecture}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem*{remark}{Remark}
+
+%%%%%%%%%%%%%%%%%%%%%%
+% Define new commands
+%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\R}{\mathbb{R}}
+
+
+\newcommand{\E}{\mathbb{E}}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\1}[1]{\mathbf{1} \left \{ #1 \right \}}
+\newcommand{\Range}{\operatorname{Range}}
+
+%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\title{Numerical Analysis Project \\ MATH 5600 \\ Homework 2}
+\date{Due: March 3, 2021}
+\author{Authors: \\ Dane Gollero $\cdot$ Ike Griss Salas $\cdot$ Magon Bowling}
+
+\maketitle
+
+\begin{itemize}
+    \item[{\textbf{-1-}}] \textbf{(Taylor Series.)}  Let
+    \begin{equation}
+        f(x)=e^x \text{ and } g(x)=ln(x+1)
+    \end{equation}
+    and let $p_n$ and $q_n$ be the Taylor polynomials of degree $n$ for $f$ and $g$, respectively, about
+    \begin{equation}
+        x_0 = 0.
+    \end{equation}
+    Plot the graphs of $f$, $g$, $p_n$ and $q_n$, for some small values of $n$, and comment on you results.  Discuss in particular how well $f$ and $g$ are approximated by their Taylor polynomials.  Explain your observations in terms of a suitable expression for the error in the approximation.
+\end{itemize}
+Recall the Taylor Series
+\[f(x) = \sum_{i=0}^{\infty} f^{(i)} (\alpha) \cdot \frac{(x-\alpha)^i}{i!}.\]
+We know that \(\forall \ i \in \mathbb{N}\),
+\[f(x) = e^x \Rightarrow f^{(i)}(0) = 1.\]
+Thus,
+\[f(x) = e^x = \sum_{i=0}^{\infty} \frac{x^i}{i!}.\]
+We also have
+\begin{equation*}
+    \begin{split}
+        g(x) &= \ln (x+1) = 0 \quad \text{for } x = 0 \\
+        g^{\prime}(x) &= \frac{1}{x+1} = 1 = 1! \\
+        g^{\prime\prime}(x) &= \frac{-1}{(x+1)^2} = -1 = -1! \\
+        g^{\prime\prime\prime}(x) &= \frac{2}{(x+1)^3} = 2 = 2! \\
+        g^{(4)}(x) &= \frac{-6}{(x+1)^4} = -6 = -3! \\
+        \vdots \\
+        g^{(n)} (x) &= \frac{(-1)^{n-1} (n-1)!}{(x+1)^n} = (-1)^{n-1} (n-1)! \quad \text{for } x=0, n>0
+    \end{split}
+\end{equation*}
+\[\Longrightarrow \sum_{n=1}^{\infty} (-1)^{n-1} (n-1)! \cdot \frac{x^n}{n!}.\]
+\[\includegraphics[width=15cm, height=9cm]{hw2_images/}\]
+Qualitatively we can see the Taylor polynomial, $p_n$, begins to better approximate $e^x$ as $n$ gets larger.  However, the Taylor polynomial, $q_n$, tends to be problematic for larger $n$.  It seems that $q_n$ doesn't approximate $g(x)$ very well for $x>1$, despite increasing values of $n$.
+We have the error functions,
+\[E_n^f (x) = \left|e^x - \sum_{k=0}^n \frac{x^k}{k!}\right|\]
+\[E_n^g (x) = \left|\ln (x+1) - \sum_{k=1}^n (-1)^{k-1} (k-1)! \cdot \frac{x^k}{k!}\right|\]
+Look at the graph for error at $x$ values less than $1$ and larger than $1$.
+\[\includegraphics[width=15cm, height=9cm]{hw2_images/}\]
+
+\begin{itemize}
+    \item[{\textbf{-2-}}] \textbf{(A "simple" program.)}  Write a program that reads $n$ and the entries $x_1$, $x_2$, ..., $x_n$ of a vector $x \in \R^2$ from standard input and prints
+    \begin{equation*}
+        ||x||_2 = \sqrt{\sum_{i=1}^n x_i^2}
+    \end{equation*}
+    to standard output.  Mail me your code before the lecture on March 3.
+\end{itemize}
+\begin{lstlisting}[language=Python]
+    from math import sqrt
+
+    def norm(vec):
+        square = [i**2 for i in vec]
+        square_sum = sum(square)
+        size = sqrt(square_sum)
+        return size
+\end{lstlisting}
+
+\begin{itemize}
+    \item[{\textbf{-3-}}] \textbf{(Some Iteration.)}  Consider the iteration
+    \begin{equation}
+        x_{n+1} = F(x_n) = \sin x_n, \quad x_0 = 1
+    \end{equation}
+    (where of course the angle is measured in radians).  What does our theory tell us about convergence? Show that the iteration does converge!  What is the limit?  How fast does the iteration converge?  Carefully explain the effects of rounding errors.
+\end{itemize}
+We have the fixed point iteration $x_{n+1} = g(x_n)$ converges if we have \(\left|g^{\prime} (\alpha)\right| < 1\) where $g(\alpha) = \alpha$, and $x_0$ is sufficiently close to $\alpha$.  In our case we have $g^{\prime} (\alpha) = \cos (0) = 1$.  On its own tells us nothing, thus our convergence theory is not particularly helpful.  However, we can say that it indeed converges with $\sin (x)$ monotonically decreasing and bounded below by $0$.  Therefore, it must converge.  In fact, because $\sin (x)$ is continuous, then as $x_n \rightarrow 0$ as $n \rightarrow \infty$.  We can simply say the limit is zero by
+\[\lim_{x \rightarrow 0^+} \sin (x) = \sin (0) = 0.\]
+This converges much slower than linearly because $g^{\prime} (\alpha) \neq 0$.
+\[\includegraphics[width=15cm, height=9cm]{hw2_images/}\]
+The issues of rounding errors can have catastrophic effects on the ability for our sequence to converge.  If we have machine that only computes to say first $3$ decimal points (i.e., it rounds), then the sequence will never converge.  The iteration is so slow to converge that $3$ decimal places of information is much too small to maintain accuracy.  In fact, this becomes a constant when running it in Python.
+\[\includegraphics[width=15cm, height=9cm]{hw2_images/}\]
+The iteration settles on ???? after ???? steps.  Now of course for this sample example, we know that $\sin (x_n) = x_{n+1}$ for $x_0 = 1$ converges to zero from our deeper analysis.  If we simple went to iteration via the computer, we may get misleading results.
+
+\begin{itemize}
+    \item[{\textbf{-4-}}] \textbf{Newton's Method}  Suppose $f$ has a root of multiplicity $p>1$ at $x=\alpha$, i.e.,
+    \begin{equation}
+        f(\alpha) = f^{\prime} (\alpha) = ... = f^{(p-1)} (\alpha) = 0, \quad f^{(p)} (\alpha) \neq 0.
+    \end{equation}
+    \begin{enumerate}[a.]
+        \item Show that Newton's method applied to $f(x) = 0$ converges linearly to $\alpha$.
+        \item Show that this modification of Newton's Method:
+        \begin{equation}
+            x_{k+1} = x_k - p \frac{f(x_k)}{f^{\prime}(x_k)}
+        \end{equation}
+        converges quadratically to $\alpha$.  \textbf{Hint:}  You probably are thinking of using the Rule of L'Hopital, but the problem is much easier if you think of $f$ as being defined by $f(x) = (x-\alpha)^p F(x)$ where $F(\alpha) \neq 0.$
+        \end{enumerate}
+\end{itemize}
+(a)
+\begin{equation*}
+    \begin{split}
+        g = x - \frac{f}{f^{\prime}} &= x - \frac{(x-\alpha)^p F(x)}{p(x-\alpha)^{p-1} F(x) + (x-\alpha)^p F^{\prime} (x)} \Longleftrightarrow g(\alpha) = \alpha \\
+        &= x - \frac{(x-\alpha) F(x)}{pF(x) + (x-\alpha)F^{\prime}(x)}
+    \end{split}
+\end{equation*}
+\[g^{\prime} = 1 - \frac{\big(pF(x) + (x-\alpha)F^{\prime}(x)\big) \big(F(x) + (x-\alpha)F^{\prime}(x)\big) - (x-\alpha)F(x) \big(pF(x) + (x-\alpha)F^{\prime}(x)\big)^{\prime}}{\left(pF(x) + (x-\alpha)F^{\prime}(x)\right)^2}\]
+\[g^{\prime}(\alpha) = 1 - \frac{p \cdot F(\alpha) \cdot F(\alpha)}{p^2 \cdot F(\alpha)^2} = 1 - \frac{1}{p} = \left|\frac{p-1}{p}\right| < 1, \quad \forall \ p > 1\]
+We have the absolute value of $g^{\prime}(\alpha)$ converges linearly. \\
+(b)
+\begin{equation*}
+    \begin{split}
+        g(x) &= x - p \frac{f}{f^{\prime}} \\
+        g^{\prime}(x) &= 1 - p \left(\frac{f}{f^{\prime}}\right)^{\prime} \Longrightarrow g^{\prime}(\alpha) = 1 - p \cdot \frac{1}{p} = 0
+    \end{split}
+\end{equation*}
+This converges quadratically.
+
+\begin{itemize}
+    \item[{\textbf{-5-}}] \textbf{(Division without division.)}  Suppose you have a computer or calculator that has no built-in division.  Come up with a fixed point iteration that converges to $1/r$ for any given non-zero number $r$, and that only uses addition, subtraction, and multiplication.  \textbf{Hint:}  Write down an equation satisfied by $1/r$, apply Newton's method to that equation, and then modify Newton's method so that it doesn't use division.  Your resulting method should converge of order 2.
+\end{itemize}
+Let \(f(x) = \frac{1}{x} - r\).  Now $f$ is satisfied by $x = \frac{1}{r}$ for $r \neq 0$.  We have
+\begin{equation*}
+    \begin{split}
+        f(x) &= \frac{1}{x} - r \\
+        f^{\prime}(x) &= \frac{-1}{x^2} \\
+        f^{\prime\prime}(x) &= \frac{2}{x^3}
+    \end{split}
+\end{equation*}
+Both $f^{\prime}$ and $f^{\prime\prime}$ are non-zero at $x = \frac{1}{r}$ meaning the Newton's method converges quadratically.  We now look at Newton's method:
+\begin{equation*}
+    \begin{split}
+        g(x) &= x - \frac{f}{f^{\prime}} = x - \frac{\frac{1}{x} - r}{\frac{-1}{x^2}} \\
+        &= x - (-x + rx^2) \\
+        &= 2x - rx^2.
+    \end{split}
+\end{equation*}
+\[\includegraphics[width=15cm, height=9cm]{hw2_images/}\]
+
+\begin{itemize}
+    \item[{\textbf{-6-}}] \textbf{(A cubically convergent method.)}  Consider the iteration
+    \begin{equation*}
+        x_{k+1} = g(x_k) \text{  where  } g(x) = x - \frac{f(x)}{f^{\prime}(x)} - \frac{1}{2}\frac{f^2 (x) f^{\prime\prime}(x)}{\left(f^{\prime}(x)\right)^3}.
+    \end{equation*}
+    (We assume $f$ is sufficiently differentiable, and $f^{\prime}(x) \neq 0$.)  Suppose that $g(\alpha) = \alpha$.  Show that
+    \[g^{\prime}(\alpha) = g^{\prime\prime}(\alpha) = 0.\]
+    (Thus the fixed point method will converge of order at least $3$ if we start sufficiently close to $\alpha$.)
+\end{itemize}
+\begin{equation*}
+    \begin{split}
+        g &= x - \frac{f}{f^{\prime}} - \frac{1}{2} \frac{f^2 f^{\prime\prime}}{f^{\prime 3}} \\
+        g^{\prime} &= 1 - \frac{f^{\prime 2} - f f^{\prime\prime}}{f^{\prime 2}} - \frac{1}{2} \frac{f^{\prime 3} (2 f f^{\prime} f^{\prime\prime} + f^2 f^{\prime\prime\prime}) - 3 f^{\prime 2} f^{\prime\prime} f^2 f^{\prime\prime}}{f^{\prime 6}} \\
+        &= \frac{f f^{\prime\prime}}{f^{\prime2}} - \frac{1}{2} \frac{2ff^{\prime4}f^{\prime\prime}}{f^{\prime 6}} - \frac{1}{2} \frac{f^2 f^{\prime3} f^{\prime\prime\prime}}{f^{\prime 6}} + \frac{1}{2} \frac{3f^2 f^{\prime2} f^{\prime\prime2}}{f^{\prime 6}} \\
+        &= \frac{f f^{\prime\prime}}{f^{\prime2}} - \frac{f f^{\prime\prime}}{f^{\prime 2}} - \frac{1}{2} \frac{f^2 f^{\prime\prime\prime}}{f^{\prime 3}} + \frac{1}{2} \frac{3 f^2 f^{\prime\prime2}}{f^{\prime 4}} \\
+        &= \frac{1}{2} f^2 \left(\frac{f^{\prime\prime2}}{f^{\prime4}} - \frac{f^{\prime\prime\prime}}{f^{\prime3}}\right) = 0 \quad \text{at} \ x = \alpha \ \text{since} \ f(\alpha) = 0 \ \text{and} \ f^{\prime}(\alpha) \neq 0 \\
+        g^{\prime\prime} &= f f^{\prime} \left(\frac{f^{\prime\prime2}}{f^{\prime4}} - \frac{f^{\prime\prime\prime}}{f^{\prime3}}\right) + \frac{1}{2}f^2 \left(\frac{f^{\prime\prime2}}{f^{\prime4}} - \frac{f^{\prime\prime\prime}}{f^{\prime3}}\right)^{\prime} \\
+        &= 0 \quad \text{since each term has a multiple of $f$ which is $0$ at } \alpha.
+    \end{split}
+\end{equation*}
+\[\Longrightarrow \text{Thus our fixed point iteration converges of order at least} \ 3.\]
+
+\begin{itemize}
+    \item[{\textbf{-7-}}] \textbf{(Polynomial Interpolation.)}  Suppose you want to interpolate to the data $(x_i, y_i), i=0,..., n$ by a polynomial of degree $n$.  Recall that the interpolating polynomial $p$ can be written in its Lagrange form as
+    \begin{equation}
+        p(x) = \sum_{i=0}^n y_i L_i (x) \text{  where  } L_i (x) = \frac{\prod_{i \neq j}(x - x_j)}{\prod_{i \neq j}(x_i - x_j)}.
+    \end{equation}
+    Show that
+    \begin{equation}
+        \sum_{i=0}^n x_i^j L_i (x) = x^j \text{  for  } j=0,..., n.
+    \end{equation}
+\end{itemize}
+We first note that we have $n+1$ data points, thus any polynomial interpolation up to degree $n$ will be unique.  We have the points \(\left(x_i , x_i^{\delta}\right) \text{ for } i=0,1,2,...,n\) and where $\delta$ is a fixed power that can take on the values $\delta = 0,1,2,...,n$, which let's us interpolate uniquely.  Also, we assume all the points are distinct.  By the construction of these points, the polynomial $x^{\delta}$ interpolates our data points since it is unique.
+\[P(x) = \sum_{i=0}^n x_i^{\delta} LL_i (x) = x^{\delta} \quad \text{for} \ \delta = 0,1,...,n\]
+
+\begin{itemize}
+    \item[{\textbf{-8-}}] \textbf{(Uniqueness of the interpolating polynomial.)}  Assume you are given the data
+    \begin{equation}
+        \begin{split}
+            x_i &:\quad 1\quad 2\quad 4\quad 8 \\
+            y_i &:\quad 1\quad 2\quad 3\quad 4
+        \end{split}
+    \end{equation}
+    Construct the interpolating polynomial using
+    \begin{enumerate}[a.]
+        \item the power form obtained by solving the Vandermonde system,
+        \item the Lagrange form,
+        \item the Newton form,\\
+        and show that they all yield the same polynomial.
+    \end{enumerate}
+\end{itemize}
+(a) Vandermonde System: We have $4$ nodes, thus we interpolate with polynomial of degree 3:
+\[a + bx + cx^2 + dx^3 = y\]
+\begin{equation*}
+    \begin{split}
+    a + b + c + d &= 1 \\
+    a + 2b + 4c + 8d &= 2 \\
+    a + 4b + 16c + 64d &= 3 \\
+    a + 8b + 64c + 512d &= 4
+    \end{split}
+    \Longleftrightarrow \begin{bmatrix}
+    1 & 1 & 1 & 1 \\
+    1 & 2 4 & & 8 \\
+    1 & 4 & 16 & 64 \\
+    1 & 8 & 64 & 512
+    \end{bmatrix} \begin{bmatrix}
+    a \\ b \\ c \\ d
+    \end{bmatrix} = \begin{bmatrix}
+    1 \\ 2 \\ 3 \\ 4 \end{bmatrix}
+\end{equation*}
+Solving the corresponding augmented matrix reveals
+\[\begin{bmatrix} a & b & c & d \end{bmatrix}^T = \begin{bmatrix} -\frac{10}{21} & \frac{7}{4} & -\frac{7}{24} & \frac{1}{56} \end{bmatrix}^T\]
+\[\Longrightarrow P(x) = -\frac{10}{21} + \frac{7}{4}x - \frac{7}{24}x^2 + \frac{1}{56}x^3\]
+(b) Lagrange Form:
+\begin{equation*}
+    \begin{split}
+        L_0 (x) &= \frac{(x-2)(x-4)(x-8)}{(-1)(-3)(-7)} = \frac{x^3 - 14x^2 + 56x - 64}{-21} \\
+        L_1 (x) &= \frac{(x-1)(x-4)(x-8)}{(1)(-2)(-6)} = \frac{x^3 - 13x^2 + 44x - 32}{12} \\
+        L_2 (x) &= \frac{(x-1)(x-2)(x-8)}{(3)(2)(-4)} = \frac{x^3 - 11x^2 + 26x - 16}{-24} \\
+        L_3 (x) &= \frac{(x-1)(x-2)(x-4)}{(7)(6)(4)} = \frac{x^3 - 7x^2 + 14x - 8}{168}
+    \end{split}
+\end{equation*}
+\begin{equation*}
+    \begin{split}
+        \Longrightarrow P(x) = \sum_{i=0}^3 y_i L_i (x) &= \frac{1}{-21}(x^3 - 14x^2 + 56x - 64) + \frac{2}{12}(x^3 - 13x^2 + 44x - 32) \\ & \qquad - \frac{3}{24}(x^3 - 11x^2 + 26x - 16) + \frac{4}{168}(x^3 - 7x^2 + 14x - 8) \\
+        &= \frac{1}{169}(-8x^3 + 112x^2 - 448x + 512 + 28x^3 - 364x^2 + 1232x - 896 \\
+        & \qquad - 21x^3 + 231x^2 - 546x + 336 + 4x^3 - 28x^2 56x - 32) \\
+        &= \frac{1}{168}(3x^3 - 49x^2 + 294x - 80) \\
+        &= \frac{1}{56}x^3 - \frac{7}{24}x^2 + \frac{7}{4}x - \frac{10}{21}
+    \end{split}
+\end{equation*}
+(c) Newton Form:
+\begin{center}
+\begin{tabular}{ |p{0.1cm}|p{0.1cm}|p{2cm}|p{3cm}|p{4cm}| }
+\hline
+$x$ & $f$ & \(F(x_i , x_j)\) & \(F(x_i , x_j , x_k)\) & \(F(x_i , x_j , x_k , x_{\ell})\) \\
+\hline
+$1$ & $1$ & \(F(x_0 , x_1) = \frac{f_1 - f_0}{x_1 - x_0} = 1\) & \multirow{3}{6em}{\(F(x_0 , x_1 , x_2) = \frac{F(x_1 , x_2) - F(x_0 , x_1)}{x_2 - x_0} = -\frac{1}{6}\)} & \multirow{4}{6em}{\(F(x_0 , x_1 , x_2 , x_3) = \frac{F(x_1 , x_2 , x_3) - F(x_0 , x_1 , x_2)}{x_3 - x_0} = \frac{1}{56}\)} \\
+$2$ & $2$ & \(F(x_1 , x_2) = \frac{f_2 - f_1}{x_2 - x_1} = \frac{1}{2}\) & \multirow{5}{10em}{\(F(x_1 , x_2 , x_3) = \frac{F(x_2 , x_3) - F(x_1 , x_2)}{x_3 - x_1} = -\frac{1}{24}\)} &   \\
+$4$ & $3$ & \(F(x_2 , x_3) = \frac{f_3 - f_2}{x_3 - x_2} = \frac{1}{4}\) &   &\\
+$8$ & $4$ &   &   &\\
+\hline
+\end{tabular}
+\end{center}
+\begin{equation*}
+    \begin{split}
+        P(x) &= f_0 + (x-x_0) F(x_0 , x_1) + (x-x_0)(x-x_1) F(x_0 , x_1 , x_2) + (x-x_0)(x-x_1)(x-x_2) F(x_0 , x_1 , x_2 , x_3) \\
+        &= 1 + (x-1) \cdot 1 + (x-1)(x-2)\left(-\frac{1}{6}\right) + (x-1)(x-2)(x-4)\left(\frac{1}{56}\right) \\
+        &= 1 + x - 1 - \frac{1}{6}(x^2 -3x+2) + \frac{1}{56}(x^3 -7x^2 +14x-8) \\
+        &= x - \frac{1}{6}x^2 + \frac{1}{2}x - \frac{1}{3} + \frac{1}{56}x^3 - \frac{1}{8}x^2 + \frac{1}{4}x - \frac{1}{7} \\
+        &= \frac{1}{56}x^3 - \frac{7}{24}x^2 + \frac{7}{4}x - \frac{10}{21}
+    \end{split}
+\end{equation*}
+All of these interpolating methods yield the same polynomial.
+
+\begin{itemize}
+    \item[{\textbf{-9-}}] \textbf{(The infamous Runge-Phenomenon.)}  It is not generally true that higher degree interpolation polynomials yield more accurate approximations.  This is illustrated in this problem.  Let
+    \[f(x) = \frac{1}{1+x^2} \ \text{ and } \ x_j = -5+jh, \quad j = 0,1,...,n, \quad h=\frac{10}{n}.\]
+    For
+    \[n = 1,2,3,...,20\]
+    plot the graph (in the interval $[-5,5]$) of the interpolant.
+    \[p(x) = \sum_{i=0}^n \alpha_i x^i\]
+    defined by
+    \[p(x_i) = f(x_i), \quad i = 0,1,...,n.\]
+    Also list the approximate maximum error in the interval $[-5,5]$ for each polynomial degree.  To approximate the maximum error sample the error at $200$ evenly spaced points (at least!) in the interval.
+\end{itemize}
+\[\includegraphics[width=15cm, height=9cm]{hw2_images/}\]
+
+\begin{itemize}
+    \item[{\textbf{-10-}}] \textbf{(Judicious interpolation.)}  Repeat the above except that you interpolate at the roots of the Chebycheff polynomials, i.e.,
+    \begin{equation}
+        x_i = 5\cos \frac{i\pi}{n}, \quad i=0,1,...,n.
+    \end{equation}
+\end{itemize}
+\[\includegraphics[width=15cm, height=9cm]{hw2_images/}\]
+
+\begin{itemize}
+    \item[{\textbf{-11-}}] \textbf{(Least Squares approximation of functions.)}  Find a linear function $\ell(x)$ such that
+    \begin{equation}
+        \int_0^1 (e^x - \ell(x))^2 dx = \min.
+    \end{equation}
+\end{itemize}
+If we let \(\ell(x) = mx+b \text{ for } m,b \in \R\), then we can think of equation (10) as a function of $m$ and $b$
+\[F(m,b) = \int_0^1 (e^x - mx - b)^2 dx.\]
+We want to minimize $F(m,b)$, so we take partial derivatives
+\begin{equation*}
+    \begin{split}
+        \frac{\partial F}{\partial m} &= \frac{\partial}{\partial m} \int_0^1 (e^x - mx - b)^2 dx \\
+        &= \int_0^1 \frac{\partial}{\partial m} (e^x - mx - b)^2 dx \\
+        &= \int_0^1 2(e^x - mx - b)(-x)dx \\
+        &= 2 \int_1^0 x(e^x - mx - b) dx \\
+        &= 2 \left[xe^x - \frac{m}{2}x^3 - bx^2 \Big|_1^0 -\left(e^x - \frac{m}{6}x^3 - \frac{b}{2}x^2\right)\Big|_1^0 \right] \\
+        &= 2\left[-\left(e - \frac{m}{2} - b\right) - \left(1 - \left(e - \frac{m}{6} - \frac{b}{2}\right)\right)\right] \\
+        &= 2\left(-e + \frac{m}{2} + b - 1 + e - \frac{m}{6} - \frac{b}{2}\right) \\
+        &= 2\left(-1 + \frac{m}{3} + \frac{b}{2}\right) \\
+        &= b + \frac{2m}{3} - 2 \\ \\
+        \frac{\partial F}{\partial b} &= \frac{\partial}{\partial b} \int_0^1 (e^x - mx - b)^2 dx \\
+        &= \int_0^1 \frac{\partial}{\partial b} (e^x - mx - b)^2 dx \\
+        &= \int_0^1 2(e^x - mx - b)(-x)dx \\
+        &= 2 \int_1^0 (e^x - mx - b) dx \\
+        &= 2 \left[e^x - \frac{m}{2}x^2 - bx \Big|_1^0 \right] \\
+        &= 2\left[1 - \left(e - \frac{m}{2} - b\right)\right] \\
+        &= 2\left(\frac{m}{2} + b + 1 - e\right) \\
+        &= m + 2b + 2 - 2e
+    \end{split}
+\end{equation*}
+To minimize, we set partial derivatives equal to zero and solve for $m$ and $b$.
+\[m + 2b + 2 - 2e = 0\]
+\[b + \frac{2m}{3} - 2 = 0\]
+\[\begin{bmatrix} 1 & 2 & \Big| & 2(e-1) \\
+\frac{2}{3} & 1 & \Big| & 2 \end{bmatrix} \Longrightarrow
+\begin{bmatrix} 1 & 2 & \Big| & 2(e-1) \\
+2 & 3 & \Big| & 6 \end{bmatrix} \Longrightarrow
+\begin{bmatrix} 1 & 2 & \Big| & 2(e-1) \\
+0 & -1 & \Big| & 10-4e \end{bmatrix} \Longrightarrow
+\begin{bmatrix} 1 & 0 & \Big| & 18-6e) \\
+0 & 1 & \Big| & 4e-10 \end{bmatrix}\]
+We have \(b = 4e - 10 \text{ and } m = 18 - 6e.\) Thus, \(\ell(x) = (18-6e)x + (4e-10)\) minimizes equation (10).
+
+\begin{itemize}
+    \item[{\textbf{-12-}}] \textbf{(An alternative approximation problem.)}  Find a linear function $\ell(x)$ such that
+    \begin{equation}
+        \int_0^1 |e^x - \ell(x)| dx = \min.
+    \end{equation}
+\end{itemize}
+We know that our linear function $\ell(x)$ must actually intersect $e^x$ twice on the interval $[0,1]$.  The graph illustrates the points of intersection $\alpha$ and $\beta$, some arbitrary points.
+\[\includegraphics[width=15cm, height=9cm]{hw2_images/}\]
+We want to minimize the following
+\[I = \int_0^1 |e^x - \ell(x)| dx = \int_0^{\alpha} (e^x - \ell(x)) dx + \int_{\alpha}^{\beta} (\ell(x) - e^x) dx + \int_{\beta}^1 (e^x - \ell(x)) dx.\]
+If we let $\ell(x) = mx+b$, the following evaluates to
+\begin{equation*}
+    \begin{split}
+        I &= \left[e^x - \frac{m}{2}x^2 - bx\right]\bigg|_0^{\alpha} + \left[\frac{m}{2}x^2 + bx - e^x\right]\bigg|_{\alpha}^{\beta} + \left[e^x - \frac{m}{2}x^2 - bx\right]\bigg|_{\beta}^1 \\
+        &= \left(e^{\alpha} \frac{\alpha^2}{2}m - \alpha b - 1\right) + \left(\frac{\beta^2}{2}m + \beta b - e^{\beta}\right) - \left(\frac{\alpha^2}{2}m + \alpha b - e^{\alpha}\right) \\
+        & \qquad \qquad \qquad + \left(e - \frac{1}{2}m - b\right) - \left(e^{\beta} - \frac{\beta^2}{2}m - \beta b\right) \\
+        &= e^{\alpha} - \frac{\alpha^2}{2}m - \alpha b - 1 + \frac{\beta^2}{2}m + \beta b - e^{\beta} - \frac{\alpha^2}{2}m - \alpha b + e^{\alpha} \\
+        & \qquad \qquad \qquad + e - \frac{1}{2}m - b - e^{\beta} + \frac{\beta^2}{2}m + \beta b
+    \end{split}
+\end{equation*}
+\[F(m,b) = \left(\beta^2 - \alpha^2 - \frac{1}{2}\right)m + \left(2\beta - 2\alpha - 1\right)b + \left(2e^{\alpha} - 2e^{\beta} + e - 1\right)\]
+\[\frac{\partial F}{\partial m} = \beta^2 - \alpha^2 - \frac{1}{2} = 0 \Longrightarrow (\beta - \alpha)(\beta + \alpha) = \frac{1}{2}\]
+\[\frac{\partial F}{\partial b} = 2\beta - 2\alpha - 1 = 0 \Longrightarrow \beta - \alpha = \frac{1}{2}\]
+Therefore we have,
+\[\alpha = \frac{1}{4} \text{  and  } \beta = \frac{3}{4}.\]
+Now
+\[m = \frac{e^{\beta} - e^{\alpha}}{\beta - \alpha} = 2\left(e^{3/4} - e^{1/4}\right)\]
+which means that
+\[y = 2\left(e^{3/4} - e^{1/4}\right)x + b \Longrightarrow e^{1/4} = \frac{1}{2}e^{3/4} - \frac{1}{2}e^{1/4} + b \text{, and}\]
+\[b = \frac{1}{2}\left(3e^{1/4} - e^{3/4}\right).\]
+Therefore,
+\[\ell(x) = 2\left(e^{3/4} - e^{1/4}\right)x + \frac{1}{2}\left(3e^{1/4} - e^{3/4}\right) \quad \text{minimizes (11).}\]
+
+\begin{itemize}
+    \item[{\textbf{-13-}}] \textbf{(Another alternative approximation problem.)}  Find a linear function $\ell(x)$ such that
+    \begin{equation}
+        \max_{0 \leq x \leq 1} |e^x - \ell(x)| = \min.
+    \end{equation}
+\end{itemize}
+
+
+
+\end{document}
