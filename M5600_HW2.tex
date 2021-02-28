@@ -70,6 +70,10 @@
 
 \maketitle
 
+\tableofcontents
+
+\section{Homework Problems}
+
 \begin{itemize}
     \item[{\textbf{-1-}}] \textbf{(Taylor Series.)}  Let
     \begin{equation}
@@ -100,13 +104,19 @@ We also have
     \end{split}
 \end{equation*}
 \[\Longrightarrow \sum_{n=1}^{\infty} (-1)^{n-1} (n-1)! \cdot \frac{x^n}{n!}.\]
-\[\includegraphics[width=15cm, height=9cm]{hw2_images/}\]
-Qualitatively we can see the Taylor polynomial, $p_n$, begins to better approximate $e^x$ as $n$ gets larger.  However, the Taylor polynomial, $q_n$, tends to be problematic for larger $n$.  It seems that $q_n$ doesn't approximate $g(x)$ very well for $x>1$, despite increasing values of $n$.
-We have the error functions,
+Below, we will illustrate some Taylor polynomial approximations for $f$ and $g$, respectively.
+\[\includegraphics[width=15cm]{hw2_images/8subplots.jpg}\]
+Qualitatively we can see the Taylor polynomial, $p_n$, begins to better approximate $e^x$ as $n$ gets larger.  However, the Taylor polynomial, $q_n$, tends to be problematic for larger $n$.  It seems that $q_n$ doesn't approximate $g(x)$ very well for $x>1$, despite increasing values of $n$.  We define the suitable error functions below.
 \[E_n^f (x) = \left|e^x - \sum_{k=0}^n \frac{x^k}{k!}\right|\]
-\[E_n^g (x) = \left|\ln (x+1) - \sum_{k=1}^n (-1)^{k-1} (k-1)! \cdot \frac{x^k}{k!}\right|\]
-Look at the graph for error at $x$ values less than $1$ and larger than $1$.
-\[\includegraphics[width=15cm, height=9cm]{hw2_images/}\]
+\begin{equation*}
+    \begin{split}
+        E_n^g (x) &= \left|\ln (x+1) - \sum_{k=1}^n (-1)^{k-1} (k-1)! \cdot \frac{x^k}{k!}\right| \\
+        &= \left|\ln (x+1) - \sum_{k=1}^n (-1)^{k-1} \frac{x^k}{k}\right|
+    \end{split}
+\end{equation*}
+We show the graphs for our suitable errors as a function $n$ for fixed $x \geq 1$.
+\[\includegraphics[width=14cm]{hw2_images/error_subplot.jpg}\]
+As we can see increasing our polynomial degree for $q_n$ does not imply a better approximation everywhere.
 
 \begin{itemize}
     \item[{\textbf{-2-}}] \textbf{(A "simple" program.)}  Write a program that reads $n$ and the entries $x_1$, $x_2$, ..., $x_n$ of a vector $x \in \R^2$ from standard input and prints
@@ -134,11 +144,41 @@ Look at the graph for error at $x$ values less than $1$ and larger than $1$.
 \end{itemize}
 We have the fixed point iteration $x_{n+1} = g(x_n)$ converges if we have \(\left|g^{\prime} (\alpha)\right| < 1\) where $g(\alpha) = \alpha$, and $x_0$ is sufficiently close to $\alpha$.  In our case we have $g^{\prime} (\alpha) = \cos (0) = 1$.  On its own tells us nothing, thus our convergence theory is not particularly helpful.  However, we can say that it indeed converges with $\sin (x)$ monotonically decreasing and bounded below by $0$.  Therefore, it must converge.  In fact, because $\sin (x)$ is continuous, then as $x_n \rightarrow 0$ as $n \rightarrow \infty$.  We can simply say the limit is zero by
 \[\lim_{x \rightarrow 0^+} \sin (x) = \sin (0) = 0.\]
-This converges much slower than linearly because $g^{\prime} (\alpha) \neq 0$.
-\[\includegraphics[width=15cm, height=9cm]{hw2_images/}\]
-The issues of rounding errors can have catastrophic effects on the ability for our sequence to converge.  If we have machine that only computes to say first $3$ decimal points (i.e., it rounds), then the sequence will never converge.  The iteration is so slow to converge that $3$ decimal places of information is much too small to maintain accuracy.  In fact, this becomes a constant when running it in Python.
-\[\includegraphics[width=15cm, height=9cm]{hw2_images/}\]
-The iteration settles on ???? after ???? steps.  Now of course for this sample example, we know that $\sin (x_n) = x_{n+1}$ for $x_0 = 1$ converges to zero from our deeper analysis.  If we simple went to iteration via the computer, we may get misleading results.
+This converges much slower than linearly because $g^{\prime} (\alpha) \neq 0$.  Below we show a table of runtimes for achieving certain error tolerances for this iteration.  \footnote{Runtime will differ for different computers.  Code included in Appendix.}
+\begin{center}
+\begin{tabular}{ |c|c|c| }
+\hline
+Error & Steps & Runtime (seconds) \\
+\hline
+$0.1$ & $295$ & $5.39 \times 10^{-5}$ \\
+$0.01$ & $29992$ & $0.005967$ \\
+$0.001$ & $2999989$ & $0.677399$ \\
+$0.0001$ &  &  \\
+\hline
+\end{tabular}
+\end{center}
+We can see that $x_{n+1} = \sin (x_n)$ will take a substantial amount of time to converge.
+\\
+The issues of rounding errors can have catastrophic effects on the ability for our sequence to converge.  If we have machine that only computes to say first $3$ decimal points (i.e., it rounds), then the sequence will never converge.  The iteration is so slow to converge that $3$ decimal places of information is much too small to maintain accuracy.  In fact, this becomes a constant when running it in Python.  Letting $x_0 = 1$ we have
+\begin{center}
+\begin{tabular}{ |c|c| }
+\hline
+ & \(\sin(x_n) = x_{n+1}\) \\
+n  & (rounded) \\
+\hline
+$0$ & $0.841$ \\
+$1$ & $0.745$ \\
+$2$ & $0.678$ \\
+\vdots & \vdots \\
+$125$ & $0.145$ \\
+$126$ & $0.144$ \\
+$127$ & $0.144$ \\
+$128$ & $0.144$ \\
+\vdots & \vdots \\
+\hline
+\end{tabular}
+\end{center}
+The iteration settles on $0.144$ after $126$ steps.\footnote{Code in Appendix.}  Now of course, we know that $\sin (x_n) = x_{n+1}$ for $x_0 = 1$ does in fact converges to zero from our deeper analysis.  If we simply went to iteration via the computer, we may get misleading results.
 
 \begin{itemize}
     \item[{\textbf{-4-}}] \textbf{Newton's Method}  Suppose $f$ has a root of multiplicity $p>1$ at $x=\alpha$, i.e.,
@@ -192,7 +232,8 @@ Both $f^{\prime}$ and $f^{\prime\prime}$ are non-zero at $x = \frac{1}{r}$ meani
         &= 2x - rx^2.
     \end{split}
 \end{equation*}
-\[\includegraphics[width=15cm, height=9cm]{hw2_images/}\]
+Thus we have a fixed point iteration that does not use division.  Below we show a hypothetical convergence for some $r$.
+\[\includegraphics[width=14cm]{hw2_images/convergence.jpg}\]
 
 \begin{itemize}
     \item[{\textbf{-6-}}] \textbf{(A cubically convergent method.)}  Consider the iteration
@@ -227,7 +268,7 @@ Both $f^{\prime}$ and $f^{\prime\prime}$ are non-zero at $x = \frac{1}{r}$ meani
     \end{equation}
 \end{itemize}
 We first note that we have $n+1$ data points, thus any polynomial interpolation up to degree $n$ will be unique.  We have the points \(\left(x_i , x_i^{\delta}\right) \text{ for } i=0,1,2,...,n\) and where $\delta$ is a fixed power that can take on the values $\delta = 0,1,2,...,n$, which let's us interpolate uniquely.  Also, we assume all the points are distinct.  By the construction of these points, the polynomial $x^{\delta}$ interpolates our data points since it is unique.
-\[P(x) = \sum_{i=0}^n x_i^{\delta} LL_i (x) = x^{\delta} \quad \text{for} \ \delta = 0,1,...,n\]
+\[P(x) = \sum_{i=0}^n x_i^{\delta} L_i (x) = x^{\delta} \quad \text{for} \ \delta = 0,1,...,n\]
 
 \begin{itemize}
     \item[{\textbf{-8-}}] \textbf{(Uniqueness of the interpolating polynomial.)}  Assume you are given the data
@@ -380,7 +421,7 @@ We have \(b = 4e - 10 \text{ and } m = 18 - 6e.\) Thus, \(\ell(x) = (18-6e)x + (
     \end{equation}
 \end{itemize}
 We know that our linear function $\ell(x)$ must actually intersect $e^x$ twice on the interval $[0,1]$.  The graph illustrates the points of intersection $\alpha$ and $\beta$, some arbitrary points.
-\[\includegraphics[width=15cm, height=9cm]{hw2_images/}\]
+\[\includegraphics[width=14cm]{hw2_images/desmos12.jpg}\]
 We want to minimize the following
 \[I = \int_0^1 |e^x - \ell(x)| dx = \int_0^{\alpha} (e^x - \ell(x)) dx + \int_{\alpha}^{\beta} (\ell(x) - e^x) dx + \int_{\beta}^1 (e^x - \ell(x)) dx.\]
 If we let $\ell(x) = mx+b$, the following evaluates to
@@ -412,6 +453,64 @@ Therefore,
         \max_{0 \leq x \leq 1} |e^x - \ell(x)| = \min.
     \end{equation}
 \end{itemize}
+We know that our function $\ell(x)$ will intersect $e^x$ twice, say $\alpha$ and $\beta$.  However, we won't focus on these values all that much.  The idea is that the maximum error will occur at one of these intervals.  We wish to minimize the maximum error, to do this the maximum error on each interval \([0, \alpha], [\alpha, \beta], \text{and} [\beta, 1]\) must be identical.  We can always adjust the time to reduce the error.  We can see what this looks like, qualitatively, below.  Note that E denotes our minimized maximum error.
+\[\includegraphics[height=8cm]{hw2_images/desmos13.jpg}\]
+We know that based on the shape of $e^x$ on the interval, the minimized maximum error will occur at $x=0, x=1$ and some $\hat{x}$ on the interval $[\alpha, \beta]$.  If we let $\ell(x) = mx+b$ then we have the following system,
+\[e^0 - (m(0) + b) = E\]
+\[e^{\hat{x}} - (m\hat{x} + b) = -E\]
+\[e^1 - (m(1) + b) = E\]
+We also note that \(E^{\prime}(\hat{x}) = e^{\hat{x}} - m = 0 \Leftrightarrow e^{\hat{x}} = m \Leftrightarrow \hat{x} = \ln (m)\).  Solving the system we have,
+\begin{align*}
+    e - m - b &= E \\
+    (-) \quad 1 - b &= E
+\end{align*}
+\[\Longrightarrow \quad e - 1 - m = 0 \quad \Longleftrightarrow \quad m = e - 1\]
+\begin{align*}
+    e - m - b &= E \\
+    (+) \quad e^{\hat{x}} - m\hat{x} - b &= -E
+\end{align*}
+\[\Longrightarrow \quad e + e^{\hat{x}} - m - m\hat{x} - 2b = 0 \]
+\begin{equation*}
+    \begin{split}
+        \Longrightarrow \quad 2b &= e + e^{\hat{x}} - m - m\hat{x} \\
+        b &= \frac{1}{2}\left(e - m\hat{x}\right) \\
+        &= \frac{1}{2}\left(e - (e - 1)\ln(e - 1)\right) \\
+        &= \frac{1}{2}\left(e - e\ln(e - 1) + \ln(e - 1)\right)
+    \end{split}
+\end{equation*}
+
+Thus, \(\ln(x) = (e - 1)x + \frac{1}{2}\left(e - e\ln(e-1) + \ln(e-1)\right)\) minimizes our function.
+
+\section{Appendix}
+
+\begin{itemize}
+    \item[{\textbf{-A-}}] Python Code for runtimes in problem 3.
+\end{itemize}
+\begin{lstlisting}[language=Python]
+    from math import sin
+
+    #First program to test how many steps it takes to get epsilon
+    #distance from 0.
+    i = 0
+    x = 1
+    while True:
+        i += 1
+        x = sin(x)
+        if x < 0.001:
+            break
+    print(x, i)
+
+    #Code to look at how at effects of rounding errors.
+    i = 0
+    x = 1
+    n = 10000
+    rounding = 3
+
+    for step in range(n):
+        i += 1
+        x = round(sin(x), rounding)
+        print(f'{step+1}: {x}')
+\end{lstlisting}
 
 
 
