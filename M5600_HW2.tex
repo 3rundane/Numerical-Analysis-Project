@@ -25,6 +25,18 @@
 \usepackage{listings}
 \usepackage{multirow}
 \usepackage[utf8]{inputenc}
+\usepackage[bottom]{footmisc}
+\usepackage{animate}
+\usepackage{float}
+\usepackage{hyperref}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+}
+\urlstyle{same}
 
 \setlength{\arrayrulewidth}{0.8mm}
 \setlength{\tabcolsep}{18pt}
@@ -77,7 +89,7 @@
 \begin{itemize}
     \item[{\textbf{-1-}}] \textbf{(Taylor Series.)}  Let
     \begin{equation}
-        f(x)=e^x \text{ and } g(x)=ln(x+1)
+        f(x)=e^x \text{ and } g(x)=\ln(x+1)
     \end{equation}
     and let $p_n$ and $q_n$ be the Taylor polynomials of degree $n$ for $f$ and $g$, respectively, about
     \begin{equation}
@@ -87,7 +99,7 @@
 \end{itemize}
 Recall the Taylor Series
 \[f(x) = \sum_{i=0}^{\infty} f^{(i)} (\alpha) \cdot \frac{(x-\alpha)^i}{i!}.\]
-We know that \(\forall \ i \in \mathbb{N}\),
+We know that for all \(i \in \mathbb{N}\),
 \[f(x) = e^x \Rightarrow f^{(i)}(0) = 1.\]
 Thus,
 \[f(x) = e^x = \sum_{i=0}^{\infty} \frac{x^i}{i!}.\]
@@ -104,8 +116,16 @@ We also have
     \end{split}
 \end{equation*}
 \[\Longrightarrow \sum_{n=1}^{\infty} (-1)^{n-1} (n-1)! \cdot \frac{x^n}{n!}.\]
-Below, we will illustrate some Taylor polynomial approximations for $f$ and $g$, respectively.
-\[\includegraphics[width=15cm]{hw2_images/8subplots.jpg}\]
+Below, we will illustrate some Taylor polynomial approximations for $f$ and $g$, respectively.\footnote{Code in Appendix -A-.}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=15cm]{hw2_images/8subplots.jpg}
+    \caption{Solid Blue indicates $e^x$, Solid Red indicates $\ln(x+1)$, and the Dashed lines represent their Taylor approximations respectively.}
+    \label{fig:my_label}
+\end{figure}
+We show a GIF of the Taylor polynomial approximations here:
+\href{https://github.com/3rundane/Numerical-Analysis-Project/blob/main/homework\%202\%20gifs/problemgif.gif}{Taylor Polynomial GIF} \\
+
 Qualitatively we can see the Taylor polynomial, $p_n$, begins to better approximate $e^x$ as $n$ gets larger.  However, the Taylor polynomial, $q_n$, tends to be problematic for larger $n$.  It seems that $q_n$ doesn't approximate $g(x)$ very well for $x>1$, despite increasing values of $n$.  We define the suitable error functions below.
 \[E_n^f (x) = \left|e^x - \sum_{k=0}^n \frac{x^k}{k!}\right|\]
 \begin{equation*}
@@ -114,8 +134,13 @@ Qualitatively we can see the Taylor polynomial, $p_n$, begins to better approxim
         &= \left|\ln (x+1) - \sum_{k=1}^n (-1)^{k-1} \frac{x^k}{k}\right|
     \end{split}
 \end{equation*}
-We show the graphs for our suitable errors as a function $n$ for fixed $x \geq 1$.
-\[\includegraphics[width=14cm]{hw2_images/error_subplot.jpg}\]
+We show the graphs for our suitable errors as a function $n$ for fixed $x \geq 1$.\footnote{Code in Appendix -B-.}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=14cm]{hw2_images/error_subplot.jpg}
+    \caption{Blue dots indicate the error $E_n^f$ and the Red dots indicate the error $E_n^g$.}
+    \label{fig:my_label}
+\end{figure}
 As we can see increasing our polynomial degree for $q_n$ does not imply a better approximation everywhere.
 
 \begin{itemize}
@@ -142,9 +167,21 @@ As we can see increasing our polynomial degree for $q_n$ does not imply a better
     \end{equation}
     (where of course the angle is measured in radians).  What does our theory tell us about convergence? Show that the iteration does converge!  What is the limit?  How fast does the iteration converge?  Carefully explain the effects of rounding errors.
 \end{itemize}
-We have the fixed point iteration $x_{n+1} = g(x_n)$ converges if we have \(\left|g^{\prime} (\alpha)\right| < 1\) where $g(\alpha) = \alpha$, and $x_0$ is sufficiently close to $\alpha$.  In our case we have $g^{\prime} (\alpha) = \cos (0) = 1$.  On its own tells us nothing, thus our convergence theory is not particularly helpful.  However, we can say that it indeed converges with $\sin (x)$ monotonically decreasing and bounded below by $0$.  Therefore, it must converge.  In fact, because $\sin (x)$ is continuous, then as $x_n \rightarrow 0$ as $n \rightarrow \infty$.  We can simply say the limit is zero by
-\[\lim_{x \rightarrow 0^+} \sin (x) = \sin (0) = 0.\]
-This converges much slower than linearly because $g^{\prime} (\alpha) \neq 0$.  Below we show a table of runtimes for achieving certain error tolerances for this iteration.  \footnote{Runtime will differ for different computers.  Code included in Appendix.}
+We have the fixed point iteration $x_{n+1} = g(x_n)$ converges if we have \(\left|g^{\prime} (\alpha)\right| < 1\) where $g(\alpha) = \alpha$, and $x_0$ is sufficiently close to $\alpha$.  In our case, we have $g^{\prime} (\alpha) = \cos (0) = 1$.  On its own this tells us nothing, thus our convergence theory is not particularly helpful.  However, we can say that it indeed converges.  For $x$ on the interval $[0, \frac{\pi}{2}]$ we know that
+\[\sin x \leq x.\]
+Thus if we assume $x_0$ is sufficiently close to $0$ (on the interval) we have that
+\begin{equation*}
+    \begin{split}
+        x_1 = \sin (x_0) &\leq x_0 \\
+        x_2 = \sin (x_1) &\leq \sin (x_0) = x_1 \\
+        \vdots
+    \end{split}
+\end{equation*}
+Inductively, we can see $\sin(x)$ is monotonically decreasing on $[0, \frac{\pi}{2}]$.  And we know $\sin(x)$ defined on $[0, \frac{\pi}{2}]$ is bounded below by $0$.  By the Monotone Convergence Theorem, the sequence defined by $x_{n+1} = \sin(x_n)$ converges for $x_0$ sufficiently close to zero.  Furthermore, since $\sin(x)$ is a continuous function on $[0, \frac{\pi}{2}]$ we can say
+\[\lim_{x \rightarrow 0^+} \sin (x) = \sin (0) = 0\]
+is equivalent to
+\[\lim_{n \rightarrow \infty} \sin (x_n).\]
+Therefore, our sequence converges to $0$.  This converges much slower than linearly because $g^{\prime} (\alpha) \neq 0$.  Below we show a table of runtimes for achieving certain error tolerances for this iteration.  \footnote{Runtime will differ for different computers.  Code included in Appendix -C-.}
 \begin{center}
 \begin{tabular}{ |c|c|c| }
 \hline
@@ -153,13 +190,12 @@ Error & Steps & Runtime (seconds) \\
 $0.1$ & $295$ & $5.39 \times 10^{-5}$ \\
 $0.01$ & $29992$ & $0.005967$ \\
 $0.001$ & $2999989$ & $0.677399$ \\
-$0.0001$ &  &  \\
+$0.0001$ & $299999986$ & $67.413355$ \\
+$0.00001$ & $29999999984$ & $6726.195585$ \\
 \hline
 \end{tabular}
 \end{center}
-We can see that $x_{n+1} = \sin (x_n)$ will take a substantial amount of time to converge.
-\\
-The issues of rounding errors can have catastrophic effects on the ability for our sequence to converge.  If we have machine that only computes to say first $3$ decimal points (i.e., it rounds), then the sequence will never converge.  The iteration is so slow to converge that $3$ decimal places of information is much too small to maintain accuracy.  In fact, this becomes a constant when running it in Python.  Letting $x_0 = 1$ we have
+We can see that $x_{n+1} = \sin (x_n)$ will take a substantial amount of time to converge.  The issues of rounding errors can have catastrophic effects on the ability for our sequence to converge.  If we have a machine that only computes to say the first $3$ decimal points (i.e., it rounds), then the sequence will never converge.  As the iteration progresses, the difference in outputs is less than $3$ decimal places after a certain point, thus, the change in output becomes so minute that the algorithm will not converge to the right value.  In fact, this becomes a constant when running it in Python.  Letting $x_0 = 1$ we have
 \begin{center}
 \begin{tabular}{ |c|c| }
 \hline
@@ -178,7 +214,7 @@ $128$ & $0.144$ \\
 \hline
 \end{tabular}
 \end{center}
-The iteration settles on $0.144$ after $126$ steps.\footnote{Code in Appendix.}  Now of course, we know that $\sin (x_n) = x_{n+1}$ for $x_0 = 1$ does in fact converges to zero from our deeper analysis.  If we simply went to iteration via the computer, we may get misleading results.
+The iteration settles on $0.144$ after $126$ steps.  Now of course, we know that $\sin (x_n) = x_{n+1}$ for $x_0 = 1$ does in fact converges to zero from our deeper analysis.  If we simply went to iteration via the computer, we may get misleading results.
 
 \begin{itemize}
     \item[{\textbf{-4-}}] \textbf{Newton's Method}  Suppose $f$ has a root of multiplicity $p>1$ at $x=\alpha$, i.e.,
@@ -202,7 +238,7 @@ The iteration settles on $0.144$ after $126$ steps.\footnote{Code in Appendix.} 
     \end{split}
 \end{equation*}
 \[g^{\prime} = 1 - \frac{\big(pF(x) + (x-\alpha)F^{\prime}(x)\big) \big(F(x) + (x-\alpha)F^{\prime}(x)\big) - (x-\alpha)F(x) \big(pF(x) + (x-\alpha)F^{\prime}(x)\big)^{\prime}}{\left(pF(x) + (x-\alpha)F^{\prime}(x)\right)^2}\]
-\[g^{\prime}(\alpha) = 1 - \frac{p \cdot F(\alpha) \cdot F(\alpha)}{p^2 \cdot F(\alpha)^2} = 1 - \frac{1}{p} = \left|\frac{p-1}{p}\right| < 1, \quad \forall \ p > 1\]
+\[g^{\prime}(\alpha) = 1 - \frac{p \cdot F(\alpha) \cdot F(\alpha)}{p^2 \cdot F(\alpha)^2} = 1 - \frac{1}{p} = \left|\frac{p-1}{p}\right| < 1, \quad \text{for all} \ p > 1\]
 We have the absolute value of $g^{\prime}(\alpha)$ converges linearly. \\
 (b)
 \begin{equation*}
@@ -211,7 +247,7 @@ We have the absolute value of $g^{\prime}(\alpha)$ converges linearly. \\
         g^{\prime}(x) &= 1 - p \left(\frac{f}{f^{\prime}}\right)^{\prime} \Longrightarrow g^{\prime}(\alpha) = 1 - p \cdot \frac{1}{p} = 0
     \end{split}
 \end{equation*}
-This converges quadratically.
+This converges at least quadratically.
 
 \begin{itemize}
     \item[{\textbf{-5-}}] \textbf{(Division without division.)}  Suppose you have a computer or calculator that has no built-in division.  Come up with a fixed point iteration that converges to $1/r$ for any given non-zero number $r$, and that only uses addition, subtraction, and multiplication.  \textbf{Hint:}  Write down an equation satisfied by $1/r$, apply Newton's method to that equation, and then modify Newton's method so that it doesn't use division.  Your resulting method should converge of order 2.
@@ -232,7 +268,7 @@ Both $f^{\prime}$ and $f^{\prime\prime}$ are non-zero at $x = \frac{1}{r}$ meani
         &= 2x - rx^2.
     \end{split}
 \end{equation*}
-Thus we have a fixed point iteration that does not use division.  Below we show a hypothetical convergence for some $r$.
+Again, $g(x)$ converges quadratically since $g^{\prime}(x) = 2 - 2rx$ is zero at $x = \frac{1}{r}$, and $g^{\prime\prime}(x) = -2r$ is non-zero for all $x$.  Thus we have a fixed point iteration that does not use division.  Below we show a hypothetical convergence for some $r$.
 \[\includegraphics[width=14cm]{hw2_images/convergence.jpg}\]
 
 \begin{itemize}
@@ -267,8 +303,8 @@ Thus we have a fixed point iteration that does not use division.  Below we show 
         \sum_{i=0}^n x_i^j L_i (x) = x^j \text{  for  } j=0,..., n.
     \end{equation}
 \end{itemize}
-We first note that we have $n+1$ data points, thus any polynomial interpolation up to degree $n$ will be unique.  We have the points \(\left(x_i , x_i^{\delta}\right) \text{ for } i=0,1,2,...,n\) and where $\delta$ is a fixed power that can take on the values $\delta = 0,1,2,...,n$, which let's us interpolate uniquely.  Also, we assume all the points are distinct.  By the construction of these points, the polynomial $x^{\delta}$ interpolates our data points since it is unique.
-\[P(x) = \sum_{i=0}^n x_i^{\delta} L_i (x) = x^{\delta} \quad \text{for} \ \delta = 0,1,...,n\]
+We first note that we have $n+1$ data points, thus any polynomial interpolation up to degree $n$ will be unique, assuming each $x_i$ is distinct.  We have the points \(\left(x_i , x_i^j\right) \text{ for } i=0,1,2,...,n\) and where $j$ is a fixed power that can take on the values $j = 0,1,2,...,n$, which lets us interpolate uniquely.  Also, we assume all the points are distinct.  By the construction of these points, the polynomial $x^j$ interpolates our data.  Since the interpolant is unique, we have
+\[P(x) = \sum_{i=0}^n x_i^j L_i (x) = x^j \quad \text{for} \ j = 0,1,...,n.\]
 
 \begin{itemize}
     \item[{\textbf{-8-}}] \textbf{(Uniqueness of the interpolating polynomial.)}  Assume you are given the data
@@ -361,7 +397,8 @@ All of these interpolating methods yield the same polynomial.
     \[p(x_i) = f(x_i), \quad i = 0,1,...,n.\]
     Also list the approximate maximum error in the interval $[-5,5]$ for each polynomial degree.  To approximate the maximum error sample the error at $200$ evenly spaced points (at least!) in the interval.
 \end{itemize}
-\[\includegraphics[width=15cm, height=9cm]{hw2_images/}\]
+We have the interpolants in the form of a GIF here: \href{https://github.com/3rundane/Numerical-Analysis-Project/blob/main/homework\%202\%20gifs/problem9.gif}{Runge-Phenomenon Interpolant}. \\
+We can see that the maximum error increases in size as the degree of the interpolating polynomial increases.\footnote{Code in Appendix -D-.}
 
 \begin{itemize}
     \item[{\textbf{-10-}}] \textbf{(Judicious interpolation.)}  Repeat the above except that you interpolate at the roots of the Chebycheff polynomials, i.e.,
@@ -369,7 +406,8 @@ All of these interpolating methods yield the same polynomial.
         x_i = 5\cos \frac{i\pi}{n}, \quad i=0,1,...,n.
     \end{equation}
 \end{itemize}
-\[\includegraphics[width=15cm, height=9cm]{hw2_images/}\]
+We have the interpolants in the form of a GIF here: \href{https://github.com/3rundane/Numerical-Analysis-Project/blob/main/homework\%202\%20gifs/problem10.gif}{Judicious Interpolant}. \\
+It appears that as the degree of the interpolating polynomial increases the maximum error reduces in size.\footnote{Code in Appendix -E-.}
 
 \begin{itemize}
     \item[{\textbf{-11-}}] \textbf{(Least Squares approximation of functions.)}  Find a linear function $\ell(x)$ such that
@@ -386,16 +424,16 @@ We want to minimize $F(m,b)$, so we take partial derivatives
         &= \int_0^1 \frac{\partial}{\partial m} (e^x - mx - b)^2 dx \\
         &= \int_0^1 2(e^x - mx - b)(-x)dx \\
         &= 2 \int_1^0 x(e^x - mx - b) dx \\
-        &= 2 \left[xe^x - \frac{m}{2}x^3 - bx^2 \Big|_1^0 -\left(e^x - \frac{m}{6}x^3 - \frac{b}{2}x^2\right)\Big|_1^0 \right] \\
+        &= 2 \left[\left(xe^x - \frac{m}{2}x^3 - bx^2\right) \Big|_1^0 -\left(e^x - \frac{m}{6}x^3 - \frac{b}{2}x^2\right)\Big|_1^0 \right] \\
         &= 2\left[-\left(e - \frac{m}{2} - b\right) - \left(1 - \left(e - \frac{m}{6} - \frac{b}{2}\right)\right)\right] \\
         &= 2\left(-e + \frac{m}{2} + b - 1 + e - \frac{m}{6} - \frac{b}{2}\right) \\
         &= 2\left(-1 + \frac{m}{3} + \frac{b}{2}\right) \\
         &= b + \frac{2m}{3} - 2 \\ \\
         \frac{\partial F}{\partial b} &= \frac{\partial}{\partial b} \int_0^1 (e^x - mx - b)^2 dx \\
         &= \int_0^1 \frac{\partial}{\partial b} (e^x - mx - b)^2 dx \\
-        &= \int_0^1 2(e^x - mx - b)(-x)dx \\
+        &= \int_0^1 2(e^x - mx - b)(-1)dx \\
         &= 2 \int_1^0 (e^x - mx - b) dx \\
-        &= 2 \left[e^x - \frac{m}{2}x^2 - bx \Big|_1^0 \right] \\
+        &= 2 \left[\left(e^x - \frac{m}{2}x^2 - bx\right) \Big|_1^0 \right] \\
         &= 2\left[1 - \left(e - \frac{m}{2} - b\right)\right] \\
         &= 2\left(\frac{m}{2} + b + 1 - e\right) \\
         &= m + 2b + 2 - 2e
@@ -404,15 +442,15 @@ We want to minimize $F(m,b)$, so we take partial derivatives
 To minimize, we set partial derivatives equal to zero and solve for $m$ and $b$.
 \[m + 2b + 2 - 2e = 0\]
 \[b + \frac{2m}{3} - 2 = 0\]
-\[\begin{bmatrix} 1 & 2 & \Big| & 2(e-1) \\
-\frac{2}{3} & 1 & \Big| & 2 \end{bmatrix} \Longrightarrow
-\begin{bmatrix} 1 & 2 & \Big| & 2(e-1) \\
-2 & 3 & \Big| & 6 \end{bmatrix} \Longrightarrow
-\begin{bmatrix} 1 & 2 & \Big| & 2(e-1) \\
-0 & -1 & \Big| & 10-4e \end{bmatrix} \Longrightarrow
-\begin{bmatrix} 1 & 0 & \Big| & 18-6e) \\
-0 & 1 & \Big| & 4e-10 \end{bmatrix}\]
-We have \(b = 4e - 10 \text{ and } m = 18 - 6e.\) Thus, \(\ell(x) = (18-6e)x + (4e-10)\) minimizes equation (10).
+% \[\begin{bmatrix} 1 & 2 & \Big| & 2(e-1) \\
+% \frac{2}{3} & 1 & \Big| & 2 \end{bmatrix} \Longrightarrow
+% \begin{bmatrix} 1 & 2 & \Big| & 2(e-1) \\
+% 2 & 3 & \Big| & 6 \end{bmatrix} \Longrightarrow
+% \begin{bmatrix} 1 & 2 & \Big| & 2(e-1) \\
+% 0 & -1 & \Big| & 10-4e \end{bmatrix} \Longrightarrow
+% \begin{bmatrix} 1 & 0 & \Big| & 18-6e) \\
+% 0 & 1 & \Big| & 4e-10 \end{bmatrix}\]
+Solving the linear system yields \(b = 4e - 10 \text{ and } m = 18 - 6e.\) Thus, \(\ell(x) = (18-6e)x + (4e-10)\) minimizes equation (10).
 
 \begin{itemize}
     \item[{\textbf{-12-}}] \textbf{(An alternative approximation problem.)}  Find a linear function $\ell(x)$ such that
@@ -428,7 +466,7 @@ If we let $\ell(x) = mx+b$, the following evaluates to
 \begin{equation*}
     \begin{split}
         I &= \left[e^x - \frac{m}{2}x^2 - bx\right]\bigg|_0^{\alpha} + \left[\frac{m}{2}x^2 + bx - e^x\right]\bigg|_{\alpha}^{\beta} + \left[e^x - \frac{m}{2}x^2 - bx\right]\bigg|_{\beta}^1 \\
-        &= \left(e^{\alpha} \frac{\alpha^2}{2}m - \alpha b - 1\right) + \left(\frac{\beta^2}{2}m + \beta b - e^{\beta}\right) - \left(\frac{\alpha^2}{2}m + \alpha b - e^{\alpha}\right) \\
+        &= \left(e^{\alpha} - \frac{\alpha^2}{2}m - \alpha b - 1\right) + \left(\frac{\beta^2}{2}m + \beta b - e^{\beta}\right) - \left(\frac{\alpha^2}{2}m + \alpha b - e^{\alpha}\right) \\
         & \qquad \qquad \qquad + \left(e - \frac{1}{2}m - b\right) - \left(e^{\beta} - \frac{\beta^2}{2}m - \beta b\right) \\
         &= e^{\alpha} - \frac{\alpha^2}{2}m - \alpha b - 1 + \frac{\beta^2}{2}m + \beta b - e^{\beta} - \frac{\alpha^2}{2}m - \alpha b + e^{\alpha} \\
         & \qquad \qquad \qquad + e - \frac{1}{2}m - b - e^{\beta} + \frac{\beta^2}{2}m + \beta b
@@ -453,7 +491,7 @@ Therefore,
         \max_{0 \leq x \leq 1} |e^x - \ell(x)| = \min.
     \end{equation}
 \end{itemize}
-We know that our function $\ell(x)$ will intersect $e^x$ twice, say $\alpha$ and $\beta$.  However, we won't focus on these values all that much.  The idea is that the maximum error will occur at one of these intervals.  We wish to minimize the maximum error, to do this the maximum error on each interval \([0, \alpha], [\alpha, \beta], \text{and} [\beta, 1]\) must be identical.  We can always adjust the time to reduce the error.  We can see what this looks like, qualitatively, below.  Note that E denotes our minimized maximum error.
+We know that our function $\ell(x)$ will intersect $e^x$ twice, say at $\alpha$ and $\beta$.  However, we won't focus on these values all that much.  The idea is that the maximum error will occur at one of these intervals.  We wish to minimize the maximum error, to do this the maximum error on each interval \([0, \alpha], [\alpha, \beta], \text{and} [\beta, 1]\) must be identical.  We can always adjust the line to reduce the error.  We can see what this looks like, qualitatively, below.  We let E denote the minimized maximum error.
 \[\includegraphics[height=8cm]{hw2_images/desmos13.jpg}\]
 We know that based on the shape of $e^x$ on the interval, the minimized maximum error will occur at $x=0, x=1$ and some $\hat{x}$ on the interval $[\alpha, \beta]$.  If we let $\ell(x) = mx+b$ then we have the following system,
 \[e^0 - (m(0) + b) = E\]
@@ -481,35 +519,308 @@ We also note that \(E^{\prime}(\hat{x}) = e^{\hat{x}} - m = 0 \Leftrightarrow e^
 
 Thus, \(\ln(x) = (e - 1)x + \frac{1}{2}\left(e - e\ln(e-1) + \ln(e-1)\right)\) minimizes our function.
 
+\pagebreak
+
 \section{Appendix}
 
 \begin{itemize}
-    \item[{\textbf{-A-}}] Python Code for runtimes in problem 3.
+    \item[{\textbf{-A-}}] Python Code for Graphs in problem 1.
+\end{itemize}
+\begin{lstlisting}[language=Python]
+    import matplotlib.pyplot as plt
+    import numpy as np
+    from math import factorial
+
+    t = np.linspace(-10, 10, 1000)
+
+    # I need this one for the ln function since I don't know how to
+    # deal with singularity of -1
+    t_ln = np.linspace(-0.9999, 10, 1000)
+
+    # Define e^x
+    def f(x):
+        return np.exp(x)
+
+    # Define ln(x+1)
+    def g(x):
+        return np.log(x+1)
+
+    # Define taylor poly for e^x
+    def p(x,n):
+        if n == 0:
+            return 1
+        else:
+            return ((x**n) / factorial(n)) + p(x, n-1)
+
+    # Define taylor poly for ln(x+1)
+    def q(x,n):
+        if n == 1:
+            return x
+        else:
+            return (-1)**(n-1) * factorial(n-1)*x**n / factorial(n)
+                + q(x, n-1)
+
+    # For subplots
+    fig, ax = plt.subplots(2, 4, figsize=(10,5))
+    i = 0
+    for n in range(1, 23, 3):
+        # print(n)
+        test = ax[i // 4, i % 4]
+        test.plot(t, f(t), color='blue', label='e^x')
+        test.plot(t, p(t, n), color='blue', linestyle='--', label='p')
+        test.plot(t_ln, g(t_ln), color='red', label='ln(1+x)')
+        test.plot(t, q(t, n), color='red', linestyle='--', label='q')
+        test.set_ylim(-10, 10)
+        test.set_title(f'Degree {n}')
+        i+=1
+
+    fig.show()
+\end{lstlisting}
+
+\begin{itemize}
+    \item[{\textbf{-B-}}] Python Code for Errors in problem 1.
+\end{itemize}
+\begin{lstlisting}[language=Python]
+    import numpy as np
+    from math import factorial
+    import matplotlib.pyplot as plt
+
+    def f(x):
+        return np.exp(x)
+
+    # Define ln(x+1)
+    def g(x):
+        return np.log(x+1)
+
+    # Define taylor poly for e^x
+    def p(x,n):
+        if n == 0:
+            return 1
+        else:
+            return ((x**n) / factorial(n)) + p(x, n-1)
+
+    # Define taylor poly for ln(x+1)
+    def q(x,n):
+        if n == 1:
+            return x
+        else:
+            return (-1)**(n-1) * factorial(n-1)*x**n / factorial(n)
+                + q(x, n-1)
+
+    def error_f(x,n):
+         return abs(f(x) - p(x, n))
+
+    def error_g(x,n):
+        if x <= -1:
+            return 'undefined'
+        else:
+            return abs(g(x) - q(x, n))
+
+    # Parameters for graph
+    x = 1
+    n = 14
+
+    domain = [i for i in range(1, n+1)]
+    codomain_f = [error_f(x, i) for i in range(1, n+1)]
+    codomain_g = [error_g(x, i) for i in range(1, n+1)]
+
+    print("e^x errors:")
+    print('----------')
+    for i in range(0,n):
+        print(f'degree {i+1}: {codomain_f[i]}')
+    print()
+
+    print("ln errors:")
+    print('----------')
+    for i in range(0,n):
+        print(f'degree {i+1}: {codomain_g[i]}')
+
+    x_list = [1, 1.1, 1.2, 1.3, 1.4, 1.5]
+    fig, ax = plt.subplots(2, 3, figsize=(10, 7))
+
+    for j in range(6):
+        codomain_f = [error_f(x_list[j], i) for i in range(1, n + 1)]
+        codomain_g = [error_g(x_list[j], i) for i in range(1, n + 1)]
+        test = ax[j // 3, j % 3]
+        x_ticks = np.arange(1, n+1, 1)
+        test.set_xticks(x_ticks)
+        test.set_title(f'Error at x={x_list[j]}')
+        test.scatter(x=domain, y=codomain_f, color='blue',
+            label='e^x approximation error')
+        test.scatter(x=domain, y=codomain_g, color='red',
+            label='ln approximation error')
+        test.set_xlabel('degree n')
+        test.set_ylabel('error')
+
+
+    fig.show()
+\end{lstlisting}
+
+\begin{itemize}
+    \item[{\textbf{-C-}}] Python Code for Runtimes in problem 3.
 \end{itemize}
 \begin{lstlisting}[language=Python]
     from math import sin
+    import time
 
-    #First program to test how many steps it takes to get epsilon
-    #distance from 0.
+    # My first program to test how many steps it takes to get epsilon
+    # distance from 0
     i = 0
     x = 1
+    tolerance = 0.001
+    flag1 = time.process_time()
     while True:
         i += 1
         x = sin(x)
-        if x < 0.001:
+        if x < tolerance:
+            flag2 = time.process_time()
             break
-    print(x, i)
-
-    #Code to look at how at effects of rounding errors.
+    time_length = flag2-flag1
+    print(f'error: {x}\n', f'steps: {i}\n', f'time: {time_length}')
+    print()
+    # Code to look at how at effects of rounding errors.
     i = 0
     x = 1
-    n = 10000
+    n = 300
     rounding = 3
 
     for step in range(n):
         i += 1
         x = round(sin(x), rounding)
-        print(f'{step+1}: {x}')
+        print(f'{step}: {x}')
+\end{lstlisting}
+
+\begin{itemize}
+    \item[{\textbf{-D-}}] Python Code for Interpolants in problem 9.
+\end{itemize}
+\begin{lstlisting}[language=Python]
+    import matplotlib.pyplot as plt
+    import numpy as np
+    # from scipy import interpolate, linalg
+
+    # Define a linespace (or domain)
+    domain = np.linspace(-5, 5, 1000)
+
+    # Define the function
+    def f(x):
+        return 1/(1+x**2)
+
+    # Interpolate with different degree polynomials
+    for n in range(1,21):
+        h = 10 / n
+
+        # creating our nodes
+        x = [-5+i*h for i in range(n+1)]
+        y = [f(i) for i in x]
+
+       # Creating the Vondermond Matrix
+        rows = []
+        for i in x:
+            row = [i**j for j in range(n+1)]
+            rows.append(row)
+
+        # Create my system that needs to be solved
+        x_vondermond = np.array(rows)
+        y_vondermond = np.array(y)
+
+        # Solve the system of equations!
+        sol = np.linalg.solve(x_vondermond, y_vondermond)
+
+        # I built a function recursively.
+        def poly(x, n):
+            if n == 0:
+                return sol[0]
+            else:
+                return sol[n]*x**n + poly(x, n-1)
+
+        # Find the max error
+        error = [abs(f(i)-poly(i, n)) for i in domain]
+        max_error = max(error)
+        max_error_index = error.index(max_error)
+        print(f"Degree {n} Max Error: {max_error}")
+        plot_value = -5 + max_error_index/100
+        # You divide by 1000 and then multiply by 10--think about it...
+
+        # Plot the results
+        plt.plot(domain, f(domain), label='function', color='blue')
+        plt.plot(domain, poly(domain,n), label='Interpolant')
+        plt.ylim([-0.5, 1.5]) #To fix plotting frame.
+        plt.text(-2, 1.25, f'Max Error: {max_error}')
+        plt.vlines(x=plot_value, ymin=min(f(plot_value),
+            poly(plot_value, n)), ymax=max(f(plot_value),
+            poly(plot_value, n)), linestyle='--', color='red',
+            label="Max Error")
+        plt.title(f"Degree {n} Interpolation")
+        plt.legend(loc=8)
+        # plt.savefig(f'degree_{n}.jpg', bbox_inches='tight')
+        plt.show()
+\end{lstlisting}
+
+\begin{itemize}
+    \item[{\textbf{-E-}}] Python Code for Interpolants in problem 10.
+\end{itemize}
+\begin{lstlisting}[language=Python]
+    # Chebycheff Polynomial
+    import matplotlib.pyplot as plt
+    import numpy as np
+    # from scipy import interpolate, linalg
+
+    # Define a linespace (or domain)
+    domain = np.linspace(-5, 5, 1000)
+
+    # Define the function
+    def f(x):
+        return 1/(1+x**2)
+
+    # Interpolate with different degree polynomials
+    for n in range(1, 21):
+
+        # creating our nodes
+        x = [5*np.cos(i*np.pi/n) for i in range(n+1)]
+        y = [f(i) for i in x]
+
+        # Creating the Vondermond Matrix
+        rows = []
+        for i in x:
+            row = [i**j for j in range(n+1)]
+            rows.append(row)
+
+        # Create my system that needs to be solved
+        x_vondermond = np.array(rows)
+        y_vondermond = np.array(y)
+
+        # Solve the system of equations!
+        sol = np.linalg.solve(x_vondermond, y_vondermond)
+
+        # I built the function recursively.
+        def poly(x, n):
+            if n == 0:
+                return sol[0]
+            else:
+                return sol[n]*x**n + poly(x, n-1)
+
+        # Find the max error
+        error = [abs(f(i)-poly(i, n)) for i in domain]
+        max_error = max(error)
+        max_error_index = error.index(max_error)
+        print(f"Degree {n} Max Error: {max_error}")
+        plot_value = -5 + max_error_index/100
+        # You divide by 1000 and then multiply by 10--think about it...
+
+        # Plot the results
+        plt.plot(domain, f(domain), label='function', color='blue')
+        plt.plot(domain, poly(domain,n),
+            label='Chebycheff Interpolant')
+        plt.text(0, 0.1, f'Max Error: {max_error}',
+            horizontalalignment='center', verticalalignment='center')
+        plt.vlines(x=plot_value, ymin=min(f(plot_value),
+            poly(plot_value, n)), ymax=max(f(plot_value),
+            poly(plot_value, n)), linestyle='--', color='red',
+            label="Max Error")
+        plt.title(f"Degree {n} Chebycheff Interpolation")
+        plt.legend(loc=1)
+        # plt.savefig(f'chebycheff_{n}.jpg', bbox_inches='tight')
+        plt.show()
 \end{lstlisting}
 
 
