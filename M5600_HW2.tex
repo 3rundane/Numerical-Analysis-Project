@@ -95,7 +95,7 @@
     \begin{equation}
         x_0 = 0.
     \end{equation}
-    Plot the graphs of $f$, $g$, $p_n$ and $q_n$, for some small values of $n$, and comment on you results.  Discuss in particular how well $f$ and $g$ are approximated by their Taylor polynomials.  Explain your observations in terms of a suitable expression for the error in the approximation.
+    Plot the graphs of $f$, $g$, $p_n$ and $q_n$, for some small values of $n$, and comment on your results.  Discuss in particular how well $f$ and $g$ are approximated by their Taylor polynomials.  Explain your observations in terms of a suitable expression for the error in the approximation.
 \end{itemize}
 Recall the Taylor Series
 \[f(x) = \sum_{i=0}^{\infty} f^{(i)} (\alpha) \cdot \frac{(x-\alpha)^i}{i!}.\]
@@ -107,10 +107,10 @@ We also have
 \begin{equation*}
     \begin{split}
         g(x) &= \ln (x+1) = 0 \quad \text{for } x = 0 \\
-        g^{\prime}(x) &= \frac{1}{x+1} = 1 = 1! \\
-        g^{\prime\prime}(x) &= \frac{-1}{(x+1)^2} = -1 = -1! \\
-        g^{\prime\prime\prime}(x) &= \frac{2}{(x+1)^3} = 2 = 2! \\
-        g^{(4)}(x) &= \frac{-6}{(x+1)^4} = -6 = -3! \\
+        g^{\prime}(x) &= \frac{1}{x+1} = 1 = 1! \qquad \text{at} \ x = 0 \\
+        g^{\prime\prime}(x) &= \frac{-1}{(x+1)^2} = -1 = -1! \qquad \text{at} \ x = 0 \\
+        g^{\prime\prime\prime}(x) &= \frac{2}{(x+1)^3} = 2 = 2! \qquad \text{at} \ x = 0 \\
+        g^{(4)}(x) &= \frac{-6}{(x+1)^4} = -6 = -3! \qquad \text{at} \ x = 0 \\
         \vdots \\
         g^{(n)} (x) &= \frac{(-1)^{n-1} (n-1)!}{(x+1)^n} = (-1)^{n-1} (n-1)! \quad \text{for } x=0, n>0
     \end{split}
@@ -144,7 +144,7 @@ We show the graphs for our suitable errors as a function $n$ for fixed $x \geq 1
 As we can see increasing our polynomial degree for $q_n$ does not imply a better approximation everywhere.
 
 \begin{itemize}
-    \item[{\textbf{-2-}}] \textbf{(A "simple" program.)}  Write a program that reads $n$ and the entries $x_1$, $x_2$, ..., $x_n$ of a vector $x \in \R^2$ from standard input and prints
+    \item[{\textbf{-2-}}] \textbf{(A ``simple" program.)}  Write a program that reads $n$ and the entries $x_1$, $x_2$, ..., $x_n$ of a vector $x \in \R^2$ from standard input and prints
     \begin{equation*}
         ||x||_2 = \sqrt{\sum_{i=1}^n x_i^2}
     \end{equation*}
@@ -181,7 +181,7 @@ Inductively, we can see $\sin(x)$ is monotonically decreasing on $[0, \frac{\pi}
 \[\lim_{x \rightarrow 0^+} \sin (x) = \sin (0) = 0\]
 is equivalent to
 \[\lim_{n \rightarrow \infty} \sin (x_n).\]
-Therefore, our sequence converges to $0$.  This converges much slower than linearly because $g^{\prime} (\alpha) \neq 0$.  Below we show a table of runtimes for achieving certain error tolerances for this iteration.  \footnote{Runtime will differ for different computers.  Code included in Appendix -C-.}
+Therefore, our sequence converges to $0$.  This converges much slower than linearly since $g^{\prime} (\alpha) = 1$.  Below we show a table of runtimes for achieving certain error tolerances for this iteration.  \footnote{Runtime will differ for different computers.  Code included in Appendix -C-.}
 \begin{center}
 \begin{tabular}{ |c|c|c| }
 \hline
@@ -233,13 +233,13 @@ The iteration settles on $0.144$ after $126$ steps.  Now of course, we know that
 (a)
 \begin{equation*}
     \begin{split}
-        g = x - \frac{f}{f^{\prime}} &= x - \frac{(x-\alpha)^p F(x)}{p(x-\alpha)^{p-1} F(x) + (x-\alpha)^p F^{\prime} (x)} \Longleftrightarrow g(\alpha) = \alpha \\
+        g = x - \frac{f}{f^{\prime}} &= x - \frac{(x-\alpha)^p F(x)}{p(x-\alpha)^{p-1} F(x) + (x-\alpha)^p F^{\prime} (x)} \\
         &= x - \frac{(x-\alpha) F(x)}{pF(x) + (x-\alpha)F^{\prime}(x)}
     \end{split}
 \end{equation*}
-\[g^{\prime} = 1 - \frac{\big(pF(x) + (x-\alpha)F^{\prime}(x)\big) \big(F(x) + (x-\alpha)F^{\prime}(x)\big) - (x-\alpha)F(x) \big(pF(x) + (x-\alpha)F^{\prime}(x)\big)^{\prime}}{\left(pF(x) + (x-\alpha)F^{\prime}(x)\right)^2}\]
+\[g^{\prime} = 1 - \frac{\big(pF(x) + (x-\alpha)F^{\prime}(x)\big) \big(F(x) + (x-\alpha)F^{\prime}(x)\big) - (x-\alpha)F(x) \Big(\big(pF(x) + (x-\alpha)F^{\prime}(x)\big)^2\Big)^{\prime}}{\left(pF(x) + (x-\alpha)F^{\prime}(x)\right)^2}\]
 \[g^{\prime}(\alpha) = 1 - \frac{p \cdot F(\alpha) \cdot F(\alpha)}{p^2 \cdot F(\alpha)^2} = 1 - \frac{1}{p} = \left|\frac{p-1}{p}\right| < 1, \quad \text{for all} \ p > 1\]
-We have the absolute value of $g^{\prime}(\alpha)$ converges linearly. \\
+We have the absolute value of $g^{\prime}(\alpha)$ such that $0 < g^{\prime}(\alpha) < 1$ for all $p>1$.  Thus $f$ converges linearly. \\
 (b)
 \begin{equation*}
     \begin{split}
@@ -288,10 +288,10 @@ Again, $g(x)$ converges quadratically since $g^{\prime}(x) = 2 - 2rx$ is zero at
         &= \frac{f f^{\prime\prime}}{f^{\prime2}} - \frac{f f^{\prime\prime}}{f^{\prime 2}} - \frac{1}{2} \frac{f^2 f^{\prime\prime\prime}}{f^{\prime 3}} + \frac{1}{2} \frac{3 f^2 f^{\prime\prime2}}{f^{\prime 4}} \\
         &= \frac{1}{2} f^2 \left(\frac{f^{\prime\prime2}}{f^{\prime4}} - \frac{f^{\prime\prime\prime}}{f^{\prime3}}\right) = 0 \quad \text{at} \ x = \alpha \ \text{since} \ f(\alpha) = 0 \ \text{and} \ f^{\prime}(\alpha) \neq 0 \\
         g^{\prime\prime} &= f f^{\prime} \left(\frac{f^{\prime\prime2}}{f^{\prime4}} - \frac{f^{\prime\prime\prime}}{f^{\prime3}}\right) + \frac{1}{2}f^2 \left(\frac{f^{\prime\prime2}}{f^{\prime4}} - \frac{f^{\prime\prime\prime}}{f^{\prime3}}\right)^{\prime} \\
-        &= 0 \quad \text{since each term has a multiple of $f$ which is $0$ at } \alpha.
+        &= 0 \quad \text{at $x=\alpha$ since each term has a multiple of $f$ which is $0$ at } \alpha.
     \end{split}
 \end{equation*}
-\[\Longrightarrow \text{Thus our fixed point iteration converges of order at least} \ 3.\]
+Thus our fixed point iteration converges of order at least $3$.
 
 \begin{itemize}
     \item[{\textbf{-7-}}] \textbf{(Polynomial Interpolation.)}  Suppose you want to interpolate to the data $(x_i, y_i), i=0,..., n$ by a polynomial of degree $n$.  Recall that the interpolating polynomial $p$ can be written in its Lagrange form as
@@ -333,7 +333,7 @@ We first note that we have $n+1$ data points, thus any polynomial interpolation 
     \end{split}
     \Longleftrightarrow \begin{bmatrix}
     1 & 1 & 1 & 1 \\
-    1 & 2 4 & & 8 \\
+    1 & 2 & 4 & 8 \\
     1 & 4 & 16 & 64 \\
     1 & 8 & 64 & 512
     \end{bmatrix} \begin{bmatrix}
@@ -399,6 +399,7 @@ All of these interpolating methods yield the same polynomial.
 \end{itemize}
 We have the interpolants in the form of a GIF here: \href{https://github.com/3rundane/Numerical-Analysis-Project/blob/main/homework\%202\%20gifs/problem9.gif}{Runge-Phenomenon Interpolant}. \\
 We can see that the maximum error increases in size as the degree of the interpolating polynomial increases.\footnote{Code in Appendix -D-.}
+\[\includegraphics[width=5.75cm]{hw2_images/table9errors.png}\]
 
 \begin{itemize}
     \item[{\textbf{-10-}}] \textbf{(Judicious interpolation.)}  Repeat the above except that you interpolate at the roots of the Chebycheff polynomials, i.e.,
@@ -407,7 +408,8 @@ We can see that the maximum error increases in size as the degree of the interpo
     \end{equation}
 \end{itemize}
 We have the interpolants in the form of a GIF here: \href{https://github.com/3rundane/Numerical-Analysis-Project/blob/main/homework\%202\%20gifs/problem10.gif}{Judicious Interpolant}. \\
-It appears that as the degree of the interpolating polynomial increases the maximum error reduces in size.\footnote{Code in Appendix -E-.}
+It is true for most of the maximum errors below that increasing the degree of the Interpolant decreases the maximum error with respect to the previous error.  That being said, there were a few outliers such as the 9th error compared to the 8th error.\footnote{Code in Appendix -E-.}
+\[\includegraphics[width=5.75cm]{hw2_images/table10errors.png}\]
 
 \begin{itemize}
     \item[{\textbf{-11-}}] \textbf{(Least Squares approximation of functions.)}  Find a linear function $\ell(x)$ such that
@@ -428,7 +430,11 @@ We want to minimize $F(m,b)$, so we take partial derivatives
         &= 2\left[-\left(e - \frac{m}{2} - b\right) - \left(1 - \left(e - \frac{m}{6} - \frac{b}{2}\right)\right)\right] \\
         &= 2\left(-e + \frac{m}{2} + b - 1 + e - \frac{m}{6} - \frac{b}{2}\right) \\
         &= 2\left(-1 + \frac{m}{3} + \frac{b}{2}\right) \\
-        &= b + \frac{2m}{3} - 2 \\ \\
+        &= b + \frac{2m}{3} - 2
+    \end{split}
+\end{equation*}
+\begin{equation*}
+    \begin{split}
         \frac{\partial F}{\partial b} &= \frac{\partial}{\partial b} \int_0^1 (e^x - mx - b)^2 dx \\
         &= \int_0^1 \frac{\partial}{\partial b} (e^x - mx - b)^2 dx \\
         &= \int_0^1 2(e^x - mx - b)(-1)dx \\
@@ -472,7 +478,7 @@ If we let $\ell(x) = mx+b$, the following evaluates to
         & \qquad \qquad \qquad + e - \frac{1}{2}m - b - e^{\beta} + \frac{\beta^2}{2}m + \beta b
     \end{split}
 \end{equation*}
-\[F(m,b) = \left(\beta^2 - \alpha^2 - \frac{1}{2}\right)m + \left(2\beta - 2\alpha - 1\right)b + \left(2e^{\alpha} - 2e^{\beta} + e - 1\right)\]
+\[F(m,b) = I = \left(\beta^2 - \alpha^2 - \frac{1}{2}\right)m + \left(2\beta - 2\alpha - 1\right)b + \left(2e^{\alpha} - 2e^{\beta} + e - 1\right)\]
 \[\frac{\partial F}{\partial m} = \beta^2 - \alpha^2 - \frac{1}{2} = 0 \Longrightarrow (\beta - \alpha)(\beta + \alpha) = \frac{1}{2}\]
 \[\frac{\partial F}{\partial b} = 2\beta - 2\alpha - 1 = 0 \Longrightarrow \beta - \alpha = \frac{1}{2}\]
 Therefore we have,
@@ -491,9 +497,9 @@ Therefore,
         \max_{0 \leq x \leq 1} |e^x - \ell(x)| = \min.
     \end{equation}
 \end{itemize}
-We know that our function $\ell(x)$ will intersect $e^x$ twice, say at $\alpha$ and $\beta$.  However, we won't focus on these values all that much.  The idea is that the maximum error will occur at one of these intervals.  We wish to minimize the maximum error, to do this the maximum error on each interval \([0, \alpha], [\alpha, \beta], \text{and} [\beta, 1]\) must be identical.  We can always adjust the line to reduce the error.  We can see what this looks like, qualitatively, below.  We let E denote the minimized maximum error.
-\[\includegraphics[height=8cm]{hw2_images/desmos13.jpg}\]
-We know that based on the shape of $e^x$ on the interval, the minimized maximum error will occur at $x=0, x=1$ and some $\hat{x}$ on the interval $[\alpha, \beta]$.  If we let $\ell(x) = mx+b$ then we have the following system,
+We know that our function $\ell(x)$ will intersect $e^x$ twice, say at $\alpha$ and $\beta$.  However, we won't focus on these values all that much.  The idea is that the maximum error will occur at one of these intervals.  We wish to minimize the maximum error, to do this the maximum error on each interval \([0, \alpha], [\alpha, \beta], \text{and} [\beta, 1]\) must be identical.  We can always adjust the line to reduce the error.  We can see what this looks like, qualitatively, below.
+\[\includegraphics[height=7cm]{hw2_images/desmos13.jpg}\]
+We know that based on the shape of $e^x$ on the interval, the minimized maximum error will occur at $x=0, x=1$ and some $\hat{x}$ on the interval $[\alpha, \beta]$.  If we let $\ell(x) = mx+b$ and let $E$ denote the minimized maximum error, then we have the following system,
 \[e^0 - (m(0) + b) = E\]
 \[e^{\hat{x}} - (m\hat{x} + b) = -E\]
 \[e^1 - (m(1) + b) = E\]
@@ -517,7 +523,7 @@ We also note that \(E^{\prime}(\hat{x}) = e^{\hat{x}} - m = 0 \Leftrightarrow e^
     \end{split}
 \end{equation*}
 
-Thus, \(\ln(x) = (e - 1)x + \frac{1}{2}\left(e - e\ln(e-1) + \ln(e-1)\right)\) minimizes our function.
+Thus, \(\ell(x) = (e - 1)x + \frac{1}{2}\left(e - e\ln(e-1) + \ln(e-1)\right)\) minimizes our function.
 
 \pagebreak
 
