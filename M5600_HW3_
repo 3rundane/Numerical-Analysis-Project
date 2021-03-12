@@ -1,0 +1,270 @@
+\documentclass[11pt]{article}
+
+%%%%%%%%%%%%%%%%%%%
+% Page Layout
+%%%%%%%%%%%%%%%%%%%
+
+\setlength{\paperwidth}{8.5in} \setlength{\paperheight}{11in}
+\setlength{\marginparwidth}{0in} \setlength{\marginparsep}{0in}
+\setlength{\oddsidemargin}{0in} \setlength{\evensidemargin}{0in}
+\setlength{\textwidth}{6.5in} \setlength{\topmargin}{-0.5in}
+\setlength{\textheight}{9in}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Include Packages and Style Files
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[english]{babel}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{enumerate}
+\usepackage[useregional]{datetime2}
+\usepackage[pdftex]{graphicx,color}
+\usepackage{multicol}
+\setlength{\columnsep}{1.5cm}
+\usepackage{algorithm2e}
+\usepackage{listings}
+\usepackage{multirow}
+\usepackage[utf8]{inputenc}
+\usepackage[bottom]{footmisc}
+\usepackage{animate}
+\usepackage{float}
+\usepackage{hyperref}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+}
+\urlstyle{same}
+
+\setlength{\arrayrulewidth}{0.8mm}
+\setlength{\tabcolsep}{18pt}
+\renewcommand{\arraystretch}{1.25}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Define theorem environments
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{question}[theorem]{Question}
+\newtheorem{conjecture}[theorem]{Conjecture}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem*{remark}{Remark}
+
+%%%%%%%%%%%%%%%%%%%%%%
+% Define new commands
+%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\R}{\mathbb{R}}
+
+\newcommand{\E}{\mathbb{E}}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\1}[1]{\mathbf{1} \left \{ #1 \right \}}
+\newcommand{\Range}{\operatorname{Range}}
+
+% \newenvironment{boxed}
+%     {\begin{center}
+%     \begin{tabular}{|p{0.9\textwidth}|}
+%     \hline\\
+%     }
+%     {
+%     \\\\\hline
+%     \end{tabular}
+%     \end{center}
+%     }
+
+%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\title{Numerical Analysis Project \\ MATH 5600 \\ Homework 3}
+\date{Due: March 19, 2021}
+\author{Authors: \\ Dane Gollero $\cdot$ Ike Griss Salas $\cdot$ Magon Bowling}
+
+\maketitle
+
+\begin{itemize}
+    \item[{\textbf{-1-}}] \textbf{(Inner Products.)}  Let $(f,g)$ denote an inner product on a suitable function space $S$, and let $f$ be given function in $S$.  Suppose we want to approximate $f$ by a function
+    \begin{equation}
+        s = \sum_{i=1}^n \alpha_i \phi_i
+    \end{equation}
+    also in $S$.  Recall that we have to solve a linear system with a coefficient matrix $A$ whose entry $i,j$ entry is
+    \[a_{i,j} = (\phi_i , \phi_j ).\]
+    Show that $A$ is positive definite.
+\end{itemize}
+In order to show that $A$ is positive definite, we need to show that $a^T Aa > 0$ for all $a$ in the vector space.  Let \(a^T = \begin{bmatrix} \alpha_0 & \alpha_1 & \cdots & \alpha_n \end{bmatrix}\) and $a^T A$ becomes
+\[\begin{bmatrix} \alpha_0 & \alpha_1 & \cdots & \alpha_n \end{bmatrix} \cdot
+\begin{bmatrix} (\phi_0, \phi_0) & \cdots & (\phi_0, \phi_n) \\
+\vdots &   &  \vdots \\
+(\phi_n, \phi_0) & \cdots & (\phi_n, \phi_n)\end{bmatrix} =
+\begin{bmatrix} (\phi_0, \phi_0)\alpha_0 & \cdots & (\phi_0, \phi_n)\alpha_0 \\
+\vdots &   &  \vdots \\
+(\phi_n, \phi_0)\alpha_n & \cdots & (\phi_n, \phi_n)\alpha_n \end{bmatrix} =
+\begin{bmatrix} (s, \phi_0) \\ \vdots \\ (s, \phi_n) \end{bmatrix}\]
+Now $a^T Aa$ becomes
+\[\begin{bmatrix} (\phi_0, \phi_0)\alpha_0 & \cdots & (\phi_0, \phi_n)\alpha_0 \\
+\vdots &   &  \vdots \\
+(\phi_n, \phi_0)\alpha_n & \cdots & (\phi_n, \phi_n)\alpha_n \end{bmatrix} \cdot
+\begin{bmatrix} \alpha_0 \\ \vdots \\ \alpha_n \end{bmatrix} =
+\begin{bmatrix} (\phi_0, \phi_0)\alpha_0 \alpha_0 & \cdots & (\phi_0, \phi_n)\alpha_0 \alpha_n \\
+\vdots &   &  \vdots \\
+(\phi_n, \phi_0)\alpha_n \alpha_0 & \cdots & (\phi_n, \phi_n)\alpha_n \alpha_n \end{bmatrix} =
+\begin{bmatrix} (s,s) \\ \vdots \\ (s,s) \end{bmatrix}\]
+This results in a positive definite matrix
+\[(s,s) = \sum_{i=0}^n \alpha_i \phi_i \sum_{j=0}^n \alpha_j \phi_j .\]
+
+
+\begin{itemize}
+    \item[{\textbf{-2-}}] \textbf{(Example for Gram Schmidt Process.)}  Use the Gram-Schmidt Process to find a basis of
+    \[\text{span}\{1,x,e^x\}\]
+    that is orthonormal with respect to the inner product
+    \begin{equation}
+        (f,g) = \int_0^1 f(x)g(x) dx.
+    \end{equation}
+\end{itemize}
+Let $f_1 = 1, f_2 = x$ and $f_3 = e^x$.  Recall the Gram-Schmidt formula
+\[g_1 = f_1, \quad g_2 = f_2 - \frac{(f_2, g_1)}{||g_1||^2} g_1, \quad g_3 = f_3 - \frac{(f_3, g_2)}{||g_2||^2} g_2 - \frac{(f_3, g_1)}{||g_1||^2} g_1\]
+We have
+\begin{equation*}
+    \begin{split}
+        g_1 &= 1 \\
+        g_2 &= x - \frac{(x,1)}{||1||^2} \cdot 1 = x - \frac{\int_0^1 x dx}{\int_0^1 1 dx} = x - \frac{\frac{1}{2}}{1} = x - \frac{1}{2} \\
+        g_3 &= e^x - \frac{(e^x,x - \frac{1}{2})}{\left|\left|x - \frac{1}{2}\right|\right|^2} \cdot \left(x - \frac{1}{2}\right) - \frac{(e^x,1)}{||1||^2} \cdot 1 \\
+        &= e^x - \frac{\int_0^1 e^x \left(x - \frac{1}{2}\right) dx}{\int_0^1 \left(x - \frac{1}{2}\right)^2 dx} \cdot \left(x - \frac{1}{2}\right) - \frac{\int_0^1 e^x dx}{\int_0^1 1 dx} \cdot 1 \\
+        &= e^x - \frac{\left(x - \frac{1}{2}\right)\left(\frac{1}{2} - \frac{1}{2}e\right)}{\frac{1}{12}} - (e - 1) \\
+        &= e_x - 12\left(\frac{1}{2}x - \frac{1}{2}ex - \frac{1}{4} + \frac{1}{4}e\right) - e + 1 \\
+        &= e^x - 6x + 6ex + 3 - 3e - e + 1 \\
+        &= e^x - 6x +6ex - 4e + 4
+    \end{split}
+\end{equation*}
+
+
+\begin{itemize}
+    \item[{\textbf{-3-}}] \textbf{``The Three Term Recurrence Relation".)}  Let the inner product $(f,g)$ be defined by
+    \begin{equation}
+        (f,g) = \int_a^b wf(x)g(x) dx.
+    \end{equation}
+    (where $w$ is a positive weight function).  Recall that the sequence of polynomials defined by
+    \begin{equation}
+        \begin{split}
+            Q_n &= (x - a_n ) Q_{n-1} - b_n Q_{n-2} \\
+            \text{with } \ Q_0 &= 1, \ Q_1 = x - a_1, \\
+            a_n &= (xQ_{n-1}, Q_{n-1}) / (Q_{n-1}, Q_{n-1}) \\
+            b_n &= (xQ_{n-1}, Q_{n-2}) / (Q_{n-2}, Q_{n-2})
+        \end{split}
+    \end{equation}
+    is orthogonal with respect to (3).  In particular, consider the inner product
+    \begin{equation}
+        (f,g) = \int_{-1}^1 f(x)g(x) dx.
+    \end{equation}
+    Use the recurrence relation (4) to compute $Q_i$ for $i = 0,1,2,3,4,5$.
+\end{itemize}
+We are given $Q_0 = 1$.  To calculate $Q_1$ we need to know $a_1$:
+\[a_1 = \frac{(xQ_0, Q_0)}{(Q_0, Q_0)} = \frac{(x,1)}{(1,1)} = \frac{\int_{-1}^1 x dx}{\int_{-1}^1 1 dx} = \frac{\frac{1}{2}x^2 \big|_{-1}^1}{x \big|_{-1}^1} = \frac{\frac{1}{2} - \frac{1}{2}}{1 - (-1)} = 0\]
+Therefore
+\[Q_1 = (x - a_1) Q_0 = (x - 0) \cdot 1 \Longrightarrow Q_1 = x.\]
+To calculate $Q_2$ we need to know $a_2$ and $b_2$:
+\[a_2 = \frac{(xQ_1, Q_1)}{(Q_1, Q_1)} = \frac{(x^2,x)}{(x,x)} = \frac{\int_{-1}^1 x^3 dx}{\int_{-1}^1 x^2 dx} = \frac{\frac{1}{4}x^4 \big|_{-1}^1}{\frac{1}{3}x^3 \big|_{-1}^1} = \frac{\frac{1}{4} - \frac{1}{4}}{\frac{1}{3} - \left(-\frac{1}{3}\right)} = 0\]
+\[b_2 = \frac{(xQ_1, Q_0)}{(Q_0, Q_0)} = \frac{(x^2,1)}{(1,1)} = \frac{\int_{-1}^1 x^2 dx}{\int_{-1}^1 1 dx} = \frac{\frac{1}{3}x^3 \big|_{-1}^1}{x \big|_{-1}^1} = \frac{\frac{1}{3} - \left(-\frac{1}{3}\right)}{1 - (-1)} = \frac{\frac{2}{3}}{2} = \frac{1}{3}\]
+Therefore
+\[Q_2 = (x - a_2 ) Q_1 - b_2 Q_0 = (x - 0) x - \frac{1}{3} (1) \Longrightarrow Q_2 = x^2 - \frac{1}{3}.\]
+We continue this same process for $Q_3, Q_4$ and $Q_5$.
+\[a_3 = \frac{(xQ_2, Q_2)}{(Q_2, Q_2)} = \frac{(x(x^2 - \frac{1}{3}),x^2 - \frac{1}{3})}{(x^2 - \frac{1}{3},x^2 - \frac{1}{3})} = \frac{\int_{-1}^1 x^5 - \frac{2}{3}x^3 + \frac{1}{9}x dx}{\int_{-1}^1 x^4 - \frac{2}{3}x^2 + \frac{1}{9} dx} = 0\]
+Note: all $a_n$ values will be zero because they are integrals of odd powers of $x$.  Meaning
+\[a_1 = a_2 = a_3 = a_4 = a_5 = 0.\]
+\[b_3 = \frac{(xQ_2, Q_1)}{(Q_1, Q_1)} = \frac{(x(x^2 - \frac{1}{3}),x)}{(x,x)} = \frac{\int_{-1}^1 x^4 - \frac{1}{3}x^2 dx}{\int_{-1}^1 x^2 dx} = \frac{\frac{8}{45}}{\frac{2}{3}} = \frac{4}{15}\]
+\[Q_3 = (x - a_3 ) Q_2 - b_3 Q_1 = x \left(x^2 - \frac{1}{3}\right) - \frac{4}{15} (x) \Longrightarrow Q_3 = x^3 - \frac{3}{5}x\]
+\[b_4 = \frac{(xQ_3, Q_2)}{(Q_2, Q_2)} = \frac{(x(x^3 - \frac{3}{5}x),x^2 - \frac{1}{3})}{(x^2 - \frac{1}{3},x^2 - \frac{1}{3})} = \frac{\int_{-1}^1 x^6 - \frac{14}{15}x^4 + \frac{1}{5}x^2 dx}{\int_{-1}^1 x^4 - \frac{2}{3}x^2 + \frac{1}{9} dx} = \frac{\frac{8}{175}}{\frac{8}{45}} = \frac{9}{35}\]
+\[Q_4 = (x - a_4 ) Q_3 - b_4 Q_2 = x \left(x^3 - \frac{3}{5}x\right) - \frac{9}{35} \left(x^2 - \frac{1}{3}\right) \Longrightarrow Q_4 = x^4 - \frac{6}{7}x^2 + \frac{3}{35}\]
+Finally
+\[b_5 = \frac{(xQ_4, Q_3)}{(Q_3, Q_3)} = \frac{(x(x^4 - \frac{6}{7}x^2 + \frac{3}{35}),x^3 - \frac{3}{5}x)}{(x^3 - \frac{3}{5}x,x^3 - \frac{3}{5}x)} = \frac{\int_{-1}^1 x^8 - \frac{51}{35}x^6 + \frac{3}{5}x^4 - \frac{9}{175}x^2 dx}{\int_{-1}^1 x^6 - \frac{6}{5}x^4 + \frac{9}{25}x^2 dx} = \frac{\frac{128}{11045}}{\frac{8}{175}} = \frac{16}{63}\]
+\[Q_5 = (x - a_5) Q_4 - b_5 Q_3 = x \left(x^4 - \frac{6}{7}x^2 + \frac{3}{35}\right) - \frac{16}{63} \left(x^3 - \frac{3}{5}x\right) \Longrightarrow Q_5 = x^5 - \frac{10}{9}x^3 + \frac{5}{21}x\]
+
+
+\begin{itemize}
+    \item[{\textbf{-4-}}] \textbf{(More on the Recurrence Relation.)}  Remember that a key property of the inner products for which we established the three term relation was that $(xf,g) = (f,xg)$.  Find an inner product that violates that rule, ans for which the recurrence relation does indeed fail to yield orthogonal polynomials.  (Thus use the recurrence relation to construct the first few polynomials, until you find two that are not orthogonal.)
+\end{itemize}
+
+
+\begin{itemize}
+    \item[{\textbf{-5-}}] \textbf{(Fourier Series.)}  Compute the Fourier series of the function
+    \[f(t) = \begin{cases}
+    \quad 1 \quad \text{if } t \in (-\pi, 0) \\
+    \ -1 \quad \text{if } t \in [0, \pi]]
+    \end{cases}\]
+    where you assume that $f$ is $2\pi$ periodic, i.e., $f(t+2\pi) = f(t)$ for all $t \in \R$.  Draw the truncated Fourier series for some values of $n$ and comment on your plots.
+\end{itemize}
+In the Fourier Series, we know that since $f(t)$ is an odd function that we need to calculate $b_n$ and the $\sin$ function.
+\[f(t) = \sum_{n=1}^{\infty} b_n \sin \left(\frac{n\pi t}{L}\right)\]
+where $L$ is half the length of the period of $2\pi$.  Therefore we have
+\[f(t) = \sum_{n=1}^{\infty} b_n \sin (nt)\]
+and
+\begin{equation*}
+    \begin{split}
+        b_n &= \frac{1}{\pi} \int_{-\pi}^0 \sin (nt) dt - \frac{1}{\pi} \int_0^{\pi} \sin (nt) dt \\
+        &= -\frac{1}{n\pi} \cos (nt) \Big|_{-\pi}^0 + \frac{1}{n\pi} \cos (nt) \Big|_0^{\pi} \\
+        &= -\frac{1}{n\pi}\left(1 - \cos (-n\pi)\right) + \frac{1}{n\pi}\left(\cos (n\pi) - 1\right) \\
+        &= -\frac{1}{n\pi} + \frac{1}{n\pi}\cos (-n\pi) + \frac{1}{n\pi}\cos (n\pi) - \frac{1}{n\pi} \\
+        &= \frac{2}{n\pi}\big(1 - (-1^n)\big) \\
+        &= \begin{cases} -\frac{4}{n\pi} \quad \text{odd} \\ \quad 0 \quad \text{even} \end{cases}
+    \end{split}
+\end{equation*}
+Thus
+\[f(t) = \sum_{n=1}^{\infty} \frac{-4}{(2n-1)\pi} \sin \big((2n-1)t \big).\]
+
+
+\begin{itemize}
+    \item[{\textbf{-6-}}] \textbf{(More on Fourier Series.)}  Calculate the Fourier series of
+    \[f(x) = \cos(x+1).\]
+    Hint: Before you embark on the computation of a bunch of integrals think about what you would expect the Fourier series to be.  Perhaps you can find it without doing any integrals!
+\end{itemize}
+
+
+\begin{itemize}
+    \item[{\textbf{-7-}}] \textbf{(Spline versus Cubic Hermite Interpolation.)}  Let the function $s(x)$ be defined by
+    \[f(t) = \begin{cases}
+    \quad 1 \quad \text{if } t \in (-\pi, 0) \\
+    \ -1 \quad \text{if } t \in [0, \pi]]
+    \end{cases}\]
+\end{itemize}
+\begin{itemize}
+    \item [{\textbf{a.}}]  Show that $s$ is the piecewise cubic Hermite interpolant to the data:
+    \[s(0) = 1, \quad s(1) = s(2) = 2, \quad s^{\prime}(0) = 1, \quad s^{\prime}(1) = \gamma, \quad s^{\prime}(2) = 0\]
+    \item [{\textbf{b.}}]  For what value of $\gamma$ does $s$ become a cubic spline?
+\end{itemize}
+
+
+\begin{itemize}
+    \item[{\textbf{-8-}}] \textbf{(The Bernstein Bezier Form.)}  With the notation given in our handout, show that every univariate polynomial of degree $d$ can be written uniquely in Berstein-Bezier form.
+\end{itemize}
+
+
+\begin{itemize}
+    \item[{\textbf{-9-}}] \textbf{(The interpolant to symmetric data is symmetric.)}  Suppose you are given symmetric data
+    \begin{equation}
+        (x_i, y_i), \quad i = -n, -n+1, \cdots, n-1, n,
+    \end{equation}
+    such that
+    \begin{equation}
+        x_{-i} = -x_i, \quad \text{and} \quad y_{-i} = -y_i \quad i = 0,1,\cdots,n.
+    \end{equation}
+    What is the required degree on the interpolating polynomial $p$?  Show that the interpolating polynomial is odd, i.e.,
+    \begin{equation}
+        p(x) = -p(-x)
+    \end{equation}
+    for all real numbers $x$.
+\end{itemize}
+
+
+
+
+\end{document}
