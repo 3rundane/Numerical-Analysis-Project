@@ -101,26 +101,37 @@
     \[a_{i,j} = (\phi_i , \phi_j ).\]
     Show that $A$ is positive definite.
 \end{itemize}
-In order to show that $A$ is positive definite, we need to show that $a^T Aa > 0$ for all $a$ in the vector space.  Let \(a^T = \begin{bmatrix} \alpha_0 & \alpha_1 & \cdots & \alpha_n \end{bmatrix}\) and $a^T A$ becomes
-\[\begin{bmatrix} \alpha_0 & \alpha_1 & \cdots & \alpha_n \end{bmatrix} \cdot
-\begin{bmatrix} (\phi_0, \phi_0) & \cdots & (\phi_0, \phi_n) \\
-\vdots &   &  \vdots \\
-(\phi_n, \phi_0) & \cdots & (\phi_n, \phi_n)\end{bmatrix} =
-\begin{bmatrix} (\phi_0, \phi_0)\alpha_0 & \cdots & (\phi_0, \phi_n)\alpha_0 \\
-\vdots &   &  \vdots \\
-(\phi_n, \phi_0)\alpha_n & \cdots & (\phi_n, \phi_n)\alpha_n \end{bmatrix} =
-\begin{bmatrix} (s, \phi_0) \\ \vdots \\ (s, \phi_n) \end{bmatrix}\]
-Now $a^T Aa$ becomes
-\[\begin{bmatrix} (\phi_0, \phi_0)\alpha_0 & \cdots & (\phi_0, \phi_n)\alpha_0 \\
-\vdots &   &  \vdots \\
-(\phi_n, \phi_0)\alpha_n & \cdots & (\phi_n, \phi_n)\alpha_n \end{bmatrix} \cdot
-\begin{bmatrix} \alpha_0 \\ \vdots \\ \alpha_n \end{bmatrix} =
-\begin{bmatrix} (\phi_0, \phi_0)\alpha_0 \alpha_0 & \cdots & (\phi_0, \phi_n)\alpha_0 \alpha_n \\
-\vdots &   &  \vdots \\
-(\phi_n, \phi_0)\alpha_n \alpha_0 & \cdots & (\phi_n, \phi_n)\alpha_n \alpha_n \end{bmatrix} =
-\begin{bmatrix} (s,s) \\ \vdots \\ (s,s) \end{bmatrix}\]
-This results in a positive definite matrix
-\[(s,s) = \sum_{i=0}^n \alpha_i \phi_i \sum_{j=0}^n \alpha_j \phi_j .\]
+% In order to show that $A$ is positive definite, we need to show that $a^T Aa > 0$ for all $a$ in the vector space.  Let \(a^T = \begin{bmatrix} \alpha_0 & \alpha_1 & \cdots & \alpha_n \end{bmatrix}\) and $a^T A$ becomes
+% \[\begin{bmatrix} \alpha_0 & \alpha_1 & \cdots & \alpha_n \end{bmatrix} \cdot
+% \begin{bmatrix} (\phi_0, \phi_0) & \cdots & (\phi_0, \phi_n) \\
+% \vdots &   &  \vdots \\
+% (\phi_n, \phi_0) & \cdots & (\phi_n, \phi_n)\end{bmatrix} =
+% \begin{bmatrix} (\phi_0, \phi_0)\alpha_0 & \cdots & (\phi_0, \phi_n)\alpha_0 \end{bmatrix} =
+% \begin{bmatrix} (s, \phi_0) \\ \vdots \\ (s, \phi_n) \end{bmatrix}\]
+% Now $a^T Aa$ becomes
+% \[\begin{bmatrix} (\phi_0, \phi_0)\alpha_0 & \cdots & (\phi_0, \phi_n)\alpha_0 \\
+% \vdots &   &  \vdots \\
+% (\phi_n, \phi_0)\alpha_n & \cdots & (\phi_n, \phi_n)\alpha_n \end{bmatrix} \cdot
+% \begin{bmatrix} \alpha_0 \\ \vdots \\ \alpha_n \end{bmatrix} =
+% \begin{bmatrix} (\phi_0, \phi_0)\alpha_0 \alpha_0 & \cdots & (\phi_0, \phi_n)\alpha_0 \alpha_n \\
+% \vdots &   &  \vdots \\
+% (\phi_n, \phi_0)\alpha_n \alpha_0 & \cdots & (\phi_n, \phi_n)\alpha_n \alpha_n \end{bmatrix} = (s,s)\]
+% This results in a positive definite matrix
+% \[(s,s) = \sum_{i=0}^n \alpha_i \phi_i \sum_{j=0}^n \alpha_j \phi_j .\]
+Let $\alpha \in \R^n$ where \(\alpha = \begin{bmatrix} \alpha_1 & \alpha_2 & \cdots & \alpha_n \end{bmatrix}^T\) and $\alpha \neq 0$.  Now consider $\alpha^T A\alpha$ where \(A = \left[\left(\phi_i , \phi_j \right) \right]_{i = 1, ..., n \& j = 1, ..., n}\).  We have
+\begin{equation*}
+    \begin{split}
+        \alpha^T A\alpha &= \begin{bmatrix} \sum_{i=1}^n \alpha_i (\phi_i , \phi_1) & \sum_{i=1}^n \alpha_i (\phi_i , \phi_2) & \cdots & \sum_{i=1}^n \alpha_i (\phi_i , \phi_n) \end{bmatrix} \alpha \\
+        &= \sum_{i=1}^n \alpha_1 \alpha_i (\phi_i , \phi_1) + \sum_{i=1}^n \alpha_2 \alpha_i (\phi_i , \phi_2) + ... + \sum_{i=1}^n \alpha_n \alpha_i (\phi_i , \phi_n) \\
+        &= \sum_{j=1}^n \sum_{i=1}^n \alpha_j \alpha_i (\phi_j , \phi_i) \\
+        &= \sum_{j=1}^n \sum_{i=1}^n \left(\alpha_j \phi_j , \alpha_i \phi_i \right) \\
+        &= \left(\sum_{j=1}^n \alpha_j \phi_j , \sum_{i=1}^n \alpha_i \phi_i \right) \\
+        &= (S, S)
+    \end{split}
+\end{equation*}
+And since $S$ is a non-trivial linear combo of basis function then $S \neq 0$, which in turn gives us,
+\[\alpha^T A\alpha = (S, S) > 0 \quad \text{for all} \quad \alpha \in \R^n.\]
+Therefore, $A$ is a positive definite matrix.
 
 
 \begin{itemize}
@@ -131,25 +142,50 @@ This results in a positive definite matrix
         (f,g) = \int_0^1 f(x)g(x) dx.
     \end{equation}
 \end{itemize}
-Let $f_1 = 1, f_2 = x$ and $f_3 = e^x$.  Recall the Gram-Schmidt formula
-\[g_1 = f_1, \quad g_2 = f_2 - \frac{(f_2, g_1)}{||g_1||^2} g_1, \quad g_3 = f_3 - \frac{(f_3, g_2)}{||g_2||^2} g_2 - \frac{(f_3, g_1)}{||g_1||^2} g_1\]
+% Let $f_1 = 1, f_2 = x$ and $f_3 = e^x$.  Recall the Gram-Schmidt formula
+% \[g_1 = f_1, \quad g_2 = f_2 - \frac{(f_2, g_1)}{||g_1||^2} g_1, \quad g_3 = f_3 - \frac{(f_3, g_2)}{||g_2||^2} g_2 - \frac{(f_3, g_1)}{||g_1||^2} g_1\]
+% We have
+% \begin{equation*}
+%     \begin{split}
+%         g_1 &= 1 \\
+%         g_2 &= x - \frac{(x,1)}{||1||^2} \cdot 1 = x - \frac{\int_0^1 x dx}{\int_0^1 1 dx} = x - \frac{\frac{1}{2}}{1} = x - \frac{1}{2} \\
+%         g_3 &= e^x - \frac{(e^x,x - \frac{1}{2})}{\left|\left|x - \frac{1}{2}\right|\right|^2} \cdot \left(x - \frac{1}{2}\right) - \frac{(e^x,1)}{||1||^2} \cdot 1 \\
+%         &= e^x - \frac{\int_0^1 e^x \left(x - \frac{1}{2}\right) dx}{\int_0^1 \left(x - \frac{1}{2}\right)^2 dx} \cdot \left(x - \frac{1}{2}\right) - \frac{\int_0^1 e^x dx}{\int_0^1 1 dx} \cdot 1 \\
+%         &= e^x - \frac{\left(x - \frac{1}{2}\right)\left(\frac{1}{2} - \frac{1}{2}e\right)}{\frac{1}{12}} - (e - 1) \\
+%         &= e_x - 12\left(\frac{1}{2}x - \frac{1}{2}ex - \frac{1}{4} + \frac{1}{4}e\right) - e + 1 \\
+%         &= e^x - 6x + 6ex + 3 - 3e - e + 1 \\
+%         &= e^x - 6x +6ex - 4e + 4
+%     \end{split}
+% \end{equation*}
+The Gram-Schmidt process, have basis $\phi_0, \phi_1, \phi_2$ and we want to construct orthonormal basis $g_0, g_1, g_2$ from the basis.
+Let
+\begin{equation*}
+    \begin{split}
+        g_0 = \frac{\phi_0}{||\phi_0||} \quad z_1 &= \phi_1 - (\phi_1, g_0)g_0 \quad z_2 = \phi_2 - (\phi_2, g_1)g_1 - (\phi_2, g_0)g_0 \\
+        g_1 &= \frac{z_1}{||z_1||} \quad \qquad \qquad g_2 = \frac{z_2}{||z_2||}
+    \end{split}
+\end{equation*}
 We have
 \begin{equation*}
     \begin{split}
-        g_1 &= 1 \\
-        g_2 &= x - \frac{(x,1)}{||1||^2} \cdot 1 = x - \frac{\int_0^1 x dx}{\int_0^1 1 dx} = x - \frac{\frac{1}{2}}{1} = x - \frac{1}{2} \\
-        g_3 &= e^x - \frac{(e^x,x - \frac{1}{2})}{\left|\left|x - \frac{1}{2}\right|\right|^2} \cdot \left(x - \frac{1}{2}\right) - \frac{(e^x,1)}{||1||^2} \cdot 1 \\
-        &= e^x - \frac{\int_0^1 e^x \left(x - \frac{1}{2}\right) dx}{\int_0^1 \left(x - \frac{1}{2}\right)^2 dx} \cdot \left(x - \frac{1}{2}\right) - \frac{\int_0^1 e^x dx}{\int_0^1 1 dx} \cdot 1 \\
-        &= e^x - \frac{\left(x - \frac{1}{2}\right)\left(\frac{1}{2} - \frac{1}{2}e\right)}{\frac{1}{12}} - (e - 1) \\
-        &= e_x - 12\left(\frac{1}{2}x - \frac{1}{2}ex - \frac{1}{4} + \frac{1}{4}e\right) - e + 1 \\
-        &= e^x - 6x + 6ex + 3 - 3e - e + 1 \\
-        &= e^x - 6x +6ex - 4e + 4
+        g_0 &= \frac{1}{\left[\int_0^1 1^2 \ dx \right]^{\frac{1}{2}}} = 1 \\
+        z_1 &= x - (x,1)\cdot 1 = x - \int_0^1 x \cdot 1 \ dx \cdot 1 = x - \frac{1}{2} \\
+        g_1 &= \frac{x - \frac{1}{2}}{\left[\int_0^1 \left(x - \frac{1}{2}\right)^2 \ dx \right]^{\frac{1}{2}}} = \frac{x - \frac{1}{2}}{\left[\frac{1}{3} \left(x - \frac{1}{2}\right)^3 \Big|_0^1 \right]^{\frac{1}{2}}} = 2\sqrt{3} x - \sqrt{3} \\
+        z_2 &= e^x - (e^x, 2\sqrt{3} x - \sqrt{3})(2\sqrt{3} x - \sqrt{3}) - (e^x, 1) \cdot 1 \\
+        &= e^x - \sqrt{3} \int_0^1 (2x e^x - e^x) \ dx \ (2\sqrt{3} x - \sqrt{3}) - \int_0^1 e^x \cdot 1 \ dx \cdot 1 \\
+        &= e^x + \sqrt{3}(e - 3)(2\sqrt{3} x - \sqrt{3}) - e + 1 \\
+        &= e^x + (e - 3)(6x - 3) - e + 1 \\
+        &= e^x + 6ex - 3e - 18x + 9 - e + 1 \\
+        &= e^x + (6e - 18)x + (10 - 4e) \\
+        g_2 &= \frac{e^x + (6e - 18)x + (10 - 4e)}{\left[\int_0^1 \left(e^x + (6e - 18)x + (10 - 4e)\right)^2 \ dx \right]^{\frac{1}{2}}} \\
+        &= \frac{e^x + (6e - 18)x + (10 - 4e)}{\sqrt{-4e^2 + 20e + \frac{e^2 - 1}{2} - 28}} \\
+        &= -\frac{1}{2}(7e^2 - 40e + 57)
     \end{split}
 \end{equation*}
 
 
 \begin{itemize}
-    \item[{\textbf{-3-}}] \textbf{``The Three Term Recurrence Relation".)}  Let the inner product $(f,g)$ be defined by
+    \item[{\textbf{-3-}}] \textbf{(``The Three Term Recurrence Relation".)}  Let the inner product $(f,g)$ be defined by
     \begin{equation}
         (f,g) = \int_a^b wf(x)g(x) dx.
     \end{equation}
@@ -191,8 +227,31 @@ Finally
 
 
 \begin{itemize}
-    \item[{\textbf{-4-}}] \textbf{(More on the Recurrence Relation.)}  Remember that a key property of the inner products for which we established the three term relation was that $(xf,g) = (f,xg)$.  Find an inner product that violates that rule, ans for which the recurrence relation does indeed fail to yield orthogonal polynomials.  (Thus use the recurrence relation to construct the first few polynomials, until you find two that are not orthogonal.)
+    \item[{\textbf{-4-}}] \textbf{(More on the Recurrence Relation.)}  Remember that a key property of the inner products for which we established the three term relation was that $(xf,g) = (f,xg)$.  Find an inner product that violates that rule, and for which the recurrence relation does indeed fail to yield orthogonal polynomials.  (Thus use the recurrence relation to construct the first few polynomials, until you find two that are not orthogonal.)
 \end{itemize}
+Defining the inner product as
+\[(f,g) = \int_{-1}^1 f(x)g(x) \ dx + f^{\prime}(x)g^{\prime}(x)\]
+this is not generally true that $(xf,g) = (f,xg)$. Let $f(x) = x$ and $g(x) = 1$.  We have,
+\begin{equation*}
+    \begin{split}
+        (xf,g) &= \int_{-1}^1 x^2 (1) + \left(x^2 \right)^{\prime} (1)^{\prime} \ dx = \int_{-1}^1 x^2 \ dx = \frac{2}{3} \\
+        (f,xg) &= \int_{-1}^1 x (x) + (x)^{\prime} (x)^{\prime} \ dx = \frac{2}{3} + 2
+    \end{split}
+\end{equation*}
+Let $Q_0 = 1$, thus
+\[a_1 = \frac{(xQ_0, Q_0)}{(Q_0, Q_0)} = \frac{(x \cdot 1,1)}{(1,1)} = \frac{\int_{-1}^1 x dx}{\int_{-1}^1 1 dx} = 0\]
+and
+\[Q_1 = (x - a_1) Q_0 = (x - 0) \cdot 1 \Longrightarrow Q_1 = x.\]
+Now
+\[a_2 = \frac{(xQ_1, Q_1)}{(Q_1, Q_1)} = \frac{(x \cdot x,x)}{(x,x)} = \frac{\int_{-1}^1 x^3 + 2x dx}{\int_{-1}^1 x^2 + 1 dx} = 0\]
+\[b_2 = \frac{(xQ_1, Q_0)}{(Q_0, Q_0)} = \frac{(x \cdot 1,1)}{(1,1)} = \frac{\int_{-1}^1 x^2 dx}{\int_{-1}^1 1 dx} = \frac{1}{3}\]
+and
+\[Q_2 = (x - a_2 ) Q_1 - b_2 Q_0 = (x - 0) x - \frac{1}{3} (1) \Longrightarrow Q_2 = x^2 - \frac{1}{3}.\]
+Next
+\[a_3 = \frac{(xQ_2, Q_2)}{(Q_2, Q_2)} = \frac{(x(x^2 - \frac{1}{3}),x^2 - \frac{1}{3})}{(x^2 - \frac{1}{3},x^2 - \frac{1}{3})} = 0\]
+\[b_3 = \frac{(xQ_2, Q_1)}{(Q_1, Q_1)} = \frac{(x(x^2 - \frac{1}{3}),x)}{(x,x)} = \frac{\int_{-1}^1 x^4 - \frac{1}{3}x^2 dx}{\int_{-1}^1 x^2 dx} = \frac{4}{15}\]
+\[Q_3 = (x - a_3 ) Q_2 - b_3 Q_1 = x \left(x^2 - \frac{1}{3}\right) - \frac{4}{15} (x) \Longrightarrow Q_3 = x^3 - \frac{3}{5}x.\]
+Now because \((Q_3, Q_1) = -\frac{1}{5} \neq 0\), this violates the rule of $(xf,g) = (f,xg)$ and the recurrence relation fails to yield orthogonal polynomials.
 
 
 \begin{itemize}
@@ -244,7 +303,7 @@ Thus
 
 
 \begin{itemize}
-    \item[{\textbf{-8-}}] \textbf{(The Bernstein Bezier Form.)}  With the notation given in our handout, show that every univariate polynomial of degree $d$ can be written uniquely in Berstein-Bezier form.
+    \item[{\textbf{-8-}}] \textbf{(The Bernstein B\'{e}zier Form.)}  With the notation given in our handout, show that every univariate polynomial of degree $d$ can be written uniquely in Berstein-B\'{e}zier form.
 \end{itemize}
 
 
