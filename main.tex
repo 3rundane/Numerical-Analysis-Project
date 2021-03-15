@@ -1,0 +1,68 @@
+\documentclass[11pt]{article}
+\usepackage{fancyhdr, mathtools, extramarks, amsmath, amsthm, amssymb, amsfonts, enumitem, indentfirst, graphicx, listings, cleveref, float, xfrac}
+\usepackage[bottom]{footmisc}
+\usepackage{xcolor} %for color
+\setlength\parindent{0pt}
+\usepackage[margin=1 in, footskip=0.5in]{geometry}
+
+\begin{document}
+
+
+% PROBLEM 6
+\section*{Problem 6}
+We that this problem is quite easily solvable by using the sum-to-product identity for cosine. 
+\[\cos{(\alpha + \beta)} = \cos{(\alpha)}\cos{(\beta)} - \sin{(\alpha)}\sin{(\beta)}\]
+Giving us, 
+\[\cos{(x+1)} = \cos{(1)}\cos{(x)} - \sin{(1)}\sin{(x)}\]
+which fits the form of the Fourier series. 
+% PROBLEM 8
+\newpage
+\section*{Problem 8}
+
+In order to show that any polynomial in power form can be uniquely written in B-form, we can simply show that the Bezier polynomials form a basis for the degree $d$ space. 
+Let
+\[B^d_i = {{d}\choose{i}}b_1^1b_2^{d-i} \quad \hbox{for} \quad i=0,1, \cdots, d\]
+
+It suffices to show the $B_i^d$ are linearly independent polynomials with respect to $b_1$, where $b_2 = 1-b_1$. This is sufficient since we have the correct number of polynomials to form a basis for this space. Using the Binomial expansion theorem and the fact that $b_2 = 1-b_1$ we have,
+\begin{align*}
+    B_i^d &= {d \choose i}b_1^i \cdot (1-b_1)^{d-i}\\
+          &= {d \choose i}b_1^i \sum \limits_{k=0}^{d-i}(-1)^k {{d-i}\choose{k}} b_1^k \\
+          \intertext{Applying a change of index, and some algebraic manipulation gives us,}
+          &= \sum \limits_{k=i}^{d} (-1)^{k-i} {d \choose i} {{d-i} \choose {k-i}}b_1^{k+i-i}\\
+          &= \sum \limits_{k=i}^{d}(-1)^{k-i} {d \choose k} {k \choose i} b_1^k
+\end{align*}
+The last equality comes from the fact that ${d\choose i}{{d-i}\choose {k-i}} = {d \choose k}{k \choose i}$ which is verified at the end. So we can write our Bezier polynomials in the form derived above. 
+\[B_i^d= \sum \limits_{k=i}^{d}(-1)^{k-i} {d \choose k} {k \choose i} b_1^k\]
+Now for showing linear independence if we have, 
+\[\sum \limits_{i=0}^d \alpha_i B^d_i =0 \]
+for some $\alpha_i$ coefficients, we show that all $\alpha_i$ are zero. Expanding this sum out we have:
+\begin{equation}
+    \alpha_0 \sum_{k=0}^d {d\choose k}{k \choose 0}(-1^k)b_1^k + \alpha_1 \sum_{k=1}^d {d\choose k}{k \choose 1}(-1)^{k-1}b_1^k + \cdots + \alpha_d \sum \limts_{k=d}^d {d \choose k} {k \choose d} (-1)^{k-d}b_1^k = 0
+    \label{gold}
+\end{equation}
+ We can see the only constant term, with respect to $b_1$ as our variable, is $\alpha_0$. Meaning that $\alpha_0 = 0$ as there are no other constant terms to cancel out with. So we can simplify our equation (\ref{gold}) to 
+\[\alpha_1 \sum_{k=1}^d {d\choose k}{k \choose 1}(-1)^{k-1}b_1^k + \cdots + \alpha_d \sum \limts_{k=d}^d {d \choose k} {k \choose d} (-1)^{k-d}b_1^k = 0\]
+Again we note there is now only one $b_1$ term. This term has a coefficient of $\alpha_1$. Meaning that $\alpha_1 = 0$. Continuing this process inductively we see that 
+\[\alpha_0 = \alpha_1 = \cdots = \alpha_d = 0\]
+So $\{B^d_i\}_{i=0}^d$ forms a basis for our degree $d$ polynomial space. Thus we can write any polynomial in power form  uniquely into B-form.\\
+
+Lastly verifying ${d\choose i}{{d-i}\choose {k-i}} = {d \choose k}{k \choose i}$. 
+\begin{align*}
+    {d\choose i}{{d-i}\choose {k-i}} &= \frac{d!}{i! (d-i)!}\frac{(d-i)!}{(k-i)!(d-k)!}\\
+    &=\frac{d!}{i!(k-i)!(d-k)!}\\
+    &=\frac{d!k!}{i!(k-i)!(d-k)!k!}\\
+    &=\frac{d!}{k!(d-k)!}\frac{k!}{i!(k-i)!}\\
+    &={d \choose k}{k \choose i}
+\end{align*}
+
+%PROBLEM 9
+\newpage
+\section*{Problem 9}
+We note that are interpolating at $2n+1$ distinct nodes thus we make the primitive assertion our polynomial $p$ is at most degree $2n$. We define the following function 
+\[g(x) = p(x) + p(-x)\]
+where $g$ is a polynomial of degree at most $2n$. We note that $g(x)$ has $2n+1$ distinct roots, namely $x_i$ for $i=-n,-n+1, \cdots, n-1, n$. However the only polynomial with a larger number of roots then the degree is infact the zero polynomial, or the zero function. So we have, 
+\[g(x) = p(x) + p(-x) =0 \quad \hbox{for all}\: \: x \in \mathbb{R}\]
+Thus we have, 
+\[p(x) = -p(-x)\]
+for all real numbers $x$. This of course means that our polynomial is an odd function, allowing us to mend our primitive answer before---$p$ can have a degree at most $2n-1$.
+\end{document}
