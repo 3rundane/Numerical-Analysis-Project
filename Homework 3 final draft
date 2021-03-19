@@ -1,0 +1,527 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+
+% \title{homework 3 updated}
+% \author{3rundane }
+% \date{March 2021}
+
+% \documentclass[11pt]{article}
+
+%%%%%%%%%%%%%%%%%%%
+% Page Layout
+%%%%%%%%%%%%%%%%%%%
+
+\setlength{\paperwidth}{8.5in} \setlength{\paperheight}{11in}
+\setlength{\marginparwidth}{0in} \setlength{\marginparsep}{0in}
+\setlength{\oddsidemargin}{0in} \setlength{\evensidemargin}{0in}
+\setlength{\textwidth}{6.5in} \setlength{\topmargin}{-0.5in}
+\setlength{\textheight}{9in}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Include Packages and Style Files
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage[english]{babel}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{enumerate}
+\usepackage[useregional]{datetime2}
+\usepackage[pdftex]{graphicx,color}
+\usepackage{multicol}
+\setlength{\columnsep}{1.5cm}
+\usepackage{algorithm2e}
+\usepackage{listings}
+\usepackage{multirow}
+\usepackage[utf8]{inputenc}
+\usepackage[bottom]{footmisc}
+\usepackage{animate}
+\usepackage{float}
+\usepackage{hyperref}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+}
+\urlstyle{same}
+
+\setlength{\arrayrulewidth}{0.8mm}
+\setlength{\tabcolsep}{18pt}
+\renewcommand{\arraystretch}{1.25}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Define theorem environments
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{question}[theorem]{Question}
+\newtheorem{conjecture}[theorem]{Conjecture}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem*{remark}{Remark}
+
+%%%%%%%%%%%%%%%%%%%%%%
+% Define new commands
+%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\R}{\mathbb{R}}
+
+\newcommand{\E}{\mathbb{E}}
+\renewcommand{\P}{\mathbb{P}}
+\newcommand{\Var}{\operatorname{Var}}
+\newcommand{\1}[1]{\mathbf{1} \left \{ #1 \right \}}
+\newcommand{\Range}{\operatorname{Range}}
+
+% \newenvironment{boxed}
+%     {\begin{center}
+%     \begin{tabular}{|p{0.9\textwidth}|}
+%     \hline\\
+%     }
+%     {
+%     \\\\\hline
+%     \end{tabular}
+%     \end{center}
+%     }
+
+%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\title{Numerical Analysis Project \\ MATH 5600 \\ Homework 3}
+\date{Due: March 19, 2021}
+\author{Authors: \\ Dane Gollero $\cdot$ Ike Griss Salas $\cdot$ Magon Bowling}
+
+\maketitle
+% \documentclass[11pt]{article}
+
+% %%%%%%%%%%%%%%%%%%%
+% % Page Layout
+% %%%%%%%%%%%%%%%%%%%
+
+% \setlength{\paperwidth}{8.5in} \setlength{\paperheight}{11in}
+% \setlength{\marginparwidth}{0in} \setlength{\marginparsep}{0in}
+% \setlength{\oddsidemargin}{0in} \setlength{\evensidemargin}{0in}
+% \setlength{\textwidth}{6.5in} \setlength{\topmargin}{-0.5in}
+% \setlength{\textheight}{9in}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % Include Packages and Style Files
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \usepackage[english]{babel}
+% \usepackage{amsmath,amssymb,amsthm}
+% \usepackage{enumerate}
+% \usepackage[useregional]{datetime2}
+% \usepackage[pdftex]{graphicx,color}
+% \usepackage{multicol}
+% \setlength{\columnsep}{1.5cm}
+% \usepackage{algorithm2e}
+% \usepackage{listings}
+% \usepackage{multirow}
+% \usepackage[utf8]{inputenc}
+% \usepackage[bottom]{footmisc}
+% \usepackage{animate}
+% \usepackage{float}
+% \usepackage{hyperref}
+
+% \hypersetup{
+%     colorlinks=true,
+%     linkcolor=blue,
+%     filecolor=magenta,
+%     urlcolor=cyan,
+% }
+% \urlstyle{same}
+
+% \setlength{\arrayrulewidth}{0.8mm}
+% \setlength{\tabcolsep}{18pt}
+% \renewcommand{\arraystretch}{1.25}
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% % Define theorem environments
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% \newtheorem{theorem}{Theorem}[section]
+% \newtheorem{proposition}[theorem]{Proposition}
+% \newtheorem{lemma}[theorem]{Lemma}
+% \newtheorem{corollary}[theorem]{Corollary}
+% \newtheorem{claim}[theorem]{Claim}
+% \newtheorem{question}[theorem]{Question}
+% \newtheorem{conjecture}[theorem]{Conjecture}
+
+% \theoremstyle{definition}
+% \newtheorem{definition}[theorem]{Definition}
+% \newtheorem{example}[theorem]{Example}
+% \newtheorem*{remark}{Remark}
+
+% %%%%%%%%%%%%%%%%%%%%%%
+% % Define new commands
+% %%%%%%%%%%%%%%%%%%%%%%
+
+% \newcommand{\R}{\mathbb{R}}
+
+% \newcommand{\E}{\mathbb{E}}
+% \renewcommand{\P}{\mathbb{P}}
+% \newcommand{\Var}{\operatorname{Var}}
+% \newcommand{\1}[1]{\mathbf{1} \left \{ #1 \right \}}
+% \newcommand{\Range}{\operatorname{Range}}
+
+% \newenvironment{boxed}
+%     {\begin{center}
+%     \begin{tabular}{|p{0.9\textwidth}|}
+%     \hline\\
+%     }
+%     {
+%     \\\\\hline
+%     \end{tabular}
+%     \end{center}
+%     }
+
+%%%%%%%%%%%%%%%%%%%%%%
+
+% \begin{document}
+
+% \title{Numerical Analysis Project \\ MATH 5600 \\ Homework 3}
+% \date{Due: March 19, 2021}
+% \author{Authors: \\ Dane Gollero $\cdot$ Ike Griss Salas $\cdot$ Magon Bowling}
+
+\maketitle
+
+\begin{itemize}
+    \item[{\textbf{-1-}}] \textbf{(Inner Products.)}  Let $(f,g)$ denote an inner product on a suitable function space $S$, and let $f$ be given function in $S$.  Suppose we want to approximate $f$ by a function
+    \begin{equation}
+        s = \sum_{i=1}^n \alpha_i \phi_i
+    \end{equation}
+    also in $S$.  Recall that we have to solve a linear system with a coefficient matrix $A$ whose $i,j$ entry is
+    \[a_{i,j} = (\phi_i , \phi_j ).\]
+    Show that $A$ is positive definite.
+\end{itemize}
+% In order to show that $A$ is positive definite, we need to show that $a^T Aa > 0$ for all $a$ in the vector space.  Let \(a^T = \begin{bmatrix} \alpha_0 & \alpha_1 & \cdots & \alpha_n \end{bmatrix}\) and $a^T A$ becomes
+% \[\begin{bmatrix} \alpha_0 & \alpha_1 & \cdots & \alpha_n \end{bmatrix} \cdot
+% \begin{bmatrix} (\phi_0, \phi_0) & \cdots & (\phi_0, \phi_n) \\
+% \vdots &   &  \vdots \\
+% (\phi_n, \phi_0) & \cdots & (\phi_n, \phi_n)\end{bmatrix} =
+% \begin{bmatrix} (\phi_0, \phi_0)\alpha_0 & \cdots & (\phi_0, \phi_n)\alpha_0 \end{bmatrix} =
+% \begin{bmatrix} (s, \phi_0) \\ \vdots \\ (s, \phi_n) \end{bmatrix}\]
+% Now $a^T Aa$ becomes
+% \[\begin{bmatrix} (\phi_0, \phi_0)\alpha_0 & \cdots & (\phi_0, \phi_n)\alpha_0 \\
+% \vdots &   &  \vdots \\
+% (\phi_n, \phi_0)\alpha_n & \cdots & (\phi_n, \phi_n)\alpha_n \end{bmatrix} \cdot
+% \begin{bmatrix} \alpha_0 \\ \vdots \\ \alpha_n \end{bmatrix} =
+% \begin{bmatrix} (\phi_0, \phi_0)\alpha_0 \alpha_0 & \cdots & (\phi_0, \phi_n)\alpha_0 \alpha_n \\
+% \vdots &   &  \vdots \\
+% (\phi_n, \phi_0)\alpha_n \alpha_0 & \cdots & (\phi_n, \phi_n)\alpha_n \alpha_n \end{bmatrix} = (s,s)\]
+% This results in a positive definite matrix
+% \[(s,s) = \sum_{i=0}^n \alpha_i \phi_i \sum_{j=0}^n \alpha_j \phi_j .\]
+Let $\alpha \in \R^n$ where \(\alpha = \begin{bmatrix} \alpha_1 & \alpha_2 & \cdots & \alpha_n \end{bmatrix}^T\) and $\alpha \neq 0$.  Now consider $\alpha^T A\alpha$ where \(A = \left[\left(\phi_i , \phi_j \right) \right]_{i = 1, ..., n \& j = 1, ..., n}\).  We have
+\begin{equation*}
+    \begin{split}
+        \alpha^T A\alpha &= \begin{bmatrix} \sum_{i=1}^n \alpha_i (\phi_i , \phi_1) & \sum_{i=1}^n \alpha_i (\phi_i , \phi_2) & \cdots & \sum_{i=1}^n \alpha_i (\phi_i , \phi_n) \end{bmatrix} \alpha \\
+        &= \sum_{i=1}^n \alpha_1 \alpha_i (\phi_i , \phi_1) + \sum_{i=1}^n \alpha_2 \alpha_i (\phi_i , \phi_2) + ... + \sum_{i=1}^n \alpha_n \alpha_i (\phi_i , \phi_n) \\
+        &= \sum_{j=1}^n \sum_{i=1}^n \alpha_j \alpha_i (\phi_j , \phi_i) \\
+        &= \sum_{j=1}^n \sum_{i=1}^n \left(\alpha_j \phi_j , \alpha_i \phi_i \right) \\
+        &= \left(\sum_{j=1}^n \alpha_j \phi_j , \sum_{i=1}^n \alpha_i \phi_i \right) \\
+        &= (S, S)
+    \end{split}
+\end{equation*}
+And since $S$ is a non-trivial linear combo of basis function then $S \neq 0$, which in turn gives us,
+\[\alpha^T A\alpha = (S, S) > 0 \quad \text{for all} \quad \alpha \in \R^n.\]
+Therefore, $A$ is a positive definite matrix.
+
+
+\begin{itemize}
+    \item[{\textbf{-2-}}] \textbf{(Example for Gram Schmidt Process.)}  Use the Gram-Schmidt Process to find a basis of
+    \[\text{span}\{1,x,e^x\}\]
+    that is orthonormal with respect to the inner product
+    \begin{equation}
+        (f,g) = \int_0^1 f(x)g(x) dx.
+    \end{equation}
+\end{itemize}
+% Let $f_1 = 1, f_2 = x$ and $f_3 = e^x$.  Recall the Gram-Schmidt formula
+% \[q_1 = f_1, \quad q_2 = f_2 - \frac{(f_2, q_1)}{||q_1||^2} q_1, \quad g_3 = f_3 - \frac{(f_3, q_2)}{||q_2||^2} q_2 - \frac{(f_3, q_1)}{||q_1||^2} q_1\]
+% We have
+% \begin{equation*}
+%     \begin{split}
+%         q_1 &= 1 \\
+%         q_2 &= x - \frac{(x,1)}{||1||^2} \cdot 1 = x - \frac{\int_0^1 x dx}{\int_0^1 1 dx} = x - \frac{\frac{1}{2}}{1} = x - \frac{1}{2} \\
+%         g_3 &= e^x - \frac{(e^x,x - \frac{1}{2})}{\left|\left|x - \frac{1}{2}\right|\right|^2} \cdot \left(x - \frac{1}{2}\right) - \frac{(e^x,1)}{||1||^2} \cdot 1 \\
+%         &= e^x - \frac{\int_0^1 e^x \left(x - \frac{1}{2}\right) dx}{\int_0^1 \left(x - \frac{1}{2}\right)^2 dx} \cdot \left(x - \frac{1}{2}\right) - \frac{\int_0^1 e^x dx}{\int_0^1 1 dx} \cdot 1 \\
+%         &= e^x - \frac{\left(x - \frac{1}{2}\right)\left(\frac{1}{2} - \frac{1}{2}e\right)}{\frac{1}{12}} - (e - 1) \\
+%         &= e_x - 12\left(\frac{1}{2}x - \frac{1}{2}ex - \frac{1}{4} + \frac{1}{4}e\right) - e + 1 \\
+%         &= e^x - 6x + 6ex + 3 - 3e - e + 1 \\
+%         &= e^x - 6x +6ex - 4e + 4
+%     \end{split}
+% \end{equation*}
+The Gram-Schmidt process, have basis $\phi_0, \phi_1, \phi_2$ and we want to construct orthonormal basis $q_0, q_1, q_2$ from the basis.
+Let
+\begin{equation*}
+    \begin{split}
+        q_0 = \frac{\phi_0}{||\phi_0||} \quad z_1 &= \phi_1 - (\phi_1, q_0)q_0 \quad z_2 = \phi_2 - (\phi_2, q_1)q_1 - (\phi_2, q_0)q_0 \\
+        q_1 &= \frac{z_1}{||z_1||} \quad \qquad \qquad q_2 = \frac{z_2}{||z_2||}
+    \end{split}
+\end{equation*}
+We have
+\begin{equation*}
+    \begin{split}
+        q_0 &= \frac{1}{\left[\int_0^1 1^2 \ dx \right]^{\frac{1}{2}}} = 1 \\
+        z_1 &= x - (x,1)\cdot 1 = x - \int_0^1 x \cdot 1 \ dx \cdot 1 = x - \frac{1}{2} \\
+        q_1 &= \frac{x - \frac{1}{2}}{\left[\int_0^1 \left(x - \frac{1}{2}\right)^2 \ dx \right]^{\frac{1}{2}}} = \frac{x - \frac{1}{2}}{\left[\frac{1}{3} \left(x - \frac{1}{2}\right)^3 \Big|_0^1 \right]^{\frac{1}{2}}} = 2\sqrt{3} x - \sqrt{3} \\
+        z_2 &= e^x - (e^x, 2\sqrt{3} x - \sqrt{3})(2\sqrt{3} x - \sqrt{3}) - (e^x, 1) \cdot 1 \\
+        &= e^x - \sqrt{3} \int_0^1 (2x e^x - e^x) \ dx \ (2\sqrt{3} x - \sqrt{3}) - \int_0^1 e^x \cdot 1 \ dx \cdot 1 \\
+        &= e^x + \sqrt{3}(e - 3)(2\sqrt{3} x - \sqrt{3}) - e + 1 \\
+        &= e^x + (e - 3)(6x - 3) - e + 1 \\
+        &= e^x + 6ex - 3e - 18x + 9 - e + 1 \\
+        &= e^x + (6e - 18)x + (10 - 4e) \\
+        q_2 &= \frac{e^x + (6e - 18)x + (10 - 4e)}{\left[\int_0^1 \left(e^x + (6e - 18)x + (10 - 4e)\right)^2 \ dx \right]^{\frac{1}{2}}} \\
+        &= \frac{e^x + (6e - 18)x + (10 - 4e)}{\sqrt{-4e^2 + 20e + \frac{e^2 - 1}{2} - 28}} \\
+        &= \frac{e^x + (6e - 18)x + (10 - 4e)}{\sqrt{-\frac{1}{2}(7e^2 - 40e + 57)}}
+    \end{split}
+\end{equation*}
+
+
+\begin{itemize}
+    \item[{\textbf{-3-}}] \textbf{(``The Three Term Recurrence Relation".)}  Let the inner product $(f,g)$ be defined by
+    \begin{equation}
+        (f,g) = \int_a^b wf(x)g(x) dx.
+    \end{equation}
+    (where $w$ is a positive weight function).  Recall that the sequence of polynomials defined by
+    \begin{equation}
+        \begin{split}
+            Q_n &= (x - a_n ) Q_{n-1} - b_n Q_{n-2} \\
+            \text{with } \ Q_0 &= 1, \ Q_1 = x - a_1, \\
+            a_n &= (xQ_{n-1}, Q_{n-1}) / (Q_{n-1}, Q_{n-1}) \\
+            b_n &= (xQ_{n-1}, Q_{n-2}) / (Q_{n-2}, Q_{n-2})
+        \end{split}
+    \end{equation}
+    is orthogonal with respect to (3).  In particular, consider the inner product
+    \begin{equation}
+        (f,g) = \int_{-1}^1 f(x)g(x) dx.
+    \end{equation}
+    Use the recurrence relation (4) to compute $Q_i$ for $i = 0,1,2,3,4,5$.
+\end{itemize}
+We are given $Q_0 = 1$.  To calculate $Q_1$ we need to know $a_1$:
+\[a_1 = \frac{(xQ_0, Q_0)}{(Q_0, Q_0)} = \frac{(x,1)}{(1,1)} = \frac{\int_{-1}^1 x dx}{\int_{-1}^1 1 dx} = \frac{\frac{1}{2}x^2 \big|_{-1}^1}{x \big|_{-1}^1} = \frac{\frac{1}{2} - \frac{1}{2}}{1 - (-1)} = 0\]
+Therefore
+\[Q_1 = (x - a_1) Q_0 = (x - 0) \cdot 1 \Longrightarrow Q_1 = x.\]
+To calculate $Q_2$ we need to know $a_2$ and $b_2$:
+\[a_2 = \frac{(xQ_1, Q_1)}{(Q_1, Q_1)} = \frac{(x^2,x)}{(x,x)} = \frac{\int_{-1}^1 x^3 dx}{\int_{-1}^1 x^2 dx} = \frac{\frac{1}{4}x^4 \big|_{-1}^1}{\frac{1}{3}x^3 \big|_{-1}^1} = \frac{\frac{1}{4} - \frac{1}{4}}{\frac{1}{3} - \left(-\frac{1}{3}\right)} = 0\]
+\[b_2 = \frac{(xQ_1, Q_0)}{(Q_0, Q_0)} = \frac{(x^2,1)}{(1,1)} = \frac{\int_{-1}^1 x^2 dx}{\int_{-1}^1 1 dx} = \frac{\frac{1}{3}x^3 \big|_{-1}^1}{x \big|_{-1}^1} = \frac{\frac{1}{3} - \left(-\frac{1}{3}\right)}{1 - (-1)} = \frac{\frac{2}{3}}{2} = \frac{1}{3}\]
+Therefore
+\[Q_2 = (x - a_2 ) Q_1 - b_2 Q_0 = (x - 0) x - \frac{1}{3} (1) \Longrightarrow Q_2 = x^2 - \frac{1}{3}.\]
+We continue this same process for $Q_3, Q_4$ and $Q_5$.
+\[a_3 = \frac{(xQ_2, Q_2)}{(Q_2, Q_2)} = \frac{(x(x^2 - \frac{1}{3}),x^2 - \frac{1}{3})}{(x^2 - \frac{1}{3},x^2 - \frac{1}{3})} = \frac{\int_{-1}^1 x^5 - \frac{2}{3}x^3 + \frac{1}{9}x dx}{\int_{-1}^1 x^4 - \frac{2}{3}x^2 + \frac{1}{9} dx} = 0\]
+Note: all $a_n$ values will be zero because they are integrals of odd powers of $x$.  Meaning
+\[a_1 = a_2 = a_3 = a_4 = a_5 = 0.\]
+\[b_3 = \frac{(xQ_2, Q_1)}{(Q_1, Q_1)} = \frac{(x(x^2 - \frac{1}{3}),x)}{(x,x)} = \frac{\int_{-1}^1 x^4 - \frac{1}{3}x^2 dx}{\int_{-1}^1 x^2 dx} = \frac{\frac{8}{45}}{\frac{2}{3}} = \frac{4}{15}\]
+\[Q_3 = (x - a_3 ) Q_2 - b_3 Q_1 = x \left(x^2 - \frac{1}{3}\right) - \frac{4}{15} (x) \Longrightarrow Q_3 = x^3 - \frac{3}{5}x\]
+\[b_4 = \frac{(xQ_3, Q_2)}{(Q_2, Q_2)} = \frac{(x(x^3 - \frac{3}{5}x),x^2 - \frac{1}{3})}{(x^2 - \frac{1}{3},x^2 - \frac{1}{3})} = \frac{\int_{-1}^1 x^6 - \frac{14}{15}x^4 + \frac{1}{5}x^2 dx}{\int_{-1}^1 x^4 - \frac{2}{3}x^2 + \frac{1}{9} dx} = \frac{\frac{8}{175}}{\frac{8}{45}} = \frac{9}{35}\]
+\[Q_4 = (x - a_4 ) Q_3 - b_4 Q_2 = x \left(x^3 - \frac{3}{5}x\right) - \frac{9}{35} \left(x^2 - \frac{1}{3}\right) \Longrightarrow Q_4 = x^4 - \frac{6}{7}x^2 + \frac{3}{35}\]
+Finally
+\[b_5 = \frac{(xQ_4, Q_3)}{(Q_3, Q_3)} = \frac{(x(x^4 - \frac{6}{7}x^2 + \frac{3}{35}),x^3 - \frac{3}{5}x)}{(x^3 - \frac{3}{5}x,x^3 - \frac{3}{5}x)} = \frac{\int_{-1}^1 x^8 - \frac{51}{35}x^6 + \frac{3}{5}x^4 - \frac{9}{175}x^2 dx}{\int_{-1}^1 x^6 - \frac{6}{5}x^4 + \frac{9}{25}x^2 dx} = \frac{\frac{128}{11045}}{\frac{8}{175}} = \frac{16}{63}\]
+\[Q_5 = (x - a_5) Q_4 - b_5 Q_3 = x \left(x^4 - \frac{6}{7}x^2 + \frac{3}{35}\right) - \frac{16}{63} \left(x^3 - \frac{3}{5}x\right) \Longrightarrow Q_5 = x^5 - \frac{70}{62}x^3 + \frac{15}{63}x\]
+
+
+\begin{itemize}
+    \item[{\textbf{-4-}}] \textbf{(More on the Recurrence Relation.)}  Remember that a key property of the inner products for which we established the three term relation was that $(xf,g) = (f,xg)$.  Find an inner product that violates that rule, and for which the recurrence relation does indeed fail to yield orthogonal polynomials.  (Thus use the recurrence relation to construct the first few polynomials, until you find two that are not orthogonal.)
+\end{itemize}
+Defining the inner product as
+\[(f,g) = \int_{-1}^1 f(x)g(x) + f^{\prime}(x)g^{\prime}(x) \ d x \]
+this is not generally true that $(xf,g) = (f,xg)$. Let $f(x) = x$ and $g(x) = 1$.  We have,
+\begin{equation*}
+    \begin{split}
+        (xf,g) &= \int_{-1}^1 x^2 (1) + \left(x^2 \right)^{\prime} (1)^{\prime} \ dx = \int_{-1}^1 x^2 \ dx = \frac{2}{3} \\
+        (f,xg) &= \int_{-1}^1 x (x) + (x)^{\prime} (x)^{\prime} \ dx = \frac{2}{3} + 2
+    \end{split}
+\end{equation*}
+Let $Q_0 = 1$, thus
+\[a_1 = \frac{(xQ_0, Q_0)}{(Q_0, Q_0)} = \frac{(x \cdot 1,1)}{(1,1)} = \frac{\int_{-1}^1 x dx}{\int_{-1}^1 1 dx} = 0\]
+and
+\[Q_1 = (x - a_1) Q_0 = (x - 0) \cdot 1 \Longrightarrow Q_1 = x.\]
+Now
+\[a_2 = \frac{(xQ_1, Q_1)}{(Q_1, Q_1)} = \frac{(x \cdot x,x)}{(x,x)} = \frac{\int_{-1}^1 x^3 + 2x dx}{\int_{-1}^1 x^2 + 1 dx} = 0\]
+\[b_2 = \frac{(xQ_1, Q_0)}{(Q_0, Q_0)} = \frac{(x \cdot 1,1)}{(1,1)} = \frac{\int_{-1}^1 x^2 dx}{\int_{-1}^1 1 dx} = \frac{1}{3}\]
+and
+\[Q_2 = (x - a_2 ) Q_1 - b_2 Q_0 = (x - 0) x - \frac{1}{3} (1) \Longrightarrow Q_2 = x^2 - \frac{1}{3}.\]
+Next
+\[a_3 = \frac{(xQ_2, Q_2)}{(Q_2, Q_2)} = \frac{(x(x^2 - \frac{1}{3}),x^2 - \frac{1}{3})}{(x^2 - \frac{1}{3},x^2 - \frac{1}{3})} = 0\]
+\[b_3 = \frac{(xQ_2, Q_1)}{(Q_1, Q_1)} = \frac{(x(x^2 - \frac{1}{3}),x)}{(x,x)} = \frac{\int_{-1}^1 x^4 - \frac{1}{3}x^2  + 3x^2 - \frac{1}{3} dx}{\int_{-1}^1 x^2 + 1 dx} = \frac{17}{30}\]
+\[Q_3 = (x - a_3 ) Q_2 - b_3 Q_1 = x \left(x^2 - \frac{1}{3}\right) - \frac{17}{30} (x) \Longrightarrow Q_3 = x^3 - \frac{27}{30}x.\]
+\begin{align*}
+    a_4 &= \frac{(x Q_3, Q_3)}{(Q_3, Q_3)} = \frac{\int_{-1}^1x(x^3-\frac{27}{30}x)(x^3 - \frac{27}{30}x) + (4x^3 - \frac{27}{15}x)(3x^2 - \frac{27}{30}) d x}{\int_{-1}^1 (x^3 -\frac{27}{30})^2 d x} =0 \\
+    b_4 &= \frac{(x Q_3, Q_2)}{(Q_2, Q_2)} = \frac{\int_{-1}^1x(x^3-\frac{27}{30})(x^2-\frac{1}{3}) d x}{\int_{-1}^1 (x^2-\frac{1}{3})^2 d x} = \frac{39}{40}\\
+    Q_4 &= (x-a_4)Q_3 - b_4Q_2 = x(x^3 - \frac{27}{30}x) - \frac{39}{40}(x^2-\frac{1}{3})=  x^4 - \frac{15}{8}x^2 + \frac{13}{40}\\
+\end{align*}
+We note that taking the inner product between $Q_4$ and $Q_2$ gives us
+\begin{align*}
+    (Q_4, Q_2) &= \int_{-1}^1(x^4 - \frac{15}{8}x^2 + \frac{13}{40})(x^2-\frac{1}{3}) + (4x^3 - \frac{15}{4}x)(2x) d x\\
+    &= \int_{-1}^1 x^6 (8-\frac{15}{8} - \frac{1}{3})x^4 + (\frac{13}{40} + \frac{5}{8} - \frac{15}{2})x^2 -\frac{13}{120} d x\\ 
+    &= -\frac{208}{105} \neq 0
+\end{align*}
+Which means that $Q_4$ and $Q_2$ are clearly not orthogonal. So having an inner product without the condition that $(xf,g) = (f,xg)$ means that we cannot use the Three Term Recurrence Relation to produce a set of orthogonal vectors. 
+
+
+\begin{itemize}
+    \item[{\textbf{-5-}}] \textbf{(Fourier Series.)}  Compute the Fourier series of the function
+    \[f(t) = \begin{cases}
+    \quad 1 \quad \text{if } t \in (-\pi, 0) \\
+    \ -1 \quad \text{if } t \in [0, \pi]]
+    \end{cases}\]
+    where you assume that $f$ is $2\pi$ periodic, i.e., $f(t+2\pi) = f(t)$ for all $t \in \R$.  Draw the truncated Fourier series for some values of $n$ and comment on your plots.
+\end{itemize}
+In the Fourier Series, we know that since $f(t)$ is an odd function that we only need to calculate $b_n$ and the $\sin$ function.
+\[f(t) = \sum_{n=1}^{\infty} b_n \sin \left(\frac{n\pi t}{L}\right)\]
+where $L$ is half the length of the period of $2\pi$.  Therefore we have
+\[f(t) = \sum_{n=1}^{\infty} b_n \sin (nt)\]
+and
+\begin{equation*}
+    \begin{split}
+        b_n &= \frac{1}{\pi} \int_{-\pi}^0 \sin (nt) dt - \frac{1}{\pi} \int_0^{\pi} \sin (nt) dt \\
+        &= -\frac{1}{n\pi} \cos (nt) \Big|_{-\pi}^0 + \frac{1}{n\pi} \cos (nt) \Big|_0^{\pi} \\
+        &= -\frac{1}{n\pi}\left(1 - \cos (-n\pi)\right) + \frac{1}{n\pi}\left(\cos (n\pi) - 1\right) \\
+        &= -\frac{1}{n\pi} + \frac{1}{n\pi}\cos (-n\pi) + \frac{1}{n\pi}\cos (n\pi) - \frac{1}{n\pi} \\
+        &= \frac{2}{n\pi}\big(1 - (-1^n)\big) \\
+        &= \begin{cases} -\frac{4}{n\pi} \quad \text{odd} \\ \quad 0 \quad \text{even} \end{cases}
+    \end{split}
+\end{equation*}
+Thus
+\[f(t) = \sum_{n=1}^{\infty} \frac{-4}{(2n-1)\pi} \sin \big((2n-1)t \big).\]
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{fourierseries10.pdf}
+    \caption{$n = 10$}
+    \label{fig:Incline Plane Experiment residuals}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{fourierseries50.pdf}
+    \caption{$n = 50$}
+    \label{fig:Incline Plane Experiment residuals}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{fourierseries100gibbsphenomena.pdf}
+    \caption{$n = 100$}
+    \label{fig:}
+\end{figure}
+
+As the number of terms in the Fourier series increases so too does the accuracy. That being said, since the original function has several jump discontinuities, at the endpoints and at $x=0$ we can see the Gibb's Phenomenon occur as the wild oscillations attempt to fit the rapidly changing function.
+
+% PROBLEM 6
+\begin{itemize}
+    \item[{\textbf{-6-}}] \textbf{(More on Fourier Series.)}  Calculate the Fourier series of
+    \[f(x) = \cos(x+1).\]
+    Hint: Before you embark on the computation of a bunch of integrals think about what you would expect the Fourier series to be.  Perhaps you can find it without doing any integrals!
+\end{itemize}
+
+Recall the sum to product formula from Trigonometry:
+\begin{equation*}
+    \cos(a + b) = \cos(a)\cos(b) - \sin(a)\sin(b)
+\end{equation*}
+Expanding $f(x) = \cos(x+1)$ with the above identity gives:
+\begin{equation*}
+     f(x) = \cos(x)\cos(1)-\sin(x)\sin(1)
+\end{equation*}
+Since $\cos(1)$ and $\sin(1)$ are constants and using the fact that the Fourier series on the interval $[-\pi,\pi]$ for $\sin(x)$ and $\cos(x)$ are just themselves and by uniqueness of Fourier Series we are done.  
+\begin{itemize}
+    \item[{\textbf{-7-}}] \textbf{(Spline versus Cubic Hermite Interpolation.)}  Let the function $s(x)$ be defined by
+    \[s(x) = \begin{cases}
+    \quad (\gamma-1)(x^{3}-x^{2}) + x + 1 \quad \text{if } x \in [0, 1] \\
+    \ \gamma x^{3} - 5 \gamma x^{2} + 8 \gamma x - 4 \gamma +2 \quad \text{if } x \in [1,2]
+    \end{cases}\]
+\end{itemize}
+\begin{itemize}
+    \item [{\textbf{a.}}]  Show that $s$ is the piecewise cubic Hermite interpolant to the data:
+    \[s(0) = 1, \quad s(1) = s(2) = 2, \quad s^{\prime}(0) = 1, \quad s^{\prime}(1) = \gamma, \quad s^{\prime}(2) = 0\]
+    
+    To prove this we'll show that plugging in the values above into $s(x)$ gives back the required data. Then by the uniqueness of the interpolating polynomial on an interval we will have our Hermite Interpolant.
+    \begin{align*}
+         s(0) &= 0 + 1 = 1\\
+         s(1^{-}) &= (\gamma-1)(1-1) + 1 + 1 = 2\\
+         s(1^+) &= \gamma - 5\gamma + 8\gamma - 4\gamma +2 = 2\\
+          s(2) &= 8\gamma  - 20 \gamma + 16 \gamma - 4\gamma +2 = 2 
+    \end{align*}
+    The derivatives of the two cubics on their respective intervals are:
+   \[s(x) = \begin{cases}
+    \quad (\gamma-1)(3x^{2}-2x) + 1 \quad \text{if } x \in [0, 1] \\
+    \ 3\gamma x^{2} - 10 \gamma x + 8 \gamma  \quad \text{if } x \in [1,2]
+    \end{cases}\]
+Plugging in the endpoints gives:
+\begin{align*}
+    s^{\prime}(0) &= 1\\
+    s^{\prime}(1^-) &= (\gamma - 1) + 1 = \gamma = \gamma\\
+    s^{\prime}(1^+) &= 3\gamma - 10\gamma + 8\gamma = \gamma\\
+    s^{\prime}(2) &= 3\gamma(4) -10\gamma(2) + 8\gamma = 0
+\end{align*}
+Note that from plugging 1 into our definition of the derivatives of $s(x)$ shows that the function is continuous at the point $1$ justifying it being a cubic interpolant. 
+    \item [{\textbf{b.}}]  For what value of $\gamma$ does $s$ become a cubic spline?
+    To become a cubic spline the second derivative of $s(x)$ needs to exist everywhere on the interval $[0,2]$ and be continuous. The second derivatives of the piecewise cubics above are:
+     \[s^{\prime \prime}(x) = \begin{cases}
+    \quad (\gamma-1)(6x-2) \quad \text{if } x \in [0, 1] \\
+    \ 6\gamma x - 10 \gamma  +  \quad \text{if } x \in [1,2]
+    \end{cases}\]
+\end{itemize}
+Plug in $x=1$ into both piece-wise second derivatives and set them equal to obtain:
+\begin{equation*}
+    4(\gamma-1) = -4\gamma
+\end{equation*}
+Which upon solving for $\gamma$ yields $\gamma = \frac{1}{2}$. 
+Thus $\gamma$ must be $\frac{1}{2}$ in order for $s(x)$ to become a cubic spline.
+% PROBLEM 8
+\newpage
+\section*{Problem 8}
+
+In order to show that any polynomial in power form can be uniquely written in B-form, we can simply show that the Bezier polynomials form a basis for the degree $d$ space. 
+Let
+\[B^d_i = {{d}\choose{i}}b_1^i b_2^{d-i} \quad \hbox{for} \quad i=0,1, \cdots, d\]
+
+From a well known theorem of Linear Algebra it suffices to show the $B_i^d$ are linearly independent polynomials with respect to $b_1$, where $b_2 = 1-b_1$. This is sufficient since we have the correct number of polynomials to form a basis for this space. Using the Binomial expansion theorem and the fact that $b_2 = 1-b_1$ we have,
+\begin{align*}
+    B_i^d &= {d \choose i}b_1^i \cdot (1-b_1)^{d-i}\\
+          &= {d \choose i}b_1^i \sum \limits_{k=0}^{d-i}(-1)^k {{d-i}\choose{k}} b_1^k \\
+          \intertext{Applying a change of index, and some algebraic manipulation gives us,}
+          &= \sum \limits_{k=i}^{d} (-1)^{k-i} {d \choose i} {{d-i} \choose {k-i}}b_1^{k+i-i}\\
+          &= \sum \limits_{k=i}^{d}(-1)^{k-i} {d \choose k} {k \choose i} b_1^k
+\end{align*}
+The last equality comes from the fact that ${d\choose i}{{d-i}\choose {k-i}} = {d \choose k}{k \choose i}$ which is verified at the end. So we can write our Bezier polynomials in the form derived above. 
+\[B_i^d= \sum \limits_{k=i}^{d}(-1)^{k-i} {d \choose k} {k \choose i} b_1^k\]
+Now for showing linear independence if we have, 
+\[\sum \limits_{i=0}^d \alpha_i B^d_i =0 \]
+for some $\alpha_i$ coefficients, we show that all $\alpha_i$ are zero. Expanding this sum out we have:
+\begin{equation}
+    \alpha_0 \sum_{k=0}^d {d\choose k}{k \choose 0}(-1^k)b_1^k + \alpha_1 \sum_{k=1}^d {d\choose k}{k \choose 1}(-1)^{k-1}b_1^k + \cdots + \alpha_d \sum \limts_{k=d}^d {d \choose k} {k \choose d} (-1)^{k-d}b_1^k = 0
+    \label{gold}
+\end{equation}
+ We can see the only constant term, with respect to $b_1$ as our variable, is $\alpha_0$. Meaning that $\alpha_0 = 0$ as there are no other constant terms to cancel out with. So we can simplify our equation (\ref{gold}) to 
+\[\alpha_1 \sum_{k=1}^d {d\choose k}{k \choose 1}(-1)^{k-1}b_1^k + \cdots + \alpha_d \sum \limts_{k=d}^d {d \choose k} {k \choose d} (-1)^{k-d}b_1^k = 0\]
+Again we note there is now only one $b_1$ term, $\alpha_1$ is contained in its coefficient. Meaning that $\alpha_1 = 0$. Continuing this process inductively we see that 
+\[\alpha_0 = \alpha_1 = \cdots = \alpha_d = 0\]
+So $\{B^d_i\}_{i=0}^d$ forms a basis for our degree $d$ polynomial space. Thus we can write any polynomial in power form  uniquely into B-form.\\
+
+Lastly verifying ${d\choose i}{{d-i}\choose {k-i}} = {d \choose k}{k \choose i}$. 
+\begin{align*}
+    {d\choose i}{{d-i}\choose {k-i}} &= \frac{d!}{i! (d-i)!}\frac{(d-i)!}{(k-i)!(d-k)!}\\
+    &=\frac{d!}{i!(k-i)!(d-k)!}\\
+    &=\frac{d!k!}{i!(k-i)!(d-k)!k!}\\
+    &=\frac{d!}{k!(d-k)!}\frac{k!}{i!(k-i)!}\\
+    &={d \choose k}{k \choose i}
+\end{align*}
+
+%PROBLEM 9
+\newpage
+\section*{Problem 9}
+We note that are interpolating at $2n+1$ distinct nodes thus we make the primitive assertion our polynomial $p$ is at most degree $2n$. We define the following function 
+\[g(x) = p(x) + p(-x)\]
+where $g$ is a polynomial of degree at most $2n$. We note that $g(x)$ has $2n+1$ distinct roots, namely $x_i$ for $i=-n,-n+1, \cdots, n-1, n$. However the only polynomial with a larger number of roots then the degree is infact the zero polynomial, or the zero function. So we have, 
+\[g(x) = p(x) + p(-x) =0 \quad \hbox{for all}\: \: x \in \mathbb{R}\]
+Thus we have, 
+\[p(x) = -p(-x)\]
+for all real numbers $x$. This of course means that our polynomial is an odd function, allowing us to mend our primitive answer before---$p$ can have a degree at most $2n-1$.
+\end{document}
