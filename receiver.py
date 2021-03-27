@@ -110,12 +110,31 @@ p = s / Decimal(2)
 c = Decimal(constants_names["1"])
 pi = Decimal(constants_names["0"])
 
+#input_satellites is a dictionary containing the time, x,y,z information of the satellites sent in by satellite.py
 input_satellites = {}
+#sat_length is the length of the input_satellites list, used for a for loop iteration below.
+sat_length = len(input_satellites)
+
+#i_s is the key of a given satellite whose norm of the difference between it and the current-iteration vehicle position is given.
+#x_1,x_2,x_3 are the x,y,z components of the vehicle vector on the kth iteration.
+#s_1,s_2,s_3 are the x,y,z components of the satellite at time t_s.
+# norm will be used in each iteration through being called in A below, as well as other places in the Newton's method iteration.
 def norm(i_s,x_1,x_2,x_3):
     s_1 = input_satellites[i_s][1]
     s_2 = input_satellites[i_s][2]
     s_3 = input_satellites[i_s][3]
     return sqrt((s_1-x_1)**2 + (s_2-x_2)**2 + (s_3-x_3)**2)
 
-#difference equations
-#def A():
+
+
+#difference equations are coded below. This function returns the ith output of the A_i in Peter's equation 68. This will be called at each
+#step in the Newton's method iteration.
+#i_current and i_subsequent are the ith and (i + 1)th satellite keys to be used for computing the ith and (i+1)th norm.
+#t_current and t_subsequent are the t_s's of the ith and (i+1)th satellites.
+##x_1,x_2,x_3 are the x,y,z components of the vehicle vector on the kth iteration.
+def A(i_current,i_subsequent,x_1,x_2,x_3):
+      current_norm = norm(input_satellites[i_current],x_1,x_2,x_3)
+      subsequent_norm = norm(input_satellites[i_subsequent,x_1,x_2,x_3])
+      t_current = input_satellites[i_current][0]
+      t_subsequent = input_satellites[i_subsequent][0]
+      return subsequent_norm - current_norm - c*(t_current-t_subsequent)
