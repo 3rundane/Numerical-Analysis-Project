@@ -110,6 +110,7 @@ p = s / Decimal(2)
 c = Decimal(constants_names["1"])
 pi = Decimal(constants_names["0"])
 
+
 #input_satellites is a dictionary containing the time, x,y,z information of the satellites sent in by satellite.py
 input_satellites = {}
 #sat_length is the length of the input_satellites list, used for a for loop iteration below.
@@ -138,3 +139,40 @@ def A(i_current,i_subsequent,x_1,x_2,x_3):
       t_current = input_satellites[i_current][0]
       t_subsequent = input_satellites[i_subsequent][0]
       return subsequent_norm - current_norm - c*(t_current-t_subsequent)
+
+# partial derivative wrt first coordinate of A or the difference equation.
+def X(i_current,i_subsequent,x_1,x_2,x_3):
+    current_norm = norm(input_satellites[i_current], x_1, x_2, x_3)
+    subsequent_norm = norm(input_satellites[i_subsequent, x_1, x_2, x_3])
+    s_1_current = input_satellites[i_current][1]
+    s_1_subsequent = input_satellites[i_subsequent][1]
+    return -(s_1_subsequent - x_1)/subsequent_norm + (s_1_current - x_1)/current_norm
+
+# partial derivative wrt second coordinate of A or the difference equation.
+def Y(i_current,i_subsequent,x_1,x_2,x_3):
+    current_norm = norm(input_satellites[i_current], x_1, x_2, x_3)
+    subsequent_norm = norm(input_satellites[i_subsequent, x_1, x_2, x_3])
+    s_2_current = input_satellites[i_current][2]
+    s_2_subsequent = input_satellites[i_subsequent][2]
+    return -(s_2_subsequent - x_2)/subsequent_norm + (s_2_current - x_2)/current_norm
+
+# partial derivative wrt third coordinate of A or the difference equation.
+def Z(i_current,i_subsequent,x_1,x_2,x_3):
+    current_norm = norm(input_satellites[i_current], x_1, x_2, x_3)
+    subsequent_norm = norm(input_satellites[i_subsequent, x_1, x_2, x_3])
+    s_3_current = input_satellites[i_current][3]
+    s_3_subsequent = input_satellites[i_subsequent][3]
+    return -(s_3_subsequent - x_3)/subsequent_norm + (s_3_current - x_3)/current_norm
+
+satellite_keys = input_satellites.keys()
+satty_length = len(satellite_keys)
+
+##check the absolute fuck out of this!
+def f(index,x_1,x_2,x_3):
+    if index >=1:
+        i_subsequent = satellite_keys[index]
+        i_current = satellite_keys[index-1]
+        f_value =(A(i_current, i_subsequent, x_1, x_2, x_3)) ** 2 + f(index - 1,x_1,x_2,x_3)
+    else:
+        f_value = 0
+    return f_value
