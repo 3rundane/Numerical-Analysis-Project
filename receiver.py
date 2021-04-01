@@ -115,7 +115,7 @@ pi = Decimal(constants_names["0"])
 input_satellites = {}
 #sat_length is the length of the input_satellites list, used for a for loop iteration below.
 sat_length = len(input_satellites)
-
+### equations (68)
 #i_s is the key of a given satellite whose norm of the difference between it and the current-iteration vehicle position is given.
 #x_1,x_2,x_3 are the x,y,z components of the vehicle vector on the kth iteration.
 #s_1,s_2,s_3 are the x,y,z components of the satellite at time t_s.
@@ -167,7 +167,9 @@ def Z(i_current,i_subsequent,x_1,x_2,x_3):
 satellite_keys = input_satellites.keys()
 satty_length = len(satellite_keys)
 
+## equations (69)
 ##check the absolute fuck out of this!
+## Everything below until HESSSSSIIIaAAANN TIMMMEEE is for the right hand side of our Newton's method iteration.
 def f(index,x_1,x_2,x_3):
     if index >=1:
         i_subsequent = satellite_keys[index]
@@ -176,3 +178,218 @@ def f(index,x_1,x_2,x_3):
     else:
         f_value = 0
     return f_value
+
+##Partial derivatives of little f wrt x. Recursive definition.
+def f_partial_x(index,x_1,x_2,x_3):
+    if index >=1:
+        i_subsequent = satellite_keys[index]
+        i_current = satellite_keys[index - 1]
+        f_partial_xvalue = A(i_current,i_subsequent,x_1,x_2,x_3)*X(i_current,i_subsequent,x_1,x_2,x_3) + f_partial_x(index-1,x_1,x_2,x_3)
+    else:
+        f_partial_xvalue = 0
+    return 2*f_partial_xvalue
+
+
+##Partial derivatives of little f wrt y. Recursive definition.
+def f_partial_y(index,x_1,x_2,x_3):
+    if index >=1:
+        i_subsequent = satellite_keys[index]
+        i_current = satellite_keys[index - 1]
+        f_partial_yvalue = A(i_current,i_subsequent,x_1,x_2,x_3)*Y(i_current,i_subsequent,x_1,x_2,x_3) + f_partial_y(index-1,x_1,x_2,x_3)
+    else:
+        f_partial_yvalue = 0
+    return 2*f_partial_yvalue
+
+##Partial derivatives of little f wrt z. Recursive definition.
+def f_partial_z(index,x_1,x_2,x_3):
+    if index >=1:
+        i_subsequent = satellite_keys[index]
+        i_current = satellite_keys[index - 1]
+        f_partial_zvalue = A(i_current,i_subsequent,x_1,x_2,x_3)*Z(i_current,i_subsequent,x_1,x_2,x_3) + f_partial_z(index-1,x_1,x_2,x_3)
+    else:
+        f_partial_zvalue = 0
+    return 2*f_partial_zvalue
+
+##Hesssssiaaaaannnnnnn timmmeeeeee
+##equations (71)
+##the order is the same as that in Peter's homework 1
+##partial X partial x
+def X_partial_x(i_current,i_subsequent,x_1,x_2,x_3):
+    current_norm = norm(input_satellites[i_current], x_1, x_2, x_3)
+    subsequent_norm = norm(input_satellites[i_subsequent, x_1, x_2, x_3])
+    s_1_current = input_satellites[i_current][1]
+    s_1_subsequent = input_satellites[i_subsequent][1]
+    current_fraction = (current_norm**2 - (s_1_current - x_1)**2)/(current_norm)**3
+    subsequent_fraction = (subsequent_norm**2 - (s_1_subsequent - x_1)**2)/(subsequent_norm)**3
+    return subsequent_fraction - current_fraction
+##partial Y partial x
+def Y_partial_x(i_current,i_subsequent,x_1,x_2,x_3):
+    current_norm = norm(input_satellites[i_current], x_1, x_2, x_3)
+    subsequent_norm = norm(input_satellites[i_subsequent, x_1, x_2, x_3])
+    #x_s_i, x_s_i+1 respectively
+    s_1_current = input_satellites[i_current][1]
+    s_1_subsequent = input_satellites[i_subsequent][1]
+
+    #y_s_i, y_s_i+1, respectively
+    s_2_current = input_satellites[i_current][2]
+    s_2_subsequent = input_satellites[i_subsequent][2]
+
+    current_fraction = ((s_2_current - x_2)*(s_1_current - x_1))/(current_norm**3)
+    subsequent_fraction = -((s_2_subsequent - x_2)*(s_1_subsequent - x_1))/(subsequent_norm**3)
+    return subsequent_fraction + current_fraction
+
+##partial X partial y
+def X_partial_y(i_current,i_subsequent,x_1,x_2,x_3):
+    return Y_partial_x(i_current,i_subsequent,x_1,x_2,x_3)
+
+##partial X partial z
+def X_partial_z(i_current,i_subsequent,x_1,x_2,x_3):
+    current_norm = norm(input_satellites[i_current], x_1, x_2, x_3)
+    subsequent_norm = norm(input_satellites[i_subsequent, x_1, x_2, x_3])
+    #x_s_i, x_s_i+1 respectively
+    s_1_current = input_satellites[i_current][1]
+    s_1_subsequent = input_satellites[i_subsequent][1]
+
+    #z_s_i, z_s_i+1, respectively
+    s_3_current = input_satellites[i_current][3]
+    s_3_subsequent = input_satellites[i_subsequent][3]
+
+    current_fraction = ((s_1_current - x_1)*(s_3_current - x_3))/(current_norm**3)
+    subsequent_fraction = -((s_1_subsequent - x_1)*(s_3_subsequent - x_3))/(subsequent_norm**3)
+    return subsequent_fraction + current_fraction
+##partial Z partial x
+def Z_partial_x(i_current,i_subsequent,x_1,x_2,x_3):
+    return X_partial_z(i_current,i_subsequent,x_1,x_2,x_3)
+
+##partial Y partial y
+def Y_partial_y(i_current,i_subsequent,x_1,x_2,x_3):
+    current_norm = norm(input_satellites[i_current], x_1, x_2, x_3)
+    subsequent_norm = norm(input_satellites[i_subsequent, x_1, x_2, x_3])
+    s_2_current = input_satellites[i_current][2]
+    s_2_subsequent = input_satellites[i_subsequent][2]
+    current_fraction = (current_norm**2 - (s_2_current - x_2)**2)/(current_norm)**3
+    subsequent_fraction = (subsequent_norm**2 - (s_2_subsequent - x_2)**2)/(subsequent_norm)**3
+    return subsequent_fraction - current_fraction
+##partial Y partial z
+def Y_partial_z(i_current,i_subsequent,x_1,x_2,x_3):
+    current_norm = norm(input_satellites[i_current], x_1, x_2, x_3)
+    subsequent_norm = norm(input_satellites[i_subsequent, x_1, x_2, x_3])
+    #y_s_i, y_s_i+1 respectively
+    s_2_current = input_satellites[i_current][2]
+    s_2_subsequent = input_satellites[i_subsequent][2]
+
+    #z_s_i, z_s_i+1, respectively
+    s_3_current = input_satellites[i_current][3]
+    s_3_subsequent = input_satellites[i_subsequent][3]
+
+    current_fraction = ((s_2_current - x_2)*(s_3_current - x_3))/(current_norm**3)
+    subsequent_fraction = -((s_2_subsequent - x_2)*(s_3_subsequent - x_3))/(subsequent_norm**3)
+    return subsequent_fraction + current_fraction
+##partial Z partial y
+def Z_partial_y(i_current,i_subsequent,x_1,x_2,x_3):
+    return Y_partial_z(i_current,i_subsequent,x_1,x_2,x_3)
+##partial Z partial z
+def Z_partial_z(i_current,i_subsequent,x_1,x_2,x_3):
+    current_norm = norm(input_satellites[i_current], x_1, x_2, x_3)
+    subsequent_norm = norm(input_satellites[i_subsequent, x_1, x_2, x_3])
+    s_3_current = input_satellites[i_current][3]
+    s_3_subsequent = input_satellites[i_subsequent][3]
+    current_fraction = (current_norm**2 - (s_3_current - x_3)**2)/(current_norm)**3
+    subsequent_fraction = (subsequent_norm**2 - (s_3_subsequent - x_3)**2)/(subsequent_norm)**3
+    return subsequent_fraction - current_fraction
+##partial
+
+
+
+##equations(70)
+
+##partialf^2 partial x,x
+def f_double_partial_xx(index,x_1,x_2,x_3):
+    if index >=1:
+        i_subsequent = satellite_keys[index]
+        i_current = satellite_keys[index - 1]
+        X_i = X(i_current,i_subsequent,x_1,x_2,x_3)
+        X_partial_x_i = X_partial_x(i_current,i_subsequent,x_1,x_2,x_3)
+        A_i = A(i_current,i_subsequent,x_1,x_2,x_3)
+        almost_final_value = X_i**2 + A_i*X_partial_x_i + f_double_partial_xx(index-1,x_1,x_2,x_3)
+    else:
+        almost_final_value = 0
+    return 2*almost_final_value
+
+##partialf^2 partial x,y
+def f_double_partial_xy(index,x_1,x_2,x_3):
+    if index >=1:
+        i_subsequent = satellite_keys[index]
+        i_current = satellite_keys[index - 1]
+        X_i = X(i_current,i_subsequent,x_1,x_2,x_3)
+        Y_i = Y(i_current,i_subsequent,x_1,x_2,x_3)
+        X_partial_y_i = X_partial_y(i_current,i_subsequent,x_1,x_2,x_3)
+        A_i = A(i_current,i_subsequent,x_1,x_2,x_3)
+        almost_final_value = X_i*Y_i + A_i*X_partial_y_i + f_double_partial_xy(index-1,x_1,x_2,x_3)
+    else:
+        almost_final_value = 0
+    return 2*almost_final_value
+##partialf^2 partial y,x
+def f_double_partial_yx(index,x_1,x_2,x_3):
+    return f_double_partial_xy(index,x_1,x_2,x_3)
+
+##partialf^2 partial xz
+def f_double_partial_xz(index,x_1,x_2,x_3):
+    if index >=1:
+        i_subsequent = satellite_keys[index]
+        i_current = satellite_keys[index - 1]
+        X_i = X(i_current,i_subsequent,x_1,x_2,x_3)
+        Z_i = Z(i_current,i_subsequent,x_1,x_2,x_3)
+        X_partial_z_i = X_partial_z(i_current,i_subsequent,x_1,x_2,x_3)
+        A_i = A(i_current,i_subsequent,x_1,x_2,x_3)
+        almost_final_value = X_i*Z_i + A_i*X_partial_z_i + f_double_partial_xz(index-1,x_1,x_2,x_3)
+    else:
+        almost_final_value = 0
+    return 2*almost_final_value
+##partial^2 partial zx
+def f_double_partial_zx(index,x_1,x_2,x_3):
+    return f_double_partial_xz(index,x_1,x_2,x_3)
+
+##partialf^2 partial yy
+def f_double_partial_yy(index,x_1,x_2,x_3):
+    if index >=1:
+        i_subsequent = satellite_keys[index]
+        i_current = satellite_keys[index - 1]
+        Y_i = Y(i_current,i_subsequent,x_1,x_2,x_3)
+        Y_partial_y_i = Y_partial_y(i_current,i_subsequent,x_1,x_2,x_3)
+        A_i = A(i_current,i_subsequent,x_1,x_2,x_3)
+        almost_final_value = Y_i**2 + A_i*Y_partial_y_i + f_double_partial_yy(index-1,x_1,x_2,x_3)
+    else:
+        almost_final_value = 0
+    return 2*almost_final_value
+
+##partial^2 partial yz
+def f_double_partial_yz(index,x_1,x_2,x_3):
+    if index >=1:
+        i_subsequent = satellite_keys[index]
+        i_current = satellite_keys[index - 1]
+        Y_i = Y(i_current,i_subsequent,x_1,x_2,x_3)
+        Z_i = Z(i_current,i_subsequent,x_1,x_2,x_3)
+        Y_partial_z_i = Y_partial_z(i_current,i_subsequent,x_1,x_2,x_3)
+        A_i = A(i_current,i_subsequent,x_1,x_2,x_3)
+        almost_final_value = Y_i*Z_i + A_i*Y_partial_z_i + f_double_partial_yz(index-1,x_1,x_2,x_3)
+    else:
+        almost_final_value = 0
+    return 2*almost_final_value
+
+##partial f^2 partial zy
+def f_double_partial_zy(index,x_1,x_2,x_3):
+    return f_double_partial_yz(index,x_1,x_2,x_3)
+
+###partial^2 partial zz
+def f_double_partial_zz(index,x_1,x_2,x_3):
+    if index >=1:
+        i_subsequent = satellite_keys[index]
+        i_current = satellite_keys[index - 1]
+        Z_i = Z(i_current,i_subsequent,x_1,x_2,x_3)
+        Z_partial_z_i = Z_partial_z(i_current,i_subsequent,x_1,x_2,x_3)
+        A_i = A(i_current,i_subsequent,x_1,x_2,x_3)
+        almost_final_value = Z_i**2 + A_i*Z_partial_z_i + f_double_partial_zz(index-1,x_1,x_2,x_3)
+    else:
+        almost_final_value = 0
+    return 2*almost_final_value
