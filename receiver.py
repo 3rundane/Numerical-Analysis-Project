@@ -2,6 +2,7 @@ import numpy as np
 import sys
 from decimal import *
 from math import cos,sin,sqrt
+import numpy.linalg as la
 
 def grab_datafile():
     File_object = open(r"data.dat", "r")
@@ -110,9 +111,14 @@ p = s / Decimal(2)
 c = Decimal(constants_names["1"])
 pi = Decimal(constants_names["0"])
 
-
+# File_object = open(r"b12.dat", "r")
+# vehicle_dat_raw = File_object.readlines()
 #input_satellites is a dictionary containing the time, x,y,z information of the satellites sent in by satellite.py
-input_satellites = {}
+
+##input satellites needs to be changed later, below is the testing version!
+input_satellites = {"3": [12122.917273538935, 2.605234313778725E7, 2986153.9652697924, 4264669.833325115],"4": [12122.918115974104, -1.718355633086311E7, -1.8640834276186436E7, 7941901.319733662]
+}
+
 #sat_length is the length of the input_satellites list, used for a for loop iteration below.
 sat_length = len(input_satellites)
 ### equations (68)
@@ -126,6 +132,9 @@ def norm(i_s,x_1,x_2,x_3):
     s_3 = input_satellites[i_s][3]
     return sqrt((s_1-x_1)**2 + (s_2-x_2)**2 + (s_3-x_3)**2)
 
+##this is the norm to be used in Newton' method iteration, NOT in the function definitions below.
+def normal_norm(s_1,s_2,s_3):
+    return sqrt(s_1**2 + s_2**2 + s_3**2)
 
 
 #difference equations are coded below. This function returns the ith output of the A_i in Peter's equation 68. This will be called at each
@@ -164,11 +173,14 @@ def Z(i_current,i_subsequent,x_1,x_2,x_3):
     s_3_subsequent = input_satellites[i_subsequent][3]
     return -(s_3_subsequent - x_3)/subsequent_norm + (s_3_current - x_3)/current_norm
 
-satellite_keys = input_satellites.keys()
+# satellite_keys = input_satellites.keys()
+satellite_keys =[i for i in input_satellites.keys()]
+
+print(satellite_keys)
+##largest index in satellite_keys, meant to be used in f below as well as some other stuff below.
 satty_length = len(satellite_keys)
 
 ## equations (69)
-##check the absolute fuck out of this!
 ## Everything below until HESSSSSIIIaAAANN TIMMMEEE is for the right hand side of our Newton's method iteration.
 def f(index,x_1,x_2,x_3):
     if index >=1:
@@ -393,3 +405,60 @@ def f_double_partial_zz(index,x_1,x_2,x_3):
     else:
         almost_final_value = 0
     return 2*almost_final_value
+
+##begin processing with Newton's method to find x_s
+# the negative of the gradient of f
+def B(index,x_1,x_2,x_3):
+    f_x = f_partial_x(index,x_1,x_2,x_3)
+    f_y = f_partial_y(index,x_1,x_2,x_3)
+    f_z = f_partial_z(index,x_1,x_2,x_3)
+    return -1*[f_x,f_y,f_z]
+
+#compute and return the hessian rows for a given input.
+def Hessian_rows(index,x_1,x_2,x_3):
+    f_xx = f_double_partial_xx(index,x_1,x_2,x_3)
+    f_xy = f_double_partial_xy(index,x_1,x_2,x_3)
+    f_yx = f_xy
+    f_xz = f_double_partial_xz(index,x_1,x_2,x_3)
+    f_zx = f_xz
+    f_yz = f_double_partial_yz(index,x_1,x_2,x_3)
+    f_zy = f_yz
+    f_yy = f_double_partial_yy(index,x_1,x_2,x_3)
+    f_zz = f_double_partial_zz(index,x_1,x_2,x_3)
+    return [f_xx,f_xy,f_xz],[f_yx,f_yy,f_yz],[f_zx,f_zy,f_zz]
+
+#starting guess in cartesian coordinates x,y,z
+x_0,y_0,z_0 = 10000,10000,10000
+x,y,z = x_0,y_0,z_0
+condition = True
+
+while condition:
+    hessian_row1,hessian_row2,hessian_row3 = Hessian_rows(satty_length-1,x,y,z)
+    B_vector = np.array(B(satty_length-1,x,y,z))
+    H = np.array([hessian_row1,hessian_row2,hessian_row3])
+    s = np.linalg.solve(H,B_vector)
+    x = x + s[0]
+    y = y + s[1]
+    z = z + s[2]
+    if normal_norm(s[0],s[1],s[2]) < 0.01:
+        break
+
+print(x,y,z)
+
+##Progress comments
+## error is likely in i_s being a list and not a valid key....see error below.
+#most recent error message
+##['3', '4']
+# Traceback (most recent call last):
+#   File "C:/Users/Dane/PycharmProjects/UCDavisCode/receiver.py", line 437, in <module>
+#     hessian_row1,hessian_row2,hessian_row3 = Hessian_rows(satty_length-1,x,y,z)
+#   File "C:/Users/Dane/PycharmProjects/UCDavisCode/receiver.py", line 420, in Hessian_rows
+#     f_xx = f_double_partial_xx(index,x_1,x_2,x_3)
+#   File "C:/Users/Dane/PycharmProjects/UCDavisCode/receiver.py", line 324, in f_double_partial_xx
+#     X_i = X(i_current,i_subsequent,x_1,x_2,x_3)
+#   File "C:/Users/Dane/PycharmProjects/UCDavisCode/receiver.py", line 154, in X
+#     current_norm = norm(input_satellites[i_current], x_1, x_2, x_3)
+#   File "C:/Users/Dane/PycharmProjects/UCDavisCode/receiver.py", line 130, in norm
+#     s_1 = input_satellites[i_s][1]
+# TypeError: unhashable type: 'list'
+
