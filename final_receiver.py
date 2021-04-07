@@ -636,7 +636,7 @@ def iteration_step(input_satellites,initial_guess):
     satty_length = len(satellite_keys)
 
     # x_0, y_0, z_0 = geo_to_car(12122.917273538935, 40, 45, 55.0, 1, 111, 50, 58.0, -1, 1372.0)
-    x_0, y_0, z_0 = geo_to_car(initial_guess[0],initial_guess[1],initial_guess[2],initial_guess[3],initial_guess[5],initial_guess[5],initial_guess[6],initial_guess[7],initial_guess[8],initial_guess[9])
+    x_0, y_0, z_0 = initial_guess[0],initial_guess[1],initial_guess[2]
 
     # print(geo_to_car(12123.0, 40, 45, 55.0, 1, 111, 50, 58.0, -1, 1372.0))
     x, y, z = float(x_0), float(y_0), float(z_0)
@@ -647,25 +647,52 @@ def iteration_step(input_satellites,initial_guess):
 
         B_vector = B(satty_length - 1, x, y, z, input_satellites)
         H = np.array([hessian_row1, hessian_row2, hessian_row3])
+        # try:
         s = np.linalg.solve(H, B_vector)
         x = x + s[0]
         y = y + s[1]
         z = z + s[2]
-        print(x, y, z)
-        print('S:', normal_norm(s[0], s[1], s[2]), '\n')
+        # print(x, y, z)
+        # print('S:', normal_norm(s[0], s[1], s[2]), '\n')
         if normal_norm(s[0], s[1], s[2]) < 0.01:
             key = satellite_keys[0]
             normy_norm = norm(key, x, y, z, input_satellites)
             t_s = input_satellites[key][0]
             t_v = t_s + normy_norm / c
-            # print(t_v)
+                # print(t_v)
             t, psi_degree, psi_minute, psi_second, NS, lambda_degree, lambda_minute, lambda_second, EW, h = car_to_geo(
                 x, y, z, t_v)
-            print(car_to_geo(x,y,z,t_v))
-            break
-
+            # print(car_to_geo(x,y,z,t_v))
+            return t_v, x, y, z
+        # except:
+        #     return -1
 # iteration_step(input_satellites)
 # t_v = t_s + ||X_s - X_v|| / c
+
+# iteration_step(input_satellites)
+# process piped in data
+
+# list of strings read in from Satellite
+list_of_satellites = sys.stdin.readlines()
+#length of the above list
+length_of_satellites = len(list_of_satellites)
+# print(list_of_satellites)
+#sorting hat
+sorting_hat = {}
+# one list to rule them all.
+list_of_lists = []
+for i in range(length_of_satellites):
+    list_of_lists.append(list_of_satellites[i].split())#splits each line of list_satellites into a list of space delimited values eg. [satellite #, time, x, y, z]
+
+# epoch_time=float(list_of_lists[0][1])
+# # epoch_time = float(list_of_satellites[0])
+# # epoch_time = 12122.9172735
+# print(epoch_time)
+sorting_hat = sorted(list_of_lists, key=lambda x: float(x[1]))
+
+
+# #loop through keys
+input_satellites = {}
 # input_satellites = {"3": [12122.917273538935, 2.605234313778725E7, 2986153.9652697924, 4264669.833325115],
 #                     "4": [12122.918115974104, -1.718355633086311E7, -1.8640834276186436E7, 7941901.319733662],
 #                     '8': [12122.91517247339, 1.8498279256616846E7, -1.4172390064384513E7, -1.2758766855293432E7],
@@ -675,32 +702,29 @@ def iteration_step(input_satellites,initial_guess):
 #                     '17': [12122.932126735379, 4939777.113795485, -1.796566328317718E7, 1.893839095916287E7],
 #                     '20': [12122.9302901758, 1.790346111594521E7, -1.680512822049418E7, 1.0143118495964047E7]
 #                     }
-# iteration_step(input_satellites)
-# process piped in data
-
-#list of strings read in from Satellite
-list_of_satellites = sys.stdin.readlines()
-#length of the above list
-length_of_satellites = len(list_of_satellites)
-#sorting hat
-# sorting_hat = {}
-# one list to rule them all.
-list_of_lists = []
-for i in range(length_of_satellites):
-    list_of_lists.append(list_of_satellites[i].split())#splits each line of list_satellites into a list of space delimited values eg. [satellite #, time, x, y, z]
-
-sorting_hat = sorted(list_of_lists, key=lambda x: float(x[1]))
-
-    # sorting_hat[i] = float(list_of_lists[i][1])
-# dictionary to hold shit
-# sorting_hat = dict(sorted(sorting_hat.items(), key=lambda item: item[1])) #contains everything ordered in time.
-#loop through keys
-flag = True
-input_satellites = {}
+# print(input_satellites)
 #build input_satellites
 #first epoch time value used for comparison on each epoch
 epoch_time = float(sorting_hat[0][1]) # first time value.
-##need to update initial guess on each go-around of the iteration_step # finally add in try catch statement
+# epoch_time = float(12122.917)
+# print(epoch_time)
+##epoch guess.
+x,y,z= geo_to_car(epoch_time,40, 45, 55.0, 1, 111, 50, 58.0, -1, 1372.0)#b12 coordinates + the custom time to account for Earth's rotation.
+initial_guess = [x,y,z]
+# t_v, x, y, z = iteration_step(input_satellites, initial_guess)
+# print(t_v,x,y,z)
+# for key in input_satellites.keys():
+#     x,y,z= geo_to_car(input_satellites[key][0],40, 45, 55.0, 1, 111, 50, 58.0, -1, 1372.0)#b12 coordinates + the custom time to account for Earth's rotation.
+#
+#
+#
+#
+#
+#     print(t_v,x,y,z)
+# print(initial_guess)
+# for list in sorting_hat:
+#     print(list[0],list[1])
+# ##need to update initial guess on each go-around of the iteration_step # finally add in try catch statement
 for sat_info in sorting_hat:
     if  (sat_info != sorting_hat[-1]) and (abs(epoch_time - float(sat_info[1])) < 0.5):
         i = sat_info[0]
@@ -710,7 +734,11 @@ for sat_info in sorting_hat:
         z = float(sat_info[4])
         input_satellites[i] = [t, x, y, z]
     else:
-        iteration_step(input_satellites)
+
+        t_v,x_v,y_v,z_v =iteration_step(input_satellites,initial_guess)#error should occur here if iteration_step fails then our except block catches
+        t_forprinting, psi_degree, psi_minute, psi_second, NS, lambda_degree, lambda_minute, lambda_second, EW, h=car_to_geo(x_v,y_v,z_v,t_v)
+        print(t_forprinting, psi_degree, psi_minute, psi_second, NS, lambda_degree, lambda_minute, lambda_second, EW, h)
+            # needs to be formatted later.
         input_satellites = {}
         i = sat_info[0]
         t = float(sat_info[1])
@@ -719,8 +747,11 @@ for sat_info in sorting_hat:
         z = float(sat_info[4])
         input_satellites[i] = [t, x, y, z]
         epoch_time = t
+        initial_guess = [x_v,y_v,z_v] #update initial guess. This assumes x_v, y_v, z_v are at the right time.
+        # except:
+        #     print('wrongness, much wrongness')
 
 
 
 
-print(sorting_hat)
+
