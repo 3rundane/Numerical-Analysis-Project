@@ -57,6 +57,8 @@ from math import cos, sin, sqrt
 
 # Read data.dat file. ~Dane
 import sys
+from typing import Optional, Any
+
 import numpy as np
 from decimal import *
 
@@ -169,8 +171,37 @@ c = Decimal(constants_names["1"])
 pi = Decimal(constants_names["0"])
 # Read in data from standard input. This command is to be used when piping data from a file into this program via the
 # command line. e.g. cat data.dat | readingfiles_trial.py
+log = open("satellite.log","w")
 
-# used in reality but commented out for testing purposes
+log.write("satellite log, Dane Gollero, Ike Griss Salas, Magon Bowling \n \n data.dat \n")
+log.write(f"pi = {pi} \nc = {c} \nR = {R} \ns = {s} \n")
+##iterate through dictionary satellite_data
+u1 = 0
+u2 = 0
+u3 = 0
+v1 = 0
+v2 = 0
+v3 = 0
+data_period = 0
+data_phase = 0
+data_alt = 0
+for keys in satellite_data.keys():
+    u1 = satellite_data[keys][0]
+    u2 = satellite_data[keys][1]
+    u3 = satellite_data[keys][2]
+
+    v1 = satellite_data[keys][3]
+    v2 = satellite_data[keys][4]
+    v3 = satellite_data[keys][5]
+
+    data_period = satellite_data[keys][6]
+    data_alt = satellite_data[keys][7]
+    data_phase = satellite_data[keys][8]
+
+    log.write(f"u[{int(keys)}][0] = {u1} \nu[{int(keys)}][1] = {u2} \nu[{int(keys)}][2] = {u3} \n")
+    log.write(f"v[{int(keys)}][0] = {v1} \nv[{int(keys)}[1] = {v2} \nv[{int(keys)}][2] = {v3} \n")
+    log.write(f"period[{int(keys)}] = {data_period} \naltitude[{int(keys)}] = {data_alt} \nphase[{int(keys)}] = {data_phase} \n")
+log.write("\n end data.dat\n\n")
 vehicle_dat_raw = sys.stdin.readlines()
 
 # File_object = open(r"b12.dat", "r")
@@ -178,6 +209,8 @@ vehicle_dat_raw = sys.stdin.readlines()
 length_raw = len(vehicle_dat_raw)
 
 for i in range(length_raw):
+
+    log.write(f" --- epoch = {i}\nread {vehicle_dat_raw[i]} \nwrote:\n")
     vehicle_dat = vehicle_dat_raw[i].split()
     truth = (vehicle_dat == [])
     # if statement here protects against an index out of bounds error.
@@ -198,35 +231,6 @@ for i in range(length_raw):
     h = Decimal(vehicle_dat[9])
 
 
-    # data = {0: [], 1: [], 23: []} # for testing purposes
-    # data_trip = sys.stdin.readlines()
-    # print(data_trip)
-    # radius of earth (meters)
-    # R = Decimal(6367444.50)
-    #
-    # # seconds for one sidereal day
-    # s = Decimal(86164.09)
-    #
-    # # orbital perdiod of satelite
-    # p = Decimal(s/2) #division here might truncate number... should check this later.
-    #
-    # c = Decimal(2.997924580000000000E+08)
-    #
-    # pi =  Decimal(3.141592653589793116E+00)
-
-    # Grab all geo-coordinates from Vehicle program
-    # below for testing purposes
-    # 12123.0 12123.0 0 40 45 55 1 111 50 58 -1 1372
-    # t_v = Decimal(12123.0)
-    # lat_d = Decimal(40)
-    # lat_m = Decimal(45)
-    # lat_s = Decimal(55)
-    # NS = Decimal(1)
-    # log_d = Decimal(111)
-    # log_m = Decimal(50)
-    # log_s = Decimal(58)
-    # EW = Decimal(-1)
-    # h = Decimal(1372)
 
     # Functions
 
@@ -314,32 +318,8 @@ for i in range(length_raw):
             # print(key, t_2, s_1, s_2, s_3)
             string_output = str(key) + ' ' + str(t_2) + ' ' + str(s_1) + ' ' + str(s_2) + ' ' + str(s_3)
             # print('hello')
+            log.write(string_output + '\n')
             print(string_output)
-
-# At point where returns dict of key: satellite number, and value: time t_s and coordinates at t_s
-
-# Part C. Not sure how to do this yet
-# convert geo to car of vehicle
-# def geo_to_car(t, lat_d, lat_m, lat_s, NS, log_d, log_m, log_s, EW, h):
-# #     phi = deg_to_rad(lat_d, lat_m, lat_s)  # convert lattitude into radians
-# #     theta = deg_to_rad(log_d, log_m, log_s) # convert longitutde into radians
-# #     # print(type(cos(NS*phi)))
-# #     alpha = abs((R + h) * Decimal(cos(NS * phi)))  # Projected radii onto the xy-plane
-# #
-# #     # Grab car coordinates at t=0
-# #     x0 = alpha * Decimal(cos(EW * theta))
-# #     y0 = alpha * Decimal(sin(EW * theta))
-# #     z0 = (R + h) * Decimal(sin(NS * phi))
-# #
-# #     # rotate <x0, y0, z0> about z-axis for t seconds. Gives correct cartesian values.
-# #     Rot_matrix = np.array([[Decimal(cos(2 * pi * t / s)), Decimal(-sin(2 * pi * t / s)), 0],
-# #                            [Decimal(sin(2 * pi * t / s)), Decimal(cos(2 * pi * t / s)), 0],
-# #                            [0, 0, 1]])
-# #     X0 = np.array([[x0], [y0], [z0]])
-# #     xt, yt, zt = np.dot(Rot_matrix, X0)
-# #     return xt[0], yt[0], zt[0]
-# #
-#     #         # derivative = (4*pi/p)*(R+Decimal(alt))*( (-(s_1-x_1)*u_1 -(s_2 - x_2)*u_2 -(s_3 - x_3)*u_3)*Decimal(sin(2*pi*t_s/p + Decimal(phase))) + ((s_1 - x_1)*v_1 + (s_2 - x_2)*v_2 + (s_3 - x_3)*v_3)*Decimal(cos(2*pi*t_s/p + Decimal(phase)))) + Decimal(2*(c**2)*(t_v - t_s))
-#     #         # # derivative = 1
-#     #         # numerator = (s_1-x_1)**2 + (s_2 - x_2)**2 + (s_3 - x_3)**2 - (c**2)*(t_v - t_s)**2
-#     #         # if derivative != Decimal(0):
+    log.write('\n')
+log.write("Dirty D, Griss the Grit, Mighty Tiny waz here")
+log.close()
