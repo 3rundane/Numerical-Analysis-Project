@@ -110,11 +110,14 @@ satellite_data, constants_names = grab_datafile()
 
 # Define parameters from data.dat
 R = float(constants_names["2"])
-ss = float(constants_names["3"])
+ss = float(constants_names["3"]) #do not name s!!!
 p = float(ss) / 2
 c = float(constants_names["1"])
 pi = float(constants_names["0"])
 
+log = open("receiver.log","w")
+
+log.write(f"receiver log, Dane Gollero, Magon Bowling, Ike Griss Salas \n\n data.dat: \n\npi = {pi} \nc = {c} \nR = {R} \ns = {ss} \n\n end data.dat\n\n")
 
 
 # input_satellites = {}
@@ -623,7 +626,18 @@ def car_to_geo(xt, yt, zt, t):
     return t, psi_degree, psi_minute, psi_second, NS, lambda_degree, lambda_minute, lambda_second, EW, h
 
 
-# D = R + 1000
+
+def make_life_easier(input_satellites):
+    counter = 0
+    for keys in input_satellites.keys():
+        sat_num = keys
+        time = input_satellites[keys][0]
+        x = input_satellites[keys][1]
+        y = input_satellites[keys][2]
+        z = input_satellites[keys][3]
+
+        log.write(f"{counter} {sat_num} {time} {x} {y} {z} \n")
+        counter = counter + 1
 
 #######################
 ## Page 2 lecture 10 ##
@@ -632,11 +646,13 @@ def car_to_geo(xt, yt, zt, t):
 # starting guess in cartesian coordinates x,y,z #Peter said starting guess for the first iteration of our for loop
 # should be the coordinates of the lampost b12, the subsequent initial guesses as the program goes along should be...
 def iteration_step(input_satellites,initial_guess):
+    make_life_easier(input_satellites)
     satellite_keys = [i for i in input_satellites.keys()]
     satty_length = len(satellite_keys)
-
+    num_iterations = 0
     # x_0, y_0, z_0 = geo_to_car(12122.917273538935, 40, 45, 55.0, 1, 111, 50, 58.0, -1, 1372.0)
     x_0, y_0, z_0 = initial_guess[0],initial_guess[1],initial_guess[2]
+    log.write(f" starting at: {x_0} {y_0} {z_0}\n")
 
     # print(geo_to_car(12123.0, 40, 45, 55.0, 1, 111, 50, 58.0, -1, 1372.0))
     x, y, z = float(x_0), float(y_0), float(z_0)
@@ -644,32 +660,23 @@ def iteration_step(input_satellites,initial_guess):
 
     while condition:
         hessian_row1, hessian_row2, hessian_row3 = Hessian_rows(satty_length - 1, x, y, z, input_satellites)
-
         B_vector = B(satty_length - 1, x, y, z, input_satellites)
         H = np.array([hessian_row1, hessian_row2, hessian_row3])
-        # try:
         s = np.linalg.solve(H, B_vector)
         x = x + s[0]
         y = y + s[1]
         z = z + s[2]
-        # print(x, y, z)
-        # print('S:', normal_norm(s[0], s[1], s[2]), '\n')
+        num_iterations = num_iterations + 1
         if normal_norm(s[0], s[1], s[2]) < 0.01:
             key = satellite_keys[0]
             normy_norm = norm(key, x, y, z, input_satellites)
             t_s = input_satellites[key][0]
             t_v = t_s + normy_norm / c
-                # print(t_v)
-            t, psi_degree, psi_minute, psi_second, NS, lambda_degree, lambda_minute, lambda_second, EW, h = car_to_geo(
-                x, y, z, t_v)
-            # print(car_to_geo(x,y,z,t_v))
+            log.write(f" vehicle at: {x} {y} {z} after {num_iterations} iterations\n\n")
             return t_v, x, y, z
-        # except:
-        #     return -1
-# iteration_step(input_satellites)
-# t_v = t_s + ||X_s - X_v|| / c
+        ### dangerous need else statement?
 
-# iteration_step(input_satellites)
+
 # process piped in data
 
 # list of strings read in from Satellite
@@ -725,6 +732,8 @@ initial_guess = [x,y,z]
 # for list in sorting_hat:
 #     print(list[0],list[1])
 # ##need to update initial guess on each go-around of the iteration_step # finally add in try catch statement
+number_epochs = 0
+
 for sat_info in sorting_hat:
     if  (sat_info != sorting_hat[-1]) and (abs(epoch_time - float(sat_info[1])) < 0.5):
         i = sat_info[0]
@@ -734,11 +743,16 @@ for sat_info in sorting_hat:
         z = float(sat_info[4])
         input_satellites[i] = [t, x, y, z]
     else:
-
+        # try:
+        # print(input_satellites)
+        log.write(f" Epoch {number_epochs} -- Satellite Data:\n")
+        number_epochs = number_epochs + 1
         t_v,x_v,y_v,z_v =iteration_step(input_satellites,initial_guess)#error should occur here if iteration_step fails then our except block catches
         t_forprinting, psi_degree, psi_minute, psi_second, NS, lambda_degree, lambda_minute, lambda_second, EW, h=car_to_geo(x_v,y_v,z_v,t_v)
-        print(t_forprinting, psi_degree, psi_minute, psi_second, NS, lambda_degree, lambda_minute, lambda_second, EW, h)
-            # needs to be formatted later.
+        print(round(t_forprinting,2), round(psi_degree,2), round(psi_minute,2), round(psi_second,2), round(NS,2), round(lambda_degree,2), round(lambda_minute,2), round(lambda_second,2), round(EW,2), round(h,2))
+        log.write("{} {} {} {} {} {} {} {} {} {}\n\n".format(round(t_forprinting,2), round(psi_degree,2), round(psi_minute,2), round(psi_second,2), round(NS,2), round(lambda_degree,2), round(lambda_minute,2), round(lambda_second,2), round(EW,2), round(h,2)))
+
+
         input_satellites = {}
         i = sat_info[0]
         t = float(sat_info[1])
@@ -749,9 +763,11 @@ for sat_info in sorting_hat:
         epoch_time = t
         initial_guess = [x_v,y_v,z_v] #update initial guess. This assumes x_v, y_v, z_v are at the right time.
         # except:
+        #
         #     print('wrongness, much wrongness')
 
 
+log.close()
 
 
 
