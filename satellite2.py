@@ -164,6 +164,45 @@ def grab_datafile():
 
 satellite_data, constants_names = grab_datafile()
 
+
+# Functions
+
+# # To convert geo-degrees to radians
+def deg_to_rad(deg, min, sec):
+    rad = (deg + min / Decimal(60) + sec / Decimal(3600)) / Decimal(180) * pi
+    return rad
+
+
+# Convert geo to cart at time t
+def geo_to_car(t, lat_d, lat_m, lat_s, NS, log_d, log_m, log_s, EW, h):
+    phi = 2 * pi * NS * (lat_d / Decimal(360) + lat_m / Decimal((360 * 60)) + lat_s / Decimal((360 * 60 * 60)))
+    lamb = 2 * pi * EW * (log_d / Decimal(360) + log_m / Decimal((360 * 60)) + log_s / Decimal((360 * 60 * 60)))
+
+    x0 = (R + h) * Decimal(cos(phi)) * Decimal(cos(lamb))
+    y0 = (R + h) * Decimal(cos(phi)) * Decimal(sin(lamb))
+    z0 = (R + h) * Decimal(sin(phi))
+
+    # Rotate for t seconds
+    alpha = 2 * pi * t / s
+
+    x = x0 * Decimal(cos(alpha)) - y0 * Decimal(sin(alpha))
+    y = x0 * Decimal(sin(alpha)) + y0 * Decimal(cos(alpha))
+    z = z0
+
+    return x, y, z
+
+
+# def eqn20(t, u_1, u_2, u_3, v_1, v_2, v_3, per, phase, alt):
+
+# Equation (20) position of satellite at time t
+## am I losing precision when computing cos and sin from the fact that they are returning floats??
+def eqn20(t, u_1, u_2, u_3, v_1, v_2, v_3, per, phase, alt):
+    s_1 = (R + alt) * (u_1 * Decimal(cos(2 * pi * t / per + phase)) + v_1 * Decimal(sin(2 * pi * t / per + phase)))
+    s_2 = (R + alt) * (u_2 * Decimal(cos(2 * pi * t / per + phase)) + v_2 * Decimal(sin(2 * pi * t / per + phase)))
+    s_3 = (R + alt) * (u_3 * Decimal(cos(2 * pi * t / per + phase)) + v_3 * Decimal(sin(2 * pi * t / per + phase)))
+    return s_1, s_2, s_3
+
+
 R = Decimal(constants_names["2"])
 s = Decimal(constants_names["3"])
 p = s / Decimal(2)
@@ -230,44 +269,6 @@ for i in range(length_raw):
     EW = Decimal(vehicle_dat[8])
     h = Decimal(vehicle_dat[9])
 
-
-
-    # Functions
-
-    # # To convert geo-degrees to radians
-    def deg_to_rad(deg, min, sec):
-        rad = (deg + min / Decimal(60) + sec / Decimal(3600)) / Decimal(180) * pi
-        return rad
-
-
-    # Convert geo to cart at time t
-    def geo_to_car(t, lat_d, lat_m, lat_s, NS, log_d, log_m, log_s, EW, h):
-        phi = 2 * pi * NS * (lat_d / Decimal(360) + lat_m / Decimal((360 * 60)) + lat_s / Decimal((360 * 60 * 60)))
-        lamb = 2 * pi * EW * (log_d / Decimal(360) + log_m / Decimal((360 * 60)) + log_s / Decimal((360 * 60 * 60)))
-
-        x0 = (R + h) * Decimal(cos(phi)) * Decimal(cos(lamb))
-        y0 = (R + h) * Decimal(cos(phi)) * Decimal(sin(lamb))
-        z0 = (R + h) * Decimal(sin(phi))
-
-        # Rotate for t seconds
-        alpha = 2 * pi * t / s
-
-        x = x0 * Decimal(cos(alpha)) - y0 * Decimal(sin(alpha))
-        y = x0 * Decimal(sin(alpha)) + y0 * Decimal(cos(alpha))
-        z = z0
-
-        return x, y, z
-
-
-    # def eqn20(t, u_1, u_2, u_3, v_1, v_2, v_3, per, phase, alt):
-
-    # Equation (20) position of satellite at time t
-    ## am I losing precision when computing cos and sin from the fact that they are returning floats??
-    def eqn20(t, u_1, u_2, u_3, v_1, v_2, v_3, per, phase, alt):
-        s_1 = (R + alt) * (u_1 * Decimal(cos(2 * pi * t / per + phase)) + v_1 * Decimal(sin(2 * pi * t / per + phase)))
-        s_2 = (R + alt) * (u_2 * Decimal(cos(2 * pi * t / per + phase)) + v_2 * Decimal(sin(2 * pi * t / per + phase)))
-        s_3 = (R + alt) * (u_3 * Decimal(cos(2 * pi * t / per + phase)) + v_3 * Decimal(sin(2 * pi * t / per + phase)))
-        return s_1, s_2, s_3
 
 
     # Part A.
