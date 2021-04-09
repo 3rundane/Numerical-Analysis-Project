@@ -563,14 +563,12 @@ def rad_to_deg(rad):
 
 def car_to_geo(xt, yt, zt, t):
     # Un-rotate for t seconds.
-
     x = xt * cos(2 * pi / ss * t) + yt * sin(2 * pi / ss * t)
     y = -xt * sin(2 * pi / ss * t) + yt * cos(2 * pi / ss * t)
     z = zt
 
     # Define h
     h = sqrt(x ** 2 + y ** 2 + z ** 2) - R
-
     # Define North South
     if z < 0:
         NS = -1
@@ -587,7 +585,6 @@ def car_to_geo(xt, yt, zt, t):
         EW = -1
     else:
         EW = 1
-
     # Define lambda (Longitude)
     if x == 0:
         lambda_whole = pi / 2
@@ -607,7 +604,6 @@ def car_to_geo(xt, yt, zt, t):
     else:
         lambda_whole = pi - atan(y / x)
         # print('6')
-
     # Peters but didn't work for whatever reason
     # if (x > 0) and (y > 0):
     #     lambda_whole = atan(y/x)
@@ -684,7 +680,7 @@ def rotate_initial(delta_time,x0,y0,z0):
 
     x = x0 * cos(alpha) - y0 * sin(alpha)
     y = x0 * sin(alpha) + y0 * cos(alpha)
-    z = z0
+    z = z0 + 100
     return x,y,z
 # process piped in data
 
@@ -700,47 +696,21 @@ list_of_lists = []
 for i in range(length_of_satellites):
     list_of_lists.append(list_of_satellites[i].split())#splits each line of list_satellites into a list of space delimited values eg. [satellite #, time, x, y, z]
 
-# epoch_time=float(list_of_lists[0][1])
-# # epoch_time = float(list_of_satellites[0])
-# # epoch_time = 12122.9172735
-# print(epoch_time)
+
 sorting_hat = sorted(list_of_lists, key=lambda x: float(x[1]))
 
 
 # #loop through keys
 input_satellites = {}
-# input_satellites = {"3": [12122.917273538935, 2.605234313778725E7, 2986153.9652697924, 4264669.833325115],
-#                     "4": [12122.918115974104, -1.718355633086311E7, -1.8640834276186436E7, 7941901.319733662],
-#                     '8': [12122.91517247339, 1.8498279256616846E7, -1.4172390064384513E7, -1.2758766855293432E7],
-#                     '11': [12122.929474004011, -2903225.4285143306, -1.9661358537802488E7, 1.7630410370147068E7],
-#                     '14': [12122.93081680465, 1477645.012869009, -1.5214872308462147E7, 2.172908956016601E7],
-#                     '15': [12122.91559232703, 2.6526323652830362E7, 847508.5779779141, -1210367.686336006],
-#                     '17': [12122.932126735379, 4939777.113795485, -1.796566328317718E7, 1.893839095916287E7],
-#                     '20': [12122.9302901758, 1.790346111594521E7, -1.680512822049418E7, 1.0143118495964047E7]
-#                     }
-# print(input_satellites)
+
 #build input_satellites
 #first epoch time value used for comparison on each epoch
 epoch_time = float(sorting_hat[0][1]) # first time value.
-# epoch_time = float(12122.917)
-# print(epoch_time)
+
 ##epoch guess.
 x,y,z= geo_to_car(epoch_time,40, 45, 55.0, 1, 111, 50, 58.0, -1, 1372.0)#b12 coordinates + the custom time to account for Earth's rotation.
 initial_guess = [x,y,z]
-# t_v, x, y, z = iteration_step(input_satellites, initial_guess)
-# print(t_v,x,y,z)
-# for key in input_satellites.keys():
-#     x,y,z= geo_to_car(input_satellites[key][0],40, 45, 55.0, 1, 111, 50, 58.0, -1, 1372.0)#b12 coordinates + the custom time to account for Earth's rotation.
-#
-#
-#
-#
-#
-#     print(t_v,x,y,z)
-# print(initial_guess)
-# for list in sorting_hat:
-#     print(list[0],list[1])
-# ##need to update initial guess on each go-around of the iteration_step # finally add in try catch statement
+
 number_epochs = 0
 
 ##initialize time trackers.
@@ -756,36 +726,40 @@ for sat_info in sorting_hat:
         z = float(sat_info[4])
         input_satellites[i] = [t, x, y, z]
     else:
+        try:
+            log.write(f" Epoch {number_epochs} -- Satellite Data:\n")
+            number_epochs = number_epochs + 1
 
-        log.write(f" Epoch {number_epochs} -- Satellite Data:\n")
-        number_epochs = number_epochs + 1
+            t_v,x_v,y_v,z_v =iteration_step(input_satellites,initial_guess)#error should occur here if iteration_step fails then our except block catches
+            t_forprinting, psi_degree, psi_minute, psi_second, NS, lambda_degree, lambda_minute, lambda_second, EW, h=car_to_geo(x_v,y_v,z_v,t_v)
+            print(round(t_forprinting,2), round(psi_degree,2), round(psi_minute,2), round(psi_second,2), round(NS,2), round(lambda_degree,2), round(lambda_minute,2), round(lambda_second,2), round(EW,2), round(h,2))
+            log.write("{} {} {} {} {} {} {} {} {} {}\n\n".format(round(t_forprinting,2), round(psi_degree,2), round(psi_minute,2), round(psi_second,2), round(NS,2), round(lambda_degree,2), round(lambda_minute,2), round(lambda_second,2), round(EW,2), round(h,2)))
 
+            input_satellites = {}
+            i = sat_info[0]
+            t = float(sat_info[1])
+            x = float(sat_info[2])
+            y = float(sat_info[3])
+            z = float(sat_info[4])
+            input_satellites[i] = [t, x, y, z]
 
+            ##attempted divergence fix 
+            # delta_time = t-epoch_time
+            # x_v,y_v,z_v = rotate_initial(delta_time,x_v,y_v,z_v)
 
+            initial_guess = [x_v,y_v,z_v] #update initial guess. This assumes x_v, y_v, z_v are at the right time.
+            epoch_time = t
+        except:
+            print('no convergence in receiver')
+            print(0,0,0,0,-1,0,0,0, -1, 0)
 
-        t_v,x_v,y_v,z_v =iteration_step(input_satellites,initial_guess)#error should occur here if iteration_step fails then our except block catches
-        t_forprinting, psi_degree, psi_minute, psi_second, NS, lambda_degree, lambda_minute, lambda_second, EW, h=car_to_geo(x_v,y_v,z_v,t_v)
-        print(round(t_forprinting,2), round(psi_degree,2), round(psi_minute,2), round(psi_second,2), round(NS,2), round(lambda_degree,2), round(lambda_minute,2), round(lambda_second,2), round(EW,2), round(h,2))
-        log.write("{} {} {} {} {} {} {} {} {} {}\n\n".format(round(t_forprinting,2), round(psi_degree,2), round(psi_minute,2), round(psi_second,2), round(NS,2), round(lambda_degree,2), round(lambda_minute,2), round(lambda_second,2), round(EW,2), round(h,2)))
-
-
-        input_satellites = {}
-        i = sat_info[0]
-        t = float(sat_info[1])
-        x = float(sat_info[2])
-        y = float(sat_info[3])
-        z = float(sat_info[4])
-        input_satellites[i] = [t, x, y, z]
-        delta_time = t-epoch_time
-        x_v,y_v,z_v = rotate_initial(delta_time,x_v,y_v,z_v)
-
-        initial_guess = [x_v,y_v,z_v] #update initial guess. This assumes x_v, y_v, z_v are at the right time.
-        epoch_time = t
-        # except:
-        #
-        #     print('wrongness, much wrongness')
-
-
+            log.write('no convergence in receiver\n')
+            log.write("{} {} {} {} {} {} {} {} {} {}\n\n".format(round(0, 2), round(0, 2),
+                                                                 round(0, 2), round(0, 2),
+                                                                 round(-1, 2), round(0, 2),
+                                                                 round(0, 2), round(0, 2),
+                                                                 round(-1, 2), round(0, 2)))
+            break
 log.close()
 
 
