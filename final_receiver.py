@@ -661,8 +661,10 @@ def iteration_step(input_satellites,initial_guess):
     while condition:
         hessian_row1, hessian_row2, hessian_row3 = Hessian_rows(satty_length - 1, x, y, z, input_satellites)
         B_vector = B(satty_length - 1, x, y, z, input_satellites)
+
         H = np.array([hessian_row1, hessian_row2, hessian_row3])
         s = np.linalg.solve(H, B_vector)
+        # print(normal_norm(s[0],s[1],s[2]))
         x = x + s[0]
         y = y + s[1]
         z = z + s[2]
@@ -676,7 +678,14 @@ def iteration_step(input_satellites,initial_guess):
             return t_v, x, y, z
         ### dangerous need else statement?
 
+#used to update initial guesses to account for the rotation of the earth during a given time step.
+def rotate_initial(delta_time,x0,y0,z0):
+    alpha = 2 * pi * delta_time / ss
 
+    x = x0 * cos(alpha) - y0 * sin(alpha)
+    y = x0 * sin(alpha) + y0 * cos(alpha)
+    z = z0
+    return x,y,z
 # process piped in data
 
 # list of strings read in from Satellite
@@ -734,6 +743,10 @@ initial_guess = [x,y,z]
 # ##need to update initial guess on each go-around of the iteration_step # finally add in try catch statement
 number_epochs = 0
 
+##initialize time trackers.
+t_previous = 0
+t_current = 0
+
 for sat_info in sorting_hat:
     if  (sat_info != sorting_hat[-1]) and (abs(epoch_time - float(sat_info[1])) < 0.5):
         i = sat_info[0]
@@ -743,10 +756,13 @@ for sat_info in sorting_hat:
         z = float(sat_info[4])
         input_satellites[i] = [t, x, y, z]
     else:
-        # try:
-        # print(input_satellites)
+
         log.write(f" Epoch {number_epochs} -- Satellite Data:\n")
         number_epochs = number_epochs + 1
+
+
+
+
         t_v,x_v,y_v,z_v =iteration_step(input_satellites,initial_guess)#error should occur here if iteration_step fails then our except block catches
         t_forprinting, psi_degree, psi_minute, psi_second, NS, lambda_degree, lambda_minute, lambda_second, EW, h=car_to_geo(x_v,y_v,z_v,t_v)
         print(round(t_forprinting,2), round(psi_degree,2), round(psi_minute,2), round(psi_second,2), round(NS,2), round(lambda_degree,2), round(lambda_minute,2), round(lambda_second,2), round(EW,2), round(h,2))
@@ -760,8 +776,11 @@ for sat_info in sorting_hat:
         y = float(sat_info[3])
         z = float(sat_info[4])
         input_satellites[i] = [t, x, y, z]
-        epoch_time = t
+        delta_time = t-epoch_time
+        x_v,y_v,z_v = rotate_initial(delta_time,x_v,y_v,z_v)
+
         initial_guess = [x_v,y_v,z_v] #update initial guess. This assumes x_v, y_v, z_v are at the right time.
+        epoch_time = t
         # except:
         #
         #     print('wrongness, much wrongness')
