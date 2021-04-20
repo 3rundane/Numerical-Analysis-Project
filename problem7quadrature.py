@@ -13,7 +13,7 @@ def numerator(x):
 # Method for computing integral
 def quadrature(n):
     almost_f_value = 0
-    for i in range(1,n+1):
+    for i in range(1,n+1): # starts counting at 0
         input = np.cos((2*i - 1)*np.pi / (2*n))
         almost_f_value = almost_f_value + numerator(input)
     f_value = np.pi / n * almost_f_value
@@ -22,7 +22,7 @@ def quadrature(n):
 
 # Main portion of program
 def main():
-    n_values = [4,5,6,7,8]
+    n_values = [i for i in range(4, 101)]
     for n in n_values:
         quad_value = quadrature(n)
         error = abs(true_value - quad_value)
