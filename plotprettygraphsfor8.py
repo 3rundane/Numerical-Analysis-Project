@@ -67,19 +67,6 @@ def main():
         trap_error = np.append(trap_error,np.abs(right_endpoint - trap_m(step)))
         simpsons_error = np.append(simpsons_error,np.abs(right_endpoint - simpsons_m(step)))
         rk4_error = np.append(rk4_error,np.abs(right_endpoint - rk4_m(step)))
-    # print(euler_error)
-    # fig,axes = plt.subplots(2,2)
-    # axes[0][0].loglog(h,euler_error,'b.',label="euler error",base=2)
-    # axes[0][0].set_title("euler error")
-    #
-    # axes[1][0].loglog(h,trap_error,'k.',label="trapezoidal error",base=2)
-    # axes[1][0].set_title("trapezoidal error")
-    #
-    # axes[0][1].loglog(h,simpsons_error,'r.',label="simpsons error",base=2)
-    # axes[0][1].set_title("simpsons error")
-    #
-    # axes[1][1].loglog(h,rk4_error,'m.',label="Runge-Kutta",base=2)
-    # axes[1][1].set_title("rk4 error")
 
     ##compute slope qualitatively
     slope_euler = (np.log2(euler_error[-1]) - np.log2(euler_error[0]))/(np.log2(h[-1]) - np.log2(h[0]))
@@ -97,14 +84,7 @@ def main():
     plt.loglog(h,trap_error,'k',label="trapezoidal error (2)",base=2)
     plt.loglog(h,simpsons_error,'r',label="simpsons error (4)",base=2)
     plt.loglog(h,rk4_error,'purple',label="Runge-Kutta (4)",base=2)
-    # plt.semilogy(h, euler_error, 'orange', label="euler error (1)", base=2)
-    # plt.semilogy(h, trap_error, 'k', label="trapezoidal error (2)", base=2)
-    # plt.semilogy(h, simpsons_error, 'r', label="simpsons error (4)", base=2)
-    # plt.semilogy(h, rk4_error, 'purple', label="Runge-Kutta (4)", base=2)
-    # plt.plot(h, euler_error, 'b', label="euler error")
-    # plt.plot(h, trap_error, 'k', label="trapezoidal error")
-    # plt.plot(h, simpsons_error, 'r', label="simpsons error")
-    # plt.plot(h, rk4_error, 'purple', label="Runge-Kutta")
+  
     plt.ylabel("log_2 of error at the right end point")
 
     #Plot a rough estimate of the machine limit based on the points where the last two methods go awry.
